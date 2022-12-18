@@ -1,33 +1,10 @@
-import { DataTypes, Sequelize } from "sequelize";
+import { Sequelize } from "sequelize";
+import { Food } from "./models/Food";
+import { FoodCategory } from "./models/FoodCategory";
 
-const sequelize = new Sequelize({
+export const sequelize = new Sequelize({
   dialect: "sqlite",
   storage: "./db/db.sqlite",
-});
-
-const Food = sequelize.define("Food", {
-  id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
-  },
-  name: {
-    type: DataTypes.STRING,
-  },
-  isActive: {
-    type: DataTypes.BOOLEAN,
-  },
-});
-
-const FoodCategory = sequelize.define("FoodCategory", {
-  id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
-  },
-  name: {
-    type: DataTypes.STRING,
-  },
 });
 
 export async function runSequelize() {
@@ -40,11 +17,7 @@ export async function runSequelize() {
 }
 
 export async function syncModels() {
-  await Food.sync({
-    force: true,
-  });
-
-  await FoodCategory.sync({
-    force: true,
+  [Food, FoodCategory].forEach((model) => {
+    model.sync({ force: true });
   });
 }
