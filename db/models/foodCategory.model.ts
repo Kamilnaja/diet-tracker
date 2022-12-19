@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
-import { sequelize } from "../sequelize";
+import { sequelize } from "../db";
 
-export const Food = sequelize.define("Food", {
+export const FoodCategory = sequelize.define("FoodCategory", {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -9,8 +9,5 @@ export const Food = sequelize.define("Food", {
   },
   name: {
     type: DataTypes.STRING,
-  },
-  isActive: {
-    type: DataTypes.BOOLEAN,
   },
 });

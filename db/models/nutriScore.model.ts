@@ -1,13 +1,13 @@
 import { DataTypes } from "sequelize";
-import { sequelize } from "../sequelize";
+import { sequelize } from "../db";
 
-export const FoodCategory = sequelize.define("FoodCategory", {
+export const Nutriscore = sequelize.define("Nutriscore", {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true,
   },
   name: {
-    type: DataTypes.STRING,
+    type: DataTypes.ENUM("A", "B", "C", "D", "E"),
   },
 });
