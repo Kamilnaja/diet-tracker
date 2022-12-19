@@ -1,2 +1,0 @@
-delete from foods where id is NOT NULL;
-insert into food (name, description, weight, price, caloriesPer100gram) values ('Prince Polo', 'Prince Polo, wafelek Classic XXL to polski czekoladowy wafelek znany na całym świecie, wytwarzany według tradycyjnej, sprawdzonej i niezmiennej od wieków receptury, przez co zachwyca swym smakiem coraz to młodsze pokolenia smakoszy.', 50 , 1.69, 526);
