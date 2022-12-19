@@ -1,5 +1,5 @@
-(A) add some data to table
-(A) endpoint for fetching data from foods table
+(A) better swagger file
+(A) edit action for Foods
+(A) create action for Foods
 (B) move models to separate files
 (B) add nutriscore to Food
-(A) cors 
