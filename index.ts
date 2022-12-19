@@ -5,7 +5,8 @@ import { IResponse } from "./models/response.interface";
 import cors from "cors";
 import morgan from "morgan";
 import { IFood } from "./models/food.interface";
-
+import swaggerUi from "swagger-ui-express";
+import swaggerDocument from "./swagger.json";
 dotenv.config();
 
 const app = express();
@@ -28,6 +29,8 @@ const createFoods = (): IResponse<IFood[]> => {
 };
 
 let initialFood = createFoods();
+
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Express + TypeScript Server");
