@@ -1,20 +1,83 @@
 import dotenv from "dotenv";
 import express, { Request, Response } from "express";
-import { assertDatabaseConnectionOk, initDb } from "./db/sequelize";
+import { Food } from "./models/food";
+import { IResponse } from "./models/response.interface";
+import cors from "cors";
+import morgan from "morgan";
+import { IFood } from "./models/food.interface";
 
 dotenv.config();
 
 const app = express();
 const port = process.env.PORT;
+app.use(cors());
+morgan("tiny");
 
-assertDatabaseConnectionOk();
+const createFoods = (): IResponse<IFood[]> => {
+  const cottage = new Food("Cottage Cheese", 180, 100, 1).food;
+  const tomato = new Food("Tomato", 100, 50, 2).food;
+  const chicken = new Food("Chicken", 100, 50).food;
+  const beef = new Food("Chicken", 100, 50).food;
+
+  const foods = [cottage, tomato, chicken, beef];
+
+  return {
+    data: foods,
+    length: foods.length,
+  };
+};
+
+let initialFood = createFoods();
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Express + TypeScript Server");
 });
 
-app.listen(port, async () => {
-  await assertDatabaseConnectionOk();
-  await initDb();
+app.get("/foods", (req: Request, res: Response) => {
+  const response = initialFood;
+  res.json(response);
+});
+
+app.get("/foods/:id", (req: Request, res: Response) => {
+  const id = Number(req.params.id);
+  let response: IResponse<IFood | undefined> = {
+    data: undefined,
+    length: 0,
+  };
+
+  let foundItem = initialFood.data.find((item) => item.id === Number(id));
+
+  if (foundItem) {
+    response = {
+      data: foundItem,
+      length: 1,
+    };
+  }
+  res.json(response);
+});
+
+app.delete("/foods/:id", (req, res) => {
+  const id = Number(req.params.id);
+  let response: IResponse<IFood | undefined> = {
+    data: undefined,
+    length: 0,
+  };
+
+  let foundItem = initialFood.data.find((item) => item.id === Number(id));
+
+  if (foundItem) {
+    response = {
+      data: foundItem,
+      length: 1,
+    };
+    initialFood = {
+      data: initialFood.data.filter((item) => item.id !== id),
+      length: initialFood.length - 1,
+    };
+  }
+  res.send(response);
+});
+
+app.listen(port, () => {
   console.log(`[server]: 🌩️Server is running at https://localhost:${port}`);
 });
