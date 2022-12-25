@@ -1,0 +1,13 @@
+openapi: '3.0.2'
+info:
+  title: Diet Tracker
+  version: '1.0'
+paths: 
+  /foods:
+    get:
+      tags:
+        - Foods Data
+      responses:
+        200:
+          description: Sucessfull response
+

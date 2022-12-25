@@ -1,12 +1,15 @@
+import cors from "cors";
 import dotenv from "dotenv";
 import express, { Request, Response } from "express";
-import { Food } from "./models/food";
-import { IResponse } from "./models/response.interface";
-import cors from "cors";
 import morgan from "morgan";
-import { IFood } from "./models/food.interface";
 import swaggerUi from "swagger-ui-express";
-import swaggerDocument from "./swagger.json";
+import YAML from "yamljs";
+import { Food } from "./models/food";
+import { IFood } from "./models/food.interface";
+import { IResponse } from "./models/response.interface";
+
+const swaggerDocument = YAML.load("./swagger.yaml");
+
 dotenv.config();
 
 const app = express();
