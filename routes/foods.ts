@@ -1,13 +1,37 @@
 import express from "express";
-import { Food } from "../models/food";
+import { Food } from "../food";
 import { IFood } from "../models/food.interface";
+import { NutriScore } from "../models/nutri-score.enum";
 import { IResponse } from "../models/response.interface";
 
 const createFoods = (): IResponse<IFood[]> => {
-  const cottage = new Food("Cottage Cheese", 180, 100, 1).food;
-  const tomato = new Food("Tomato", 100, 50, 2).food;
-  const chicken = new Food("Chicken", 100, 50).food;
-  const beef = new Food("Chicken", 100, 50).food;
+  const cottage = new Food()
+    .setId(1)
+    .setName("Cottage Cheese")
+    .setCaloriesPer100g(100)
+    .setWeight(180)
+    .setNutriScore(NutriScore.B)
+    .getFood();
+  const tomato = new Food()
+    .setId(2)
+    .setName("Tomato")
+    .setCaloriesPer100g(40)
+    .setWeight(100)
+    .setNutriScore(NutriScore.A)
+    .getFood();
+  const chicken = new Food()
+    .setId(3)
+    .setName("Chicken Breast")
+    .setCaloriesPer100g(100)
+    .setWeight(100)
+    .getFood();
+  const beef = new Food()
+    .setId(4)
+    .setName("Beef Steak")
+    .setCaloriesPer100g(140)
+    .setNutriScore(NutriScore.C)
+    .setWeight(100)
+    .getFood();
 
   const foods = [cottage, tomato, chicken, beef];
 
@@ -25,7 +49,10 @@ router.get("/", (req, res) => {
 });
 
 router.get("/foods", (req, res) => {
-  const response = initialFood;
+  const response = {
+    ...initialFood,
+    data: initialFood.data.map(({ nutriScore, ...keep }) => keep),
+  };
   res.json(response);
 });
 

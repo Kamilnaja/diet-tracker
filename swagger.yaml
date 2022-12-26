@@ -2,6 +2,8 @@ openapi: '3.0.2'
 info:
   title: Diet Tracker
   version: '1.0'
+servers:
+  - url: http://localhost:8080/api 
 components:
   schemas:
     Food:
@@ -15,6 +17,24 @@ components:
           type: number
         caloriesPer100g:
           type: number
+    FoodResponse: 
+      type: object
+      properties:
+        length:
+          type: number
+        data:
+          type: array
+          items: 
+            allOf:
+              - $ref: '#/components/schemas/Food'
+    FoodFull:
+      allOf: 
+      - $ref: '#/components/schemas/Food'
+      - type: object
+      properties:
+        nutriScore:
+          type: string
+
 paths: 
   /foods:
     get:
@@ -27,26 +47,44 @@ paths:
           content:
             "application/json":
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Food'
-
-  /foods/{foodId}:
+                type: object
+                $ref: '#/components/schemas/FoodResponse'
+        400:
+          description: Error
+          content:
+            "application/json":
+              schema:
+                type: object  
+  /foods/{id}:
     get:
       summary: Returns food by id
       tags:
         - Single food data
       parameters:
         - name: id
+          in: path
+          description: food id to use
+          required: true
+          schema:
+            type: string
       responses: 
         200:
           description: Successfull response
           content: 
             "application/json":
               schema:
-                $ref: '#/components/schemas/Food'
-
-                
-
-
-
+                $ref: '#/components/schemas/FoodFull'
+    delete:
+      summary: Delete one item by id
+      tags:
+        - Delete single item
+      parameters:
+        - name: id
+          in: path
+          description: food id to delete
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successfull response

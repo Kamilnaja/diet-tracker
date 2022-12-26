@@ -1,3 +1,2 @@
 (A) edit action for Foods
 (A) create action for Foods
-(B) add nutriscore to Food
