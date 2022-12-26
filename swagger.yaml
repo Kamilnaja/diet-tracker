@@ -2,12 +2,51 @@ openapi: '3.0.2'
 info:
   title: Diet Tracker
   version: '1.0'
+components:
+  schemas:
+    Food:
+      type: object
+      properties:
+        id: 
+          type: string
+        name:
+          type: string
+        weight:
+          type: number
+        caloriesPer100g:
+          type: number
 paths: 
   /foods:
     get:
+      summary: Get all foods
       tags:
-        - Foods Data
+        - All foods data
       responses:
         200:
-          description: Sucessfull response
+          description: Successfull response
+          content:
+            "application/json":
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Food'
+
+  /foods/{foodId}:
+    get:
+      summary: Returns food by id
+      tags:
+        - Single food data
+      parameters:
+        - name: id
+      responses: 
+        200:
+          description: Successfull response
+          content: 
+            "application/json":
+              schema:
+                $ref: '#/components/schemas/Food'
+
+                
+
+
 
