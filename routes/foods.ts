@@ -41,7 +41,7 @@ const createFoods = (): IResponse<IFood[]> => {
   };
 };
 
-let initialFood = createFoods();
+const initialFood = createFoods();
 export const router = express.Router();
 
 router.get("/", (req, res) => {
@@ -88,10 +88,24 @@ router.delete("/foods/:id", (req, res) => {
       data: foundItem,
       length: 1,
     };
-    initialFood = {
-      data: initialFood.data.filter((item) => item.id !== id),
-      length: initialFood.length - 1,
-    };
+    initialFood.data = initialFood.data.filter((item) => item.id !== id);
+    initialFood.length = initialFood.length - 1;
   }
   res.send(response);
+});
+
+router.put("/foods/:id", (req, res) => {
+  const id = Number(req.params.id);
+
+  let foundItemIdx = initialFood.data.findIndex(
+    (item) => item.id === Number(id)
+  );
+
+  if (foundItemIdx > -1) {
+    const { body } = req;
+    initialFood.data.splice(foundItemIdx, 0, body);
+    res.send(req.body);
+  } else {
+    res.status(404).send(null);
+  }
 });
