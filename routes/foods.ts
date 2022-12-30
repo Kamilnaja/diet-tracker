@@ -1,5 +1,6 @@
 import express from "express";
 import { Food } from "../food";
+import { IError } from "../models/error.interface";
 import { IFood } from "../models/food.interface";
 import { NutriScore } from "../models/nutri-score.enum";
 import { IResponse } from "../models/response.interface";
@@ -58,20 +59,11 @@ router.get("/foods", (req, res) => {
 
 router.get("/foods/:id", (req, res) => {
   const id = Number(req.params.id);
-  let response: IResponse<IFood | undefined> = {
-    data: undefined,
-    length: 0,
-  };
-
   let foundItem = initialFood.data.find((item) => item.id === Number(id));
 
-  if (foundItem) {
-    response = {
-      data: foundItem,
-      length: 1,
-    };
-  }
-  res.json(response);
+  foundItem
+    ? res.status(200).json(foundItem)
+    : res.status(204).json({ message: "not found" } as IError);
 });
 
 router.delete("/foods/:id", (req, res) => {
