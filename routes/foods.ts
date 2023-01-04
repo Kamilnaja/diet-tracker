@@ -1,11 +1,11 @@
 import express from "express";
 import { Food } from "../food";
 import { IError } from "../models/error.interface";
-import { IFood } from "../models/food.interface";
+import { IFoodEntity } from "../models/food.interface";
 import { NutriScore } from "../models/nutri-score.enum";
 import { IResponse } from "../models/response.interface";
 
-const createFoods = (): IResponse<IFood[]> => {
+const createFoods = (): IResponse<IFoodEntity[]> => {
   const cottage = new Food()
     .setId(1)
     .setName("Cottage Cheese")
@@ -68,6 +68,13 @@ router.get("/foods/:id", (req, res) => {
 
 router.post("/foods", (req, res) => {
   const { name, weight, caloriesPer100g, nutriScore } = req.body;
+
+  if (!name || !weight) {
+    return res
+      .status(400)
+      .json({ message: "name and weight are required" } as IError);
+  }
+
   const food = new Food()
     .setId(Math.floor(Math.random() * 1000))
     .setWeight(weight)
@@ -80,7 +87,7 @@ router.post("/foods", (req, res) => {
 
 router.delete("/foods/:id", (req, res) => {
   const id = Number(req.params.id);
-  let response: IResponse<IFood | undefined> = {
+  let response: IResponse<IFoodEntity | undefined> = {
     data: undefined,
     length: 0,
   };

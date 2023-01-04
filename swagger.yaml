@@ -9,15 +9,22 @@ components:
     Food:
       type: object
       properties:
-        id: 
-          type: string
         name:
           type: string
         weight:
           type: number
         caloriesPer100g:
           type: number
-    FoodResponse: 
+        nutriScore:
+          type: string
+    FoodEntity:
+      allOf:
+      - $ref: '#/components/schemas/Food'
+      - type: object
+      properties:
+        id: 
+          type: string
+    FoodListResponse: 
       type: object
       properties:
         length:
@@ -26,14 +33,7 @@ components:
           type: array
           items: 
             allOf:
-              - $ref: '#/components/schemas/Food'
-    FoodFull:
-      allOf: 
-      - $ref: '#/components/schemas/Food'
-      - type: object
-      properties:
-        nutriScore:
-          type: string
+              - $ref: '#/components/schemas/FoodEntity'
     Error:
       properties:
         message:
@@ -50,16 +50,15 @@ paths:
           content:
             "application/json":
               schema:
-                type: object
-                $ref: '#/components/schemas/FoodResponse'
+                $ref: '#/components/schemas/FoodListResponse'
         400:
           description: Error
           content:
             "application/json":
               schema:
-                type: object  
+                $ref: '#/components/schemas/Error'
     post:
-      summary: Create a new food resource
+      summary: Create a new food entry
       tags: 
         - Create new food
       requestBody:
@@ -70,25 +69,23 @@ paths:
             schema:
               $ref: '#/components/schemas/Food'
       responses:
-        200:
+        204:
           description: Successfull response
           content: 
             "application/json":
               schema:
-                type: object
-                $ref: '#/components/schemas/Food'
+                $ref: '#/components/schemas/FoodEntity'
         422:
           description: Missing parameter
           content:
             "application/json":
               schema:
-                type: object 
                 $ref: '#/components/schemas/Error'
   /foods/{id}:
     get:
       summary: Returns food by id
       tags:
-        - Single food data
+        - Single food entry
       parameters:
         - name: id
           in: path
@@ -96,24 +93,54 @@ paths:
           required: true
           schema:
             type: string
-      responses: 
+      responses:
         200:
           description: Successfull response
           content: 
             "application/json":
               schema:
-                $ref: '#/components/schemas/FoodFull'
+                $ref: '#/components/schemas/FoodEntity'
         204:
           description: Item not found
           content:
             "application/json":
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      summary: Edit food
+      tags: 
+        - Edit single entry
+      parameters:
+        - name: id
+          in: path
+          description: food id to use
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Body payload
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Food'
+      responses:
+        200:
+          description: Successfull response
+          content:
+            "application/json":
               schema: 
-                type: object
+                $ref: '#/components/schemas/FoodEntity'
+        204:
+          description: Error
+          content:
+            "application/json":
+              schema: 
                 $ref: '#/components/schemas/Error'
     delete:
-      summary: Delete one item by id
+      summary: Delete one entry by id
       tags:
-        - Delete single item
+        - Delete single entry
       parameters:
         - name: id
           in: path
@@ -124,10 +151,13 @@ paths:
       responses:
         200:
           description: Successfull response
+          content:
+            "application/json":
+              schema:
+                $ref: '#/components/schemas/FoodEntity'
         204:
           description: No such id
           content:
             "application/json":
               schema:
-                type: object
                 $ref: '#/components/schemas/Error'
