@@ -58,6 +58,32 @@ paths:
             "application/json":
               schema:
                 type: object  
+    post:
+      summary: Create a new food resource
+      tags: 
+        - Create new food
+      requestBody:
+        description: Body payload
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Food'
+      responses:
+        200:
+          description: Successfull response
+          content: 
+            "application/json":
+              schema:
+                type: object
+                $ref: '#/components/schemas/Food'
+        422:
+          description: Missing parameter
+          content:
+            "application/json":
+              schema:
+                type: object 
+                $ref: '#/components/schemas/Error'
   /foods/{id}:
     get:
       summary: Returns food by id
@@ -91,10 +117,17 @@ paths:
       parameters:
         - name: id
           in: path
-          description: food id to delete
+          description: Food id to delete
           required: true
           schema:
             type: string
       responses:
         200:
           description: Successfull response
+        204:
+          description: No such id
+          content:
+            "application/json":
+              schema:
+                type: object
+                $ref: '#/components/schemas/Error'

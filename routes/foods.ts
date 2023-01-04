@@ -66,6 +66,18 @@ router.get("/foods/:id", (req, res) => {
     : res.status(204).json({ message: "not found" } as IError);
 });
 
+router.post("/foods", (req, res) => {
+  const { name, weight, caloriesPer100g, nutriScore } = req.body;
+  const food = new Food()
+    .setId(Math.floor(Math.random() * 1000))
+    .setWeight(weight)
+    .setCaloriesPer100g(caloriesPer100g)
+    .setNutriScore(nutriScore)
+    .setName(name);
+
+  res.status(200).json(food);
+});
+
 router.delete("/foods/:id", (req, res) => {
   const id = Number(req.params.id);
   let response: IResponse<IFood | undefined> = {
