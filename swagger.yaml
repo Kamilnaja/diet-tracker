@@ -1,0 +1,163 @@
+openapi: '3.0.2'
+info:
+  title: Diet Tracker
+  version: '1.0'
+servers:
+  - url: http://localhost:8080/api 
+components:
+  schemas:
+    Food:
+      type: object
+      properties:
+        name:
+          type: string
+        weight:
+          type: number
+        caloriesPer100g:
+          type: number
+        nutriScore:
+          type: string
+    FoodEntity:
+      allOf:
+      - $ref: '#/components/schemas/Food'
+      - type: object
+      properties:
+        id: 
+          type: string
+    FoodListResponse: 
+      type: object
+      properties:
+        length:
+          type: number
+        data:
+          type: array
+          items: 
+            allOf:
+              - $ref: '#/components/schemas/FoodEntity'
+    Error:
+      properties:
+        message:
+          type: string
+paths: 
+  /foods:
+    get:
+      summary: Get all foods
+      tags:
+        - All foods data
+      responses:
+        200:
+          description: Successfull response
+          content:
+            "application/json":
+              schema:
+                $ref: '#/components/schemas/FoodListResponse'
+        400:
+          description: Error
+          content:
+            "application/json":
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      summary: Create a new food entry
+      tags: 
+        - Create new food
+      requestBody:
+        description: Body payload
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Food'
+      responses:
+        204:
+          description: Successfull response
+          content: 
+            "application/json":
+              schema:
+                $ref: '#/components/schemas/FoodEntity'
+        422:
+          description: Missing parameter
+          content:
+            "application/json":
+              schema:
+                $ref: '#/components/schemas/Error'
+  /foods/{id}:
+    get:
+      summary: Returns food by id
+      tags:
+        - Single food entry
+      parameters:
+        - name: id
+          in: path
+          description: food id to use
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successfull response
+          content: 
+            "application/json":
+              schema:
+                $ref: '#/components/schemas/FoodEntity'
+        204:
+          description: Item not found
+          content:
+            "application/json":
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      summary: Edit food
+      tags: 
+        - Edit single entry
+      parameters:
+        - name: id
+          in: path
+          description: food id to use
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Body payload
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Food'
+      responses:
+        200:
+          description: Successfull response
+          content:
+            "application/json":
+              schema: 
+                $ref: '#/components/schemas/FoodEntity'
+        204:
+          description: Error
+          content:
+            "application/json":
+              schema: 
+                $ref: '#/components/schemas/Error'
+    delete:
+      summary: Delete one entry by id
+      tags:
+        - Delete single entry
+      parameters:
+        - name: id
+          in: path
+          description: Food id to delete
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successfull response
+          content:
+            "application/json":
+              schema:
+                $ref: '#/components/schemas/FoodEntity'
+        204:
+          description: No such id
+          content:
+            "application/json":
+              schema:
+                $ref: '#/components/schemas/Error'
