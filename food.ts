@@ -1,4 +1,4 @@
-import { IFoodDetails } from "./models/food-details.interface";
+import { IFoodEntity } from "./models/food.interface";
 import { NutriScore } from "./models/nutri-score.enum";
 
 export class Food {
@@ -33,8 +33,8 @@ export class Food {
     return this;
   }
 
-  getFood(): IFoodDetails {
-    const food: IFoodDetails = {
+  getFood(): IFoodEntity {
+    const food: IFoodEntity = {
       id: this._id,
       name: this._name,
       weight: this._weight,

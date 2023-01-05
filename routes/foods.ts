@@ -1,6 +1,6 @@
 import express from "express";
 import { Food } from "../food";
-import { IError } from "../models/error.interface";
+import { Error } from "../models/error";
 import { IFoodEntity } from "../models/food.interface";
 import { NutriScore } from "../models/nutri-score.enum";
 import { IResponse } from "../models/response.interface";
@@ -33,8 +33,14 @@ const createFoods = (): IResponse<IFoodEntity[]> => {
     .setNutriScore(NutriScore.C)
     .setWeight(100)
     .getFood();
+  const orangeJuice = new Food()
+    .setId(5)
+    .setName("Orange juice")
+    .setCaloriesPer100g(150)
+    .setWeight(100)
+    .getFood();
 
-  const foods = [cottage, tomato, chicken, beef];
+  const foods = [cottage, tomato, chicken, beef, orangeJuice];
 
   return {
     data: foods,
@@ -63,7 +69,7 @@ router.get("/foods/:id", (req, res) => {
 
   foundItem
     ? res.status(200).json(foundItem)
-    : res.status(204).json({ message: "not found" } as IError);
+    : res.status(204).json(Error.getError("Item not found"));
 });
 
 router.post("/foods", (req, res) => {
@@ -72,7 +78,13 @@ router.post("/foods", (req, res) => {
   if (!name || !weight) {
     return res
       .status(400)
-      .json({ message: "name and weight are required" } as IError);
+      .json(Error.getError("Both name and weight are required"));
+  }
+
+  if (initialFood.data.find((item) => item.name === name)) {
+    return res
+      .status(409)
+      .json(Error.getError("Food with this name already exists"));
   }
 
   const food = new Food()
@@ -82,7 +94,10 @@ router.post("/foods", (req, res) => {
     .setNutriScore(nutriScore)
     .setName(name);
 
-  res.status(200).json(food);
+  initialFood.data.push(food.getFood());
+  initialFood.length++;
+
+  res.status(200).json(food.getFood());
 });
 
 router.delete("/foods/:id", (req, res) => {
@@ -114,9 +129,18 @@ router.put("/foods/:id", (req, res) => {
 
   if (foundItemIdx > -1) {
     const { body } = req;
-    initialFood.data.splice(foundItemIdx, 0, body);
-    res.send(req.body);
-  } else {
-    res.status(404).send(null);
+
+    const itemToReplace: IFoodEntity = {
+      id: id,
+      name: body.name,
+      weight: body.weight,
+      caloriesPer100g: body.caloriesPer100g,
+      nutriScore: body.nutriScore,
+    };
+
+    initialFood.data.splice(foundItemIdx, 1, itemToReplace);
+
+    return res.status(201).send(req.body);
   }
+  res.status(204).send(Error.getError("no id found"));
 });
