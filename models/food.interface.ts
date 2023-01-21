@@ -1,15 +1,12 @@
 import { NutriScore } from "./nutri-score.enum";
 import { IResponse } from "./response.interface";
 
-export interface IFoodEntity extends IFood {
-  id: number;
-}
-
 export interface IFood {
+  id: string;
   name: string;
   weight: number;
   caloriesPer100g: number;
   nutriScore?: NutriScore;
 }
 
-export type IFoodListResponse = IResponse<IFoodEntity>;
+export type IFoodListResponse = IResponse<IFood>;

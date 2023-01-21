@@ -1,14 +1,14 @@
-import { IFoodEntity } from "./models/food.interface";
+import { IFood } from "./models/food.interface";
 import { NutriScore } from "./models/nutri-score.enum";
 
 export class Food {
-  private _id = new Date().getTime();
+  private _id: string;
   private _name: string;
   private _weight: number;
   private _caloriesPer100g: number;
   private _nutriScore?: NutriScore;
 
-  setId(id: number): Food {
+  setId(id: string): Food {
     this._id = id;
     return this;
   }
@@ -33,8 +33,8 @@ export class Food {
     return this;
   }
 
-  getFood(): IFoodEntity {
-    const food: IFoodEntity = {
+  getFood(): IFood {
+    const food: IFood = {
       id: this._id,
       name: this._name,
       weight: this._weight,
