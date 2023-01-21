@@ -1,78 +1,30 @@
-import express from "express";
+import { Request, Response } from "express";
 import { Food } from "../food";
+import { createFoods } from "../helpers/create-foods";
 import { Error } from "../models/error";
 import { IFoodEntity } from "../models/food.interface";
-import { NutriScore } from "../models/nutri-score.enum";
 import { IResponse } from "../models/response.interface";
 
-const createFoods = (): IResponse<IFoodEntity[]> => {
-  const cottage = new Food()
-    .setId(1)
-    .setName("Cottage Cheese")
-    .setCaloriesPer100g(100)
-    .setWeight(180)
-    .setNutriScore(NutriScore.B)
-    .getFood();
-  const tomato = new Food()
-    .setId(2)
-    .setName("Tomato")
-    .setCaloriesPer100g(40)
-    .setWeight(100)
-    .setNutriScore(NutriScore.A)
-    .getFood();
-  const chicken = new Food()
-    .setId(3)
-    .setName("Chicken Breast")
-    .setCaloriesPer100g(100)
-    .setWeight(100)
-    .getFood();
-  const beef = new Food()
-    .setId(4)
-    .setName("Beef Steak")
-    .setCaloriesPer100g(140)
-    .setNutriScore(NutriScore.C)
-    .setWeight(100)
-    .getFood();
-  const orangeJuice = new Food()
-    .setId(5)
-    .setName("Orange juice")
-    .setCaloriesPer100g(150)
-    .setWeight(100)
-    .getFood();
-
-  const foods = [cottage, tomato, chicken, beef, orangeJuice];
-
-  return {
-    data: foods,
-    length: foods.length,
-  };
-};
-
 const initialFood = createFoods();
-export const router = express.Router();
 
-router.get("/", (req, res) => {
-  res.send("Express + TypeScript Server");
-});
-
-router.get("/foods", (req, res) => {
+export const getFoods = (req: Request, res: Response) => {
   const response = {
     ...initialFood,
     data: initialFood.data.map(({ nutriScore, ...keep }) => keep),
   };
   res.json(response);
-});
+};
 
-router.get("/foods/:id", (req, res) => {
-  const id = Number(req.params.id);
+export const getFoodById = (req: Request, res: Response) => {
+  const id = Number(req);
   let foundItem = initialFood.data.find((item) => item.id === Number(id));
 
   foundItem
     ? res.status(200).json(foundItem)
     : res.status(204).json(Error.getError("Item not found"));
-});
+};
 
-router.post("/foods", (req, res) => {
+export const addNewFood = (req: Request, res: Response) => {
   const { name, weight, caloriesPer100g, nutriScore } = req.body;
 
   if (!name || !weight) {
@@ -98,9 +50,9 @@ router.post("/foods", (req, res) => {
   initialFood.length++;
 
   res.status(200).json(food.getFood());
-});
+};
 
-router.delete("/foods/:id", (req, res) => {
+export const deleteFoodById = (req: Request, res: Response) => {
   const id = Number(req.params.id);
   let response: IResponse<IFoodEntity | undefined> = {
     data: undefined,
@@ -118,9 +70,9 @@ router.delete("/foods/:id", (req, res) => {
     initialFood.length = initialFood.length - 1;
   }
   res.send(response);
-});
+};
 
-router.put("/foods/:id", (req, res) => {
+export const editFood = (req: Request, res: Response) => {
   const id = Number(req.params.id);
 
   let foundItemIdx = initialFood.data.findIndex(
@@ -143,4 +95,4 @@ router.put("/foods/:id", (req, res) => {
     return res.status(201).send(req.body);
   }
   res.status(204).send(Error.getError("no id found"));
-});
+};

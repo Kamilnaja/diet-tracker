@@ -4,7 +4,7 @@ import express from "express";
 import morgan from "morgan";
 import swaggerUi from "swagger-ui-express";
 import YAML from "yamljs";
-import { router } from "./routes/foods";
+import { router } from "./routes/foods.routes";
 const swaggerDocument = YAML.load("./swagger.yaml");
 
 dotenv.config();
