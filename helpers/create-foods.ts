@@ -35,8 +35,14 @@ export const createFoods = () => {
     .setCaloriesPer100g(150)
     .setWeight(100)
     .getFood();
+  const beeHoney = new Food()
+    .setId("6")
+    .setName("Bee Honey")
+    .setCaloriesPer100g(350)
+    .setWeight(100)
+    .getFood();
 
-  const foods = [cottage, tomato, chicken, beef, orangeJuice];
+  const foods = [cottage, tomato, chicken, beef, orangeJuice, beeHoney];
 
   return {
     data: foods,

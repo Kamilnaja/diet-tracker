@@ -28,6 +28,19 @@ describe("GET /foods", () => {
     expect(!!response.body.error).toBe(false);
     expect(response.body.length).toBeGreaterThan(0);
   });
+
+  it("should find item by string param", async () => {
+    await request(baseURL).post("/foods").send(newFood);
+    const responseGet = await request(baseURL)
+      .get("/foods")
+      .query({ name: "banana" });
+
+    expect(responseGet.statusCode).toBe(200);
+    expect(
+      responseGet.body.data.find((item: IFood) => item.name === newFood.name)
+    ).not.toBeFalsy();
+    expect(responseGet.body.length).toBeGreaterThan(0);
+  });
 });
 
 describe("POST /foods", () => {
@@ -46,13 +59,15 @@ describe("POST /foods", () => {
       weight: 100,
     } as IFood;
     const response = await request(baseURL).post("/foods").send(newFood);
+
     expect(response.statusCode).toBe(201);
 
     const responseGet = await request(baseURL).get("/foods");
     const foods: IFood[] = responseGet.body.data;
+    const createdFood = foods.find((item) => item.id === newFood.id);
 
-    const exists = foods.find((item) => item.id === newFood.id);
-    expect(exists).not.toBeFalsy();
+    expect(createdFood).not.toBeFalsy();
+    expect(createdFood?.name).toEqual(newFood.name);
   });
 });
 

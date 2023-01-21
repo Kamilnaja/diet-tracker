@@ -8,10 +8,26 @@ import { IResponse } from "../models/response.interface";
 const initialFood = createFoods();
 
 export const getFoods = (req: Request, res: Response) => {
-  const response = {
-    ...initialFood,
-    data: initialFood.data.map(({ nutriScore, ...keep }) => keep),
-  };
+  let searchBy = req.query?.name as string;
+  searchBy = searchBy?.trim().toLocaleLowerCase();
+  let response: IResponse<IFood[]>;
+
+  if (searchBy) {
+    const results = initialFood.data
+      .filter((item) => item.name.toLocaleLowerCase().includes(searchBy))
+      .map(({ nutriScore, ...keep }) => keep);
+
+    response = {
+      data: results,
+      length: results.length,
+    };
+  } else {
+    response = {
+      ...initialFood,
+      data: initialFood.data.map(({ nutriScore, ...keep }) => keep),
+    };
+  }
+
   res.json(response);
 };
 
