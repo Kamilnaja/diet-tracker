@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { Food } from "../food";
 import { createFoods } from "../helpers/create-foods";
 import { Error } from "../models/error";
-import { IFoodEntity } from "../models/food.interface";
+import { IFood } from "../models/food.interface";
 import { IResponse } from "../models/response.interface";
 
 const initialFood = createFoods();
@@ -16,8 +16,8 @@ export const getFoods = (req: Request, res: Response) => {
 };
 
 export const getFoodById = (req: Request, res: Response) => {
-  const id = Number(req);
-  let foundItem = initialFood.data.find((item) => item.id === Number(id));
+  const id = req;
+  let foundItem = initialFood.data.find((item) => item.id === String(id));
 
   foundItem
     ? res.status(200).json(foundItem)
@@ -54,35 +54,35 @@ export const addNewFood = (req: Request, res: Response) => {
 
 export const deleteFoodById = (req: Request, res: Response) => {
   const id = Number(req.params.id);
-  let response: IResponse<IFoodEntity | undefined> = {
+  let response: IResponse<IFood | undefined> = {
     data: undefined,
     length: 0,
   };
 
-  let foundItem = initialFood.data.find((item) => item.id === Number(id));
+  let foundItem = initialFood.data.find((item) => item.id === String(id));
 
   if (foundItem) {
     response = {
       data: foundItem,
       length: 1,
     };
-    initialFood.data = initialFood.data.filter((item) => item.id !== id);
+    initialFood.data = initialFood.data.filter(
+      (item) => item.id !== String(id)
+    );
     initialFood.length = initialFood.length - 1;
   }
   res.send(response);
 };
 
 export const editFood = (req: Request, res: Response) => {
-  const id = Number(req.params.id);
+  const id = req.params.id;
 
-  let foundItemIdx = initialFood.data.findIndex(
-    (item) => item.id === Number(id)
-  );
+  let foundItemIdx = initialFood.data.findIndex((item) => item.id === id);
 
   if (foundItemIdx > -1) {
     const { body } = req;
 
-    const itemToReplace: IFoodEntity = {
+    const itemToReplace: IFood = {
       id: id,
       name: body.name,
       weight: body.weight,

@@ -1,15 +1,15 @@
 import request from "supertest";
-import { IFoodEntity } from "../models/food.interface";
+import { IFood } from "../models/food.interface";
 import { NutriScore } from "../models/nutri-score.enum";
 
 const baseURL = "http://localhost:8080/api";
 
-const newFood: IFoodEntity = {
+const newFood: IFood = {
   name: "Banana",
   weight: 100,
   nutriScore: NutriScore.D,
   caloriesPer100g: 10,
-  id: 10,
+  id: "10",
 };
 
 describe("GET /foods", () => {
@@ -41,15 +41,15 @@ describe("POST /foods", () => {
 
   it("should create new food with id", async () => {
     const newFood = {
-      id: 1000330300303,
+      id: "1000330300303",
       name: "Owsianka",
       weight: 100,
-    } as IFoodEntity;
+    } as IFood;
     const response = await request(baseURL).post("/foods").send(newFood);
     expect(response.statusCode).toBe(201);
 
     const responseGet = await request(baseURL).get("/foods");
-    const foods: IFoodEntity[] = responseGet.body.data;
+    const foods: IFood[] = responseGet.body.data;
 
     const exists = foods.find((item) => item.id === newFood.id);
     expect(exists).not.toBeFalsy();
@@ -66,7 +66,7 @@ describe("DELETE /foods", () => {
     const response = await request(baseURL).get("/foods");
     const foods = response.body.data;
 
-    const exists = foods.find((food: IFoodEntity) => {
+    const exists = foods.find((food: IFood) => {
       newFood.id === food.id;
     });
 
