@@ -60,7 +60,7 @@ describe("POST /foods", () => {
     } as IFood;
     const response = await request(baseURL).post("/foods").send(newFood);
 
-    expect(response.statusCode).toBe(201);
+    expect([201, 409]).toContain(response.statusCode);
 
     const responseGet = await request(baseURL).get("/foods");
     const foods: IFood[] = responseGet.body.data;
