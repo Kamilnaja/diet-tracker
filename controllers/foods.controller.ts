@@ -25,7 +25,7 @@ export const getFoodById = (req: Request, res: Response) => {
 };
 
 export const addNewFood = (req: Request, res: Response) => {
-  const { name, weight, caloriesPer100g, nutriScore } = req.body;
+  const { name, weight, caloriesPer100g, nutriScore, id } = req.body;
 
   if (!name || !weight) {
     return res
@@ -40,7 +40,7 @@ export const addNewFood = (req: Request, res: Response) => {
   }
 
   const food = new Food()
-    .setId(Math.floor(Math.random() * 1000))
+    .setId(id ? id : Math.floor(Math.random() * 1000))
     .setWeight(weight)
     .setCaloriesPer100g(caloriesPer100g)
     .setNutriScore(nutriScore)
@@ -49,7 +49,7 @@ export const addNewFood = (req: Request, res: Response) => {
   initialFood.data.push(food.getFood());
   initialFood.length++;
 
-  res.status(200).json(food.getFood());
+  res.status(201).json(food.getFood());
 };
 
 export const deleteFoodById = (req: Request, res: Response) => {
