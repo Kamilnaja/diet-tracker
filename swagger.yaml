@@ -1,9 +1,9 @@
-openapi: '3.0.2'
+openapi: "3.0.2"
 info:
   title: Diet Tracker
-  version: '1.0'
+  version: "1.0"
 servers:
-  - url: http://localhost:8080/api 
+  - url: http://localhost:8080/api
 components:
   schemas:
     Food:
@@ -19,47 +19,52 @@ components:
           type: string
     FoodEntity:
       allOf:
-      - $ref: '#/components/schemas/Food'
-      - type: object
+        - $ref: "#/components/schemas/Food"
+        - type: object
       properties:
-        id: 
+        id:
           type: string
-    FoodListResponse: 
+    FoodListResponse:
       type: object
       properties:
         length:
           type: number
         data:
           type: array
-          items: 
+          items:
             allOf:
-              - $ref: '#/components/schemas/FoodEntity'
+              - $ref: "#/components/schemas/FoodEntity"
     Error:
       properties:
         message:
           type: string
-paths: 
+paths:
   /foods:
     get:
       summary: Get all foods
       tags:
         - All foods data
+      parameters:
+        - in: query
+          name: name
+          schema:
+            type: string
       responses:
         200:
           description: Successfull response
           content:
             "application/json":
               schema:
-                $ref: '#/components/schemas/FoodListResponse'
+                $ref: "#/components/schemas/FoodListResponse"
         400:
           description: Error
           content:
             "application/json":
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
     post:
       summary: Create a new food entry
-      tags: 
+      tags:
         - Create new food
       requestBody:
         description: Body payload
@@ -67,20 +72,20 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Food'
+              $ref: "#/components/schemas/Food"
       responses:
         204:
           description: Successfull response
-          content: 
+          content:
             "application/json":
               schema:
-                $ref: '#/components/schemas/FoodEntity'
+                $ref: "#/components/schemas/FoodEntity"
         422:
           description: Missing parameter
           content:
             "application/json":
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
   /foods/{id}:
     get:
       summary: Returns food by id
@@ -96,19 +101,19 @@ paths:
       responses:
         200:
           description: Successfull response
-          content: 
+          content:
             "application/json":
               schema:
-                $ref: '#/components/schemas/FoodEntity'
+                $ref: "#/components/schemas/FoodEntity"
         204:
           description: Item not found
           content:
             "application/json":
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
     put:
       summary: Edit food
-      tags: 
+      tags:
         - Edit single entry
       parameters:
         - name: id
@@ -123,20 +128,20 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Food'
+              $ref: "#/components/schemas/Food"
       responses:
         200:
           description: Successfull response
           content:
             "application/json":
-              schema: 
-                $ref: '#/components/schemas/FoodEntity'
+              schema:
+                $ref: "#/components/schemas/FoodEntity"
         204:
           description: Error
           content:
             "application/json":
-              schema: 
-                $ref: '#/components/schemas/Error'
+              schema:
+                $ref: "#/components/schemas/Error"
     delete:
       summary: Delete one entry by id
       tags:
@@ -154,10 +159,10 @@ paths:
           content:
             "application/json":
               schema:
-                $ref: '#/components/schemas/FoodEntity'
+                $ref: "#/components/schemas/FoodEntity"
         204:
           description: No such id
           content:
             "application/json":
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
