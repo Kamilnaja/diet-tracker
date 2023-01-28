@@ -13,7 +13,7 @@ const app = express();
 const port = process.env.PORT;
 app.use(cors());
 app.use(express.json());
-morgan("tiny");
+app.use(morgan("tiny"));
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
