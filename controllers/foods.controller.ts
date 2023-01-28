@@ -32,7 +32,7 @@ export const getFoods = (req: Request, res: Response) => {
 };
 
 export const getFoodById = (req: Request, res: Response) => {
-  const id = req;
+  const { id } = req.params;
   let foundItem = initialFood.data.find((item) => item.id === String(id));
 
   foundItem

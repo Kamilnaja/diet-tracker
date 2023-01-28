@@ -41,6 +41,21 @@ describe("GET /foods", () => {
     ).not.toBeFalsy();
     expect(responseGet.body.length).toBeGreaterThan(0);
   });
+
+  it("should find item by id", async () => {
+    await request(baseURL).post("/foods").send(newFood);
+
+    const response = await request(baseURL).get("/foods/10");
+
+    expect(response.statusCode).toBe(200);
+    expect(response.body.name).toEqual(newFood.name);
+  });
+
+  it("should return 204 when couldn't find item by id", async () => {
+    const response = await request(baseURL).get("/foods/1001010");
+
+    expect(response.statusCode).toBe(204);
+  });
 });
 
 describe("POST /foods", () => {
