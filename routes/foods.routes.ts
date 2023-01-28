@@ -9,10 +9,6 @@ import {
 
 export const router = express.Router();
 
-router.get("/", (req, res) => {
-  res.send("Express + TypeScript Server");
-});
-
 router.get("/foods", getFoods);
 
 router.get("/foods/:id", getFoodById);
