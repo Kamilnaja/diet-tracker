@@ -3,7 +3,8 @@ import dotenv from "dotenv";
 import express from "express";
 import morgan from "morgan";
 import swaggerUi from "swagger-ui-express";
-import { router } from "./routes/foods.routes";
+import { diaryRouter } from "./routes/diary.routes";
+import { foodsRouter } from "./routes/foods.routes";
 import * as swaggerFile from "./swagger-output.json";
 
 dotenv.config();
@@ -15,7 +16,8 @@ app.use(express.json());
 app.use(morgan("tiny"));
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
-app.use("/api", router);
+app.use("/api/foods", foodsRouter);
+app.use("/api/diary", diaryRouter);
 
 app.listen(port, () => {
   console.log(`[server]: 🌩️Server is running at https://localhost:${port}`);

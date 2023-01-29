@@ -1,9 +1,9 @@
 {
   "swagger": "2.0",
   "info": {
+    "description": "Awesome app for tracking your diet",
     "version": "1.0.0",
-    "title": "REST API",
-    "description": ""
+    "title": "REST API"
   },
   "host": "localhost:8080",
   "basePath": "/",
@@ -11,7 +11,7 @@
     "http"
   ],
   "paths": {
-    "/api/foods": {
+    "/api/foods/": {
       "get": {
         "description": "",
         "parameters": [],
@@ -117,7 +117,17 @@
           }
         }
       }
+    },
+    "/api/diary/": {
+      "get": {
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
     }
-  },
-  "description": "Awesome app for tracking your diet"
+  }
 }

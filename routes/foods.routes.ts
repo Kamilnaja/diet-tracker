@@ -7,14 +7,14 @@ import {
   getFoods,
 } from "../controllers/foods.controller";
 
-export const router = express.Router();
+export const foodsRouter = express.Router();
 
-router.get("/foods", getFoods);
+foodsRouter.get("/", getFoods);
 
-router.get("/foods/:id", getFoodById);
+foodsRouter.get("/:id", getFoodById);
 
-router.post("/foods", addNewFood);
+foodsRouter.post("/", addNewFood);
 
-router.delete("/foods/:id", deleteFoodById);
+foodsRouter.delete("/:id", deleteFoodById);
 
-router.put("/foods/:id", editFood);
+foodsRouter.put("/:id", editFood);
