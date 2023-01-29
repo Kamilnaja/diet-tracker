@@ -1,5 +1,5 @@
-import { IFood } from "./models/food.interface";
-import { NutriScore } from "./models/nutri-score.enum";
+import { IFood } from "../models/food.interface";
+import { NutriScore } from "../models/nutri-score.enum";
 
 export class Food {
   private _id: string;

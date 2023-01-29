@@ -1,4 +1,4 @@
-import { Food } from "../food";
+import { Food } from "../builders/food";
 import { NutriScore } from "../models/nutri-score.enum";
 
 export const createFoods = () => {
