@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { Food } from "../food";
+import { Food } from "../builders/food";
 import { createFoods } from "../helpers/create-foods";
 import { Error } from "../models/error";
 import { IFood } from "../models/food.interface";

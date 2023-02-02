@@ -3,9 +3,9 @@ import dotenv from "dotenv";
 import express from "express";
 import morgan from "morgan";
 import swaggerUi from "swagger-ui-express";
-import YAML from "yamljs";
-import { router } from "./routes/foods.routes";
-const swaggerDocument = YAML.load("./swagger.yaml");
+import { diaryRouter } from "./routes/diary.routes";
+import { foodsRouter } from "./routes/foods.routes";
+import * as swaggerFile from "./swagger-output.json";
 
 dotenv.config();
 
@@ -14,10 +14,10 @@ const port = process.env.PORT;
 app.use(cors());
 app.use(express.json());
 app.use(morgan("tiny"));
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-
-app.use("/api", router);
+app.use("/api/foods", foodsRouter);
+app.use("/api/diary", diaryRouter);
 
 app.listen(port, () => {
   console.log(`[server]: 🌩️Server is running at https://localhost:${port}`);

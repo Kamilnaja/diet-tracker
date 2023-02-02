@@ -7,18 +7,14 @@ import {
   getFoods,
 } from "../controllers/foods.controller";
 
-export const router = express.Router();
+export const foodsRouter = express.Router();
 
-router.get("/", (req, res) => {
-  res.send("Express + TypeScript Server");
-});
+foodsRouter.get("/", getFoods);
 
-router.get("/foods", getFoods);
+foodsRouter.get("/:id", getFoodById);
 
-router.get("/foods/:id", getFoodById);
+foodsRouter.post("/", addNewFood);
 
-router.post("/foods", addNewFood);
+foodsRouter.delete("/:id", deleteFoodById);
 
-router.delete("/foods/:id", deleteFoodById);
-
-router.put("/foods/:id", editFood);
+foodsRouter.put("/:id", editFood);
