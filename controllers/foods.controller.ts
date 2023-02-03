@@ -41,7 +41,13 @@ export const getFoodById = (req: Request, res: Response) => {
 };
 
 export const addNewFood = (req: Request, res: Response) => {
-  const { name, weight, caloriesPer100g, nutriScore, id } = req.body;
+  const {
+    name,
+    weight,
+    caloriesPer100g,
+    nutriScore,
+    id = new Date().getTime().toString(),
+  } = req.body;
 
   if (!name || !weight) {
     return res
@@ -56,7 +62,7 @@ export const addNewFood = (req: Request, res: Response) => {
   }
 
   const food = new Food()
-    .setId(id ? id : Math.floor(Math.random() * 1000))
+    .setId(id)
     .setWeight(weight)
     .setCaloriesPer100g(caloriesPer100g)
     .setNutriScore(nutriScore)
@@ -65,7 +71,7 @@ export const addNewFood = (req: Request, res: Response) => {
   initialFood.data.push(food.getFood());
   initialFood.length++;
 
-  res.status(201).json(food.getFood());
+  res.status(201).json(food);
 };
 
 export const deleteFoodById = (req: Request, res: Response) => {
@@ -96,19 +102,20 @@ export const editFood = (req: Request, res: Response) => {
   let foundItemIdx = initialFood.data.findIndex((item) => item.id === id);
 
   if (foundItemIdx > -1) {
-    const { body } = req;
-
-    const itemToReplace: IFood = {
-      id: id,
-      name: body.name,
-      weight: body.weight,
-      caloriesPer100g: body.caloriesPer100g,
-      nutriScore: body.nutriScore,
-    };
-
-    initialFood.data.splice(foundItemIdx, 1, itemToReplace);
-
-    return res.status(201).send(req.body);
+    res.status(204).send(Error.getError("no id found"));
   }
-  res.status(204).send(Error.getError("no id found"));
+
+  const { body } = req;
+
+  const itemToReplace: IFood = {
+    id: id,
+    name: body.name,
+    weight: body.weight,
+    caloriesPer100g: body.caloriesPer100g,
+    nutriScore: body.nutriScore,
+  };
+
+  initialFood.data.splice(foundItemIdx, 1, itemToReplace);
+
+  return res.status(201).send(req.body);
 };
