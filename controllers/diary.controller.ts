@@ -8,10 +8,12 @@ import { IResponse } from "../models/response.interface";
 const initialDiary = createDiary();
 
 export const getDiary = (req: Request, res: Response): void => {
+  // #swagger.tags = ['Diary']
   res.json(initialDiary);
 };
 
 export const getDiaryById = (req: Request, res: Response): void => {
+  // #swagger.tags = ['Diary']
   const { id } = req.params;
 
   const foundItem = initialDiary.data.find((item) => item.id === id);
@@ -22,6 +24,7 @@ export const getDiaryById = (req: Request, res: Response): void => {
 };
 
 export const addNewDiaryEntry = (req: Request, res: Response) => {
+  // #swagger.tags = ['Diary']
   const {
     date = new Date().toISOString().split("T")[0],
     foodIds,
@@ -41,6 +44,7 @@ export const addNewDiaryEntry = (req: Request, res: Response) => {
 };
 
 export const deleteDiaryItemById = (req: Request, res: Response) => {
+  // #swagger.tags = ['Diary']
   const id = req.params.id;
 
   let response: IResponse<IDiary | undefined> = {
@@ -64,6 +68,7 @@ export const deleteDiaryItemById = (req: Request, res: Response) => {
 };
 
 export const editDiary = (req: Request, res: Response) => {
+  // #swagger.tags = ['Diary']
   const { id } = req.params;
 
   let foundItemIdx = initialDiary.data.findIndex((item) => item.id === id);
