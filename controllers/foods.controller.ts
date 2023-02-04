@@ -33,7 +33,7 @@ export const getFoods = (req: Request, res: Response) => {
 
 export const getFoodById = (req: Request, res: Response) => {
   const { id } = req.params;
-  let foundItem = initialFood.data.find((item) => item.id === String(id));
+  let foundItem = initialFood.data.find((item) => item.id === id);
 
   foundItem
     ? res.status(200).json(foundItem)
@@ -95,7 +95,7 @@ export const deleteFoodById = (req: Request, res: Response) => {
 };
 
 export const editFood = (req: Request, res: Response) => {
-  const id = req.params.id;
+  const { id } = req.params;
 
   let foundItemIdx = initialFood.data.findIndex((item) => item.id === id);
 

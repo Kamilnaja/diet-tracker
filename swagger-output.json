@@ -122,14 +122,63 @@
       "get": {
         "description": "",
         "parameters": [],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
+        "responses": {}
       }
     },
     "/api/diary/{id}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      },
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "date": {
+                  "example": "any"
+                },
+                "foodIds": {
+                  "example": "any"
+                },
+                "id": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "409": {
+            "description": "Conflict"
+          }
+        }
+      },
       "delete": {
         "description": "",
         "parameters": [
@@ -143,6 +192,25 @@
         "responses": {
           "200": {
             "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "204": {
+            "description": "No Content"
           }
         }
       }
