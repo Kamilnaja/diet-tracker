@@ -14,10 +14,10 @@ const port = process.env.PORT;
 app.use(cors());
 app.use(express.json());
 app.use(morgan("tiny"));
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 app.use("/api/foods", foodsRouter);
 app.use("/api/diary", diaryRouter);
+app.use("/", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 app.listen(port, () => {
   console.log(`[server]: 🌩️Server is running at https://localhost:${port}`);
