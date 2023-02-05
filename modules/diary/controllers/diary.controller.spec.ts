@@ -49,6 +49,17 @@ describe("diary", () => {
         .then((resp) => {
           expect(resp.body.data.length).toBeGreaterThan(0);
         });
+
+      await request(baseURL)
+        .get(`${partURL}/10`)
+        .expect(200)
+        .then((resp) => {
+          expect(resp.body.id).toBe("10");
+          expect(resp.body.date).toBe("2023-01-01");
+          expect(resp.body.foodIds).toEqual(["1", "2", "3"]);
+        });
+
+      await request(baseURL).get(`${partURL}/fdasdfads`).expect(204);
     });
   });
 
