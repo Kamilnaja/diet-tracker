@@ -1,9 +1,0 @@
-x (A) add some data to table
-x (A) endpoint for fetching data from foods table
-x (A) cors 
-x (A) better swagger file
-x (B) move models to separate files
-x (B) add nutriscore to Food
-x (A) - params in swagger file should not be disabled
-x (A) - details should have nutriscore
-x (A) - use builder scheme

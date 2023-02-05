@@ -5,9 +5,10 @@
   "main": "index.js",
   "scripts": {
     "build": "npx tsc",
-    "start": "node dist/index.js",
-    "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/index.js\"",
-    "test": "jest --coverage",
+    "start": "concurrently \"node dist/index.js\" \"npm run swagger-autogen\"",
+    "dev": "concurrently \"npx tsc --watch\" \"node dist/index.js\"",
+    "watch": "npx tsc --watch",
+    "test": "jest",
     "swagger-autogen": "node swagger.js"
   },
   "keywords": [],

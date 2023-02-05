@@ -1,5 +1,5 @@
 import { NutriScore } from "./nutri-score.enum";
-import { IResponse } from "./response.interface";
+import { IResponse } from "../../shared/models/response.interface";
 
 export interface IFood {
   id: string;

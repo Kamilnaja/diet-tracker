@@ -1,13 +1,14 @@
 import { Request, Response } from "express";
 import { Food } from "../builders/food";
 import { createFoods } from "../helpers/create-foods";
-import { Error } from "../models/error";
+import { Error } from "../../shared/models/error";
 import { IFood } from "../models/food.interface";
-import { IResponse } from "../models/response.interface";
+import { IResponse } from "../../shared/models/response.interface";
 
 const initialFood = createFoods();
 
 export const getFoods = (req: Request, res: Response) => {
+  // #swagger.tags = ['Foods']
   let searchBy = req.query?.name as string;
   searchBy = searchBy?.trim().toLocaleLowerCase();
   let response: IResponse<IFood[]>;
@@ -32,8 +33,10 @@ export const getFoods = (req: Request, res: Response) => {
 };
 
 export const getFoodById = (req: Request, res: Response) => {
+  // #swagger.tags = ['Foods']
+
   const { id } = req.params;
-  let foundItem = initialFood.data.find((item) => item.id === String(id));
+  let foundItem = initialFood.data.find((item) => item.id === id);
 
   foundItem
     ? res.status(200).json(foundItem)
@@ -41,7 +44,15 @@ export const getFoodById = (req: Request, res: Response) => {
 };
 
 export const addNewFood = (req: Request, res: Response) => {
-  const { name, weight, caloriesPer100g, nutriScore, id } = req.body;
+  // #swagger.tags = ['Foods']
+
+  const {
+    name,
+    weight,
+    caloriesPer100g,
+    nutriScore,
+    id = new Date().getTime().toString(),
+  } = req.body;
 
   if (!name || !weight) {
     return res
@@ -56,7 +67,7 @@ export const addNewFood = (req: Request, res: Response) => {
   }
 
   const food = new Food()
-    .setId(id ? id : Math.floor(Math.random() * 1000))
+    .setId(id)
     .setWeight(weight)
     .setCaloriesPer100g(caloriesPer100g)
     .setNutriScore(nutriScore)
@@ -65,50 +76,52 @@ export const addNewFood = (req: Request, res: Response) => {
   initialFood.data.push(food.getFood());
   initialFood.length++;
 
-  res.status(201).json(food.getFood());
+  res.status(201).json(food);
 };
 
 export const deleteFoodById = (req: Request, res: Response) => {
-  const id = Number(req.params.id);
+  // #swagger.tags = ['Foods']
+
+  const id = req.params.id;
   let response: IResponse<IFood | undefined> = {
     data: undefined,
     length: 0,
   };
 
-  let foundItem = initialFood.data.find((item) => item.id === String(id));
+  let foundItem = initialFood.data.find((item) => item.id === id);
 
   if (foundItem) {
     response = {
       data: foundItem,
       length: 1,
     };
-    initialFood.data = initialFood.data.filter(
-      (item) => item.id !== String(id)
-    );
+    initialFood.data = initialFood.data.filter((item) => item.id !== id);
     initialFood.length = initialFood.length - 1;
   }
   res.send(response);
 };
 
 export const editFood = (req: Request, res: Response) => {
-  const id = req.params.id;
+  // #swagger.tags = ['Foods']
+  const { id } = req.params;
 
   let foundItemIdx = initialFood.data.findIndex((item) => item.id === id);
 
   if (foundItemIdx > -1) {
-    const { body } = req;
-
-    const itemToReplace: IFood = {
-      id: id,
-      name: body.name,
-      weight: body.weight,
-      caloriesPer100g: body.caloriesPer100g,
-      nutriScore: body.nutriScore,
-    };
-
-    initialFood.data.splice(foundItemIdx, 1, itemToReplace);
-
-    return res.status(201).send(req.body);
+    res.status(204).send(Error.getError("no id found"));
   }
-  res.status(204).send(Error.getError("no id found"));
+
+  const { body } = req;
+
+  const itemToReplace: IFood = {
+    id: id,
+    name: body.name,
+    weight: body.weight,
+    caloriesPer100g: body.caloriesPer100g,
+    nutriScore: body.nutriScore,
+  };
+
+  initialFood.data.splice(foundItemIdx, 1, itemToReplace);
+
+  return res.status(200).send(req.body);
 };

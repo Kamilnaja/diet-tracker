@@ -13,6 +13,9 @@
   "paths": {
     "/api/foods/": {
       "get": {
+        "tags": [
+          "Foods"
+        ],
         "description": "",
         "parameters": [],
         "responses": {
@@ -22,6 +25,9 @@
         }
       },
       "post": {
+        "tags": [
+          "Foods"
+        ],
         "description": "",
         "parameters": [
           {
@@ -64,6 +70,9 @@
     },
     "/api/foods/{id}": {
       "get": {
+        "tags": [
+          "Foods"
+        ],
         "description": "",
         "parameters": [
           {
@@ -83,6 +92,9 @@
         }
       },
       "delete": {
+        "tags": [
+          "Foods"
+        ],
         "description": "",
         "parameters": [
           {
@@ -99,6 +111,121 @@
         }
       },
       "put": {
+        "tags": [
+          "Foods"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/api/diary/": {
+      "get": {
+        "tags": [
+          "Diary"
+        ],
+        "description": "",
+        "parameters": [],
+        "responses": {}
+      }
+    },
+    "/api/diary/{id}": {
+      "get": {
+        "tags": [
+          "Diary"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Diary"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "date": {
+                  "example": "any"
+                },
+                "foodIds": {
+                  "example": "any"
+                },
+                "id": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "409": {
+            "description": "Conflict"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Diary"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Diary"
+        ],
         "description": "",
         "parameters": [
           {
@@ -114,17 +241,6 @@
           },
           "204": {
             "description": "No Content"
-          }
-        }
-      }
-    },
-    "/api/diary/": {
-      "get": {
-        "description": "",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "OK"
           }
         }
       }

@@ -1,4 +1,4 @@
-import { IDiary } from "../models/diary.interface";
+import { IDiary } from "../../diary/models/diary.interface";
 
 export class Diary {
   private _id: string;
