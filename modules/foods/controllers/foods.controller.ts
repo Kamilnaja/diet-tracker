@@ -8,6 +8,8 @@ import { IResponse } from "../../shared/models/response.interface";
 const initialFood = createFoods();
 
 export const getFoods = (req: Request, res: Response) => {
+  // #swagger.tags = ['Foods']
+
   let searchBy = req.query?.name as string;
   searchBy = searchBy?.trim().toLocaleLowerCase();
   let response: IResponse<IFood[]>;
@@ -32,6 +34,8 @@ export const getFoods = (req: Request, res: Response) => {
 };
 
 export const getFoodById = (req: Request, res: Response) => {
+  // #swagger.tags = ['Foods']
+
   const { id } = req.params;
   let foundItem = initialFood.data.find((item) => item.id === String(id));
 
@@ -41,6 +45,8 @@ export const getFoodById = (req: Request, res: Response) => {
 };
 
 export const addNewFood = (req: Request, res: Response) => {
+  // #swagger.tags = ['Foods']
+
   const {
     name,
     weight,
@@ -75,6 +81,8 @@ export const addNewFood = (req: Request, res: Response) => {
 };
 
 export const deleteFoodById = (req: Request, res: Response) => {
+  // #swagger.tags = ['Foods']
+
   const id = Number(req.params.id);
   let response: IResponse<IFood | undefined> = {
     data: undefined,
@@ -97,6 +105,8 @@ export const deleteFoodById = (req: Request, res: Response) => {
 };
 
 export const editFood = (req: Request, res: Response) => {
+  // #swagger.tags = ['Foods']
+
   const id = req.params.id;
 
   let foundItemIdx = initialFood.data.findIndex((item) => item.id === id);
