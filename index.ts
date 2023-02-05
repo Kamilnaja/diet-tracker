@@ -4,7 +4,7 @@ import express from "express";
 import morgan from "morgan";
 import swaggerUi from "swagger-ui-express";
 import { diaryRouter } from "./modules/diary/routes/diary.routes";
-import { foodsRouter } from "./modules/food/routes/foods.routes";
+import { foodsRouter } from "./modules/foods/routes/foods.routes";
 import * as swaggerFile from "./swagger-output.json";
 
 dotenv.config();
