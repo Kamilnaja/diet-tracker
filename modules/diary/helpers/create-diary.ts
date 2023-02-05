@@ -1,4 +1,4 @@
-import { Diary } from "../builders/diary";
+import { Diary } from "../../food/builders/diary";
 
 export const createDiary = () => {
   const day1 = new Diary()

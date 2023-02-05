@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 import { Food } from "../builders/food";
 import { createFoods } from "../helpers/create-foods";
-import { Error } from "../models/error";
+import { Error } from "../../shared/models/error";
 import { IFood } from "../models/food.interface";
-import { IResponse } from "../models/response.interface";
+import { IResponse } from "../../shared/models/response.interface";
 
 const initialFood = createFoods();
 

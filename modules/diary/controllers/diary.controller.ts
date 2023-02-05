@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
-import { Diary } from "../builders/diary";
+import { Diary } from "../../food/builders/diary";
 import { createDiary } from "../helpers/create-diary";
 import { IDiary } from "../models/diary.interface";
-import { Error } from "../models/error";
-import { IResponse } from "../models/response.interface";
+import { Error } from "../../shared/models/error";
+import { IResponse } from "../../shared/models/response.interface";
 
 const initialDiary = createDiary();
 
