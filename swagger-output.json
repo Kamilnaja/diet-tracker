@@ -13,9 +13,6 @@
   "paths": {
     "/api/foods/": {
       "get": {
-        "tags": [
-          "Foods"
-        ],
         "description": "",
         "parameters": [],
         "responses": {
@@ -25,9 +22,6 @@
         }
       },
       "post": {
-        "tags": [
-          "Foods"
-        ],
         "description": "",
         "parameters": [
           {
@@ -70,9 +64,6 @@
     },
     "/api/foods/{id}": {
       "get": {
-        "tags": [
-          "Foods"
-        ],
         "description": "",
         "parameters": [
           {
@@ -92,9 +83,6 @@
         }
       },
       "delete": {
-        "tags": [
-          "Foods"
-        ],
         "description": "",
         "parameters": [
           {
@@ -111,9 +99,6 @@
         }
       },
       "put": {
-        "tags": [
-          "Foods"
-        ],
         "description": "",
         "parameters": [
           {
@@ -124,8 +109,8 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
+          "201": {
+            "description": "Created"
           },
           "204": {
             "description": "No Content"
