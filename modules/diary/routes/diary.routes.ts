@@ -13,7 +13,7 @@ diaryRouter.get("/", getDiary);
 
 diaryRouter.get("/:id", getDiaryById);
 
-diaryRouter.post("/:id", addNewDiaryEntry);
+diaryRouter.post("/", addNewDiaryEntry);
 
 diaryRouter.delete("/:id", deleteDiaryItemById);
 

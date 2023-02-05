@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
-import { Diary } from "../../food/builders/diary";
 import { createDiary } from "../helpers/create-diary";
 import { IDiary } from "../models/diary.interface";
 import { Error } from "../../shared/models/error";
 import { IResponse } from "../../shared/models/response.interface";
+import { Diary } from "../builders/diary";
 
 const initialDiary = createDiary();
 
@@ -37,10 +37,16 @@ export const addNewDiaryEntry = (req: Request, res: Response) => {
       .json(Error.getError("Diary entry with this id already exists"));
   }
 
-  const diaryEntry = new Diary().setId(id).setDate(date).setFoodIds(foodIds);
+  const diaryEntry = new Diary()
+    .setId(id)
+    .setDate(date)
+    .setFoodIds(foodIds)
+    .getDiary();
 
-  initialDiary.data.push(diaryEntry.getDiary());
+  initialDiary.data.push(diaryEntry);
   initialDiary.length++;
+
+  res.send(diaryEntry);
 };
 
 export const deleteDiaryItemById = (req: Request, res: Response) => {
@@ -81,7 +87,7 @@ export const editDiary = (req: Request, res: Response) => {
 
   const itemToReplace: IDiary = {
     id: id,
-    foodsIds: body.foodsIds,
+    foodIds: body.foodIds,
     date: body.date,
   };
 

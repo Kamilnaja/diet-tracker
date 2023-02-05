@@ -1,5 +1,5 @@
 export interface IDiary {
   id: string;
-  foodsIds: string[];
+  foodIds: string[];
   date: string;
 }
