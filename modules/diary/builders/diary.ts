@@ -35,7 +35,7 @@ export class Diary {
   getDiary(): IDiary {
     const diary: IDiary = {
       id: this._id,
-      foodsIds: this._foodIds,
+      foodIds: this._foodIds,
       date: this._date,
     };
     return diary;

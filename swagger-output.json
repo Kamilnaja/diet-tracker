@@ -126,6 +126,40 @@
         "description": "",
         "parameters": [],
         "responses": {}
+      },
+      "post": {
+        "tags": [
+          "Diary"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "date": {
+                  "example": "any"
+                },
+                "foodIds": {
+                  "example": "any"
+                },
+                "id": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "409": {
+            "description": "Conflict"
+          }
+        }
       }
     },
     "/api/diary/{id}": {
@@ -148,43 +182,6 @@
           },
           "204": {
             "description": "No Content"
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "Diary"
-        ],
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "date": {
-                  "example": "any"
-                },
-                "foodIds": {
-                  "example": "any"
-                },
-                "id": {
-                  "example": "any"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "409": {
-            "description": "Conflict"
           }
         }
       },
