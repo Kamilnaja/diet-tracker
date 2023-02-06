@@ -9,7 +9,25 @@ const initialDiary = createDiary();
 
 export const getDiary = (req: Request, res: Response): void => {
   // #swagger.tags = ['Diary']
-  res.json(initialDiary);
+  let searchBy = req.query?.data as string;
+  searchBy = searchBy?.trim().toLocaleLowerCase();
+  let response: IResponse<IDiary[] | undefined>;
+
+  if (searchBy) {
+    const results = initialDiary.data.filter((item) => item.date === searchBy);
+
+    response = {
+      data: results,
+      length: 1,
+    };
+  } else {
+    response = {
+      ...initialDiary,
+      data: initialDiary.data,
+    };
+  }
+
+  res.json(response);
 };
 
 export const getDiaryById = (req: Request, res: Response): void => {
