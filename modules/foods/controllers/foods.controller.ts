@@ -15,9 +15,9 @@ export const getFoods = (req: Request, res: Response) => {
   let response: IResponse<IFood[]>;
 
   if (searchBy) {
-    const results = initialFood.data
-      .filter((item) => item.name.toLocaleLowerCase().includes(searchBy))
-      .map(({ nutriScore, ...keep }) => keep);
+    const results = initialFood.data.filter((item) =>
+      item.name.toLocaleLowerCase().includes(searchBy)
+    );
 
     response = {
       data: results,
@@ -26,7 +26,7 @@ export const getFoods = (req: Request, res: Response) => {
   } else {
     response = {
       ...initialFood,
-      data: initialFood.data.map(({ nutriScore, ...keep }) => keep),
+      data: initialFood.data,
     };
   }
 
