@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
 import { Food } from "../builders/food";
-import { createFoods } from "../helpers/create-foods";
+import { getInitialFoods } from "../helpers/create-foods";
 import { Error } from "../../shared/models/error";
 import { IFood } from "../models/food.interface";
 import { IResponse } from "../../shared/models/response.interface";
 
-const initialFood = createFoods();
+const initialFood = getInitialFoods();
 
 export const getFoods = (req: Request, res: Response) => {
   // #swagger.tags = ['Foods']

@@ -1,9 +1,8 @@
 import request from "supertest";
+import { baseURL } from "../../shared/utils";
 import { IFood } from "../models/food.interface";
 import { NutriScore } from "../models/nutri-score.enum";
 import { Tag } from "../models/tag.interface";
-
-const baseURL = "http://localhost:8080/api";
 
 const newFood: IFood = {
   name: "Banana",

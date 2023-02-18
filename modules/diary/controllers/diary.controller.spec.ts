@@ -1,4 +1,5 @@
 import request from "supertest";
+import { baseURL } from "../../shared/utils";
 import { Diary } from "../builders/diary";
 
 describe("diary", () => {
@@ -6,7 +7,6 @@ describe("diary", () => {
     await request(baseURL).delete(`${partURL}/10`);
   });
 
-  const baseURL = "http://localhost:8080/api";
   const partURL = "/diary";
 
   describe("GET /diary", () => {
