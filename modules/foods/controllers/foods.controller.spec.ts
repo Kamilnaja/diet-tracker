@@ -1,6 +1,7 @@
 import request from "supertest";
 import { IFood } from "../models/food.interface";
 import { NutriScore } from "../models/nutri-score.enum";
+import { Tag } from "../models/tag.interface";
 
 const baseURL = "http://localhost:8080/api";
 
@@ -10,6 +11,7 @@ const newFood: IFood = {
   nutriScore: NutriScore.D,
   caloriesPer100g: 10,
   id: "10",
+  tags: [Tag.GlutenFree, Tag.Vegan],
 };
 
 describe("GET /foods", () => {
@@ -46,9 +48,13 @@ describe("GET /foods", () => {
     await request(baseURL).post("/foods").send(newFood);
 
     const response = await request(baseURL).get("/foods/10");
+    const { body } = response;
 
     expect(response.statusCode).toBe(200);
-    expect(response.body.name).toEqual(newFood.name);
+    expect(body.name).toEqual(newFood.name);
+    expect(body.weight).toEqual(newFood.weight);
+
+    // expect(body.tags).toEqual(newFood.tags);
   });
 
   it("should return 204 when couldn't find item by id", async () => {

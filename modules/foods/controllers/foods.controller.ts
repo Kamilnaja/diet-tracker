@@ -123,6 +123,7 @@ export const editFood = (req: Request, res: Response) => {
     weight: body.weight,
     caloriesPer100g: body.caloriesPer100g,
     nutriScore: body.nutriScore,
+    tags: body.tags,
   };
 
   initialFood.data.splice(foundItemIdx, 1, itemToReplace);
