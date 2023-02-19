@@ -1,36 +1,37 @@
 import request from "supertest";
+import { baseURL } from "../../shared/utils";
 import { IFood } from "../models/food.interface";
 import { NutriScore } from "../models/nutri-score.enum";
-
-const baseURL = "http://localhost:8080/api";
-
+import { Tag } from "../models/tag.interface";
 const newFood: IFood = {
   name: "Banana",
   weight: 100,
   nutriScore: NutriScore.D,
   caloriesPer100g: 10,
   id: "10",
+  tags: [Tag.GlutenFree, Tag.Vegan],
 };
+const partURL = "/foods";
 
 describe("GET /foods", () => {
   beforeAll(async () => {
-    await request(baseURL).post("/foods").send(newFood);
+    await request(baseURL).post(partURL).send(newFood);
   });
 
   afterAll(async () => {
-    await request(baseURL).delete(`/foods/${newFood.id}`);
+    await request(baseURL).delete(`${partURL}/${newFood.id}`);
   });
 
   it("Should return 200", async () => {
-    const response = await request(baseURL).get("/foods");
+    const response = await request(baseURL).get(partURL);
 
     expect(response.statusCode).toBe(200);
     expect(!!response.body.error).toBe(false);
-    expect(response.body.length).toBeGreaterThan(0);
+    expect(response.body.length).toBe(1);
   });
 
   it("should find item by string param", async () => {
-    await request(baseURL).post("/foods").send(newFood);
+    await request(baseURL).post(partURL).send(newFood);
     const responseGet = await request(baseURL)
       .get("/foods")
       .query({ name: "banana" });
@@ -43,16 +44,20 @@ describe("GET /foods", () => {
   });
 
   it("should find item by id", async () => {
-    await request(baseURL).post("/foods").send(newFood);
+    await request(baseURL).post(partURL).send(newFood);
 
-    const response = await request(baseURL).get("/foods/10");
+    const response = await request(baseURL).get(`${partURL}/10`);
+    const { body } = response;
 
     expect(response.statusCode).toBe(200);
-    expect(response.body.name).toEqual(newFood.name);
+    expect(body.name).toEqual(newFood.name);
+    expect(body.weight).toEqual(newFood.weight);
+
+    // expect(body.tags).toEqual(newFood.tags);
   });
 
   it("should return 204 when couldn't find item by id", async () => {
-    const response = await request(baseURL).get("/foods/1001010");
+    const response = await request(baseURL).get(`${partURL}/1001010`);
 
     expect(response.statusCode).toBe(204);
   });
@@ -63,7 +68,7 @@ describe("POST /foods", () => {
     const newFood = {
       id: 1000330300303,
     };
-    const response = await request(baseURL).post("/foods").send(newFood);
+    const response = await request(baseURL).post(partURL).send(newFood);
     expect(response.statusCode).toBe(400);
   });
 
@@ -73,11 +78,11 @@ describe("POST /foods", () => {
       name: "Owsianka",
       weight: 100,
     } as IFood;
-    const response = await request(baseURL).post("/foods").send(newFood);
+    const response = await request(baseURL).post(partURL).send(newFood);
 
     expect([201, 409]).toContain(response.statusCode);
 
-    const responseGet = await request(baseURL).get("/foods");
+    const responseGet = await request(baseURL).get(partURL);
     const foods: IFood[] = responseGet.body.data;
     const createdFood = foods.find((item) => item.id === newFood.id);
 
@@ -88,12 +93,12 @@ describe("POST /foods", () => {
 
 describe("DELETE /foods", () => {
   beforeAll(async () => {
-    await request(baseURL).post("/foods").send(newFood);
+    await request(baseURL).post(partURL).send(newFood);
   });
 
   it("Should delete one item", async () => {
-    await request(baseURL).delete(`/foods/${newFood.id}`);
-    const response = await request(baseURL).get("/foods");
+    await request(baseURL).delete(`${partURL}/${newFood.id}`);
+    const response = await request(baseURL).get(partURL);
     const foods = response.body.data;
 
     const exists = foods.find((food: IFood) => {

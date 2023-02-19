@@ -1,5 +1,6 @@
 import { IFood } from "../models/food.interface";
 import { NutriScore } from "../models/nutri-score.enum";
+import { Tag } from "../models/tag.interface";
 
 export class Food {
   private _id: string;
@@ -7,6 +8,7 @@ export class Food {
   private _weight: number;
   private _caloriesPer100g: number;
   private _nutriScore?: NutriScore;
+  private _tags: Tag[];
 
   setId(id: string): Food {
     this._id = id;
@@ -33,6 +35,11 @@ export class Food {
     return this;
   }
 
+  setTags(value: Tag[]) {
+    this._tags = value;
+    return this;
+  }
+
   getFood(): IFood {
     const food: IFood = {
       id: this._id,
@@ -40,6 +47,7 @@ export class Food {
       weight: this._weight,
       caloriesPer100g: this._caloriesPer100g,
       nutriScore: this._nutriScore,
+      tags: this._tags,
     };
     return food;
   }

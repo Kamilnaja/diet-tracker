@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
 import { Food } from "../builders/food";
-import { createFoods } from "../helpers/create-foods";
+import { getInitialFoods } from "../helpers/create-foods";
 import { Error } from "../../shared/models/error";
 import { IFood } from "../models/food.interface";
 import { IResponse } from "../../shared/models/response.interface";
 
-const initialFood = createFoods();
+const initialFood = getInitialFoods();
 
 export const getFoods = (req: Request, res: Response) => {
   // #swagger.tags = ['Foods']
@@ -83,25 +83,24 @@ export const addNewFood = (req: Request, res: Response) => {
 export const deleteFoodById = (req: Request, res: Response) => {
   // #swagger.tags = ['Foods']
 
-  const id = Number(req.params.id);
+  const id = req.params.id;
   let response: IResponse<IFood | undefined> = {
     data: undefined,
     length: 0,
   };
 
-  let foundItem = initialFood.data.find((item) => item.id === String(id));
+  let foundItem = initialFood.data.find((item) => item.id === id);
 
   if (foundItem) {
     response = {
       data: foundItem,
       length: 1,
     };
-    initialFood.data = initialFood.data.filter(
-      (item) => item.id !== String(id)
-    );
+
+    initialFood.data = initialFood.data.filter((item) => item.id !== id);
     initialFood.length = initialFood.length - 1;
   }
-  res.send(response);
+  res.status(foundItem ? 200 : 404).send(response);
 };
 
 export const editFood = (req: Request, res: Response) => {
@@ -123,6 +122,7 @@ export const editFood = (req: Request, res: Response) => {
     weight: body.weight,
     caloriesPer100g: body.caloriesPer100g,
     nutriScore: body.nutriScore,
+    tags: body.tags,
   };
 
   initialFood.data.splice(foundItemIdx, 1, itemToReplace);

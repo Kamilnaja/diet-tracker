@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
-import { createDiary } from "../helpers/create-diary";
 import { IDiary } from "../models/diary.interface";
 import { Error } from "../../shared/models/error";
 import { IResponse } from "../../shared/models/response.interface";
 import { Diary } from "../builders/diary";
+import { getInitialDiary } from "../helpers/create-diary";
 
-const initialDiary = createDiary();
+const initialDiary = getInitialDiary();
 
 export const getDiary = (req: Request, res: Response): void => {
   // #swagger.tags = ['Diary']
@@ -69,6 +69,7 @@ export const addNewDiaryEntry = (req: Request, res: Response) => {
 
 export const deleteDiaryItemById = (req: Request, res: Response) => {
   // #swagger.tags = ['Diary']
+
   const id = req.params.id;
 
   let response: IResponse<IDiary | undefined> = {
@@ -86,9 +87,8 @@ export const deleteDiaryItemById = (req: Request, res: Response) => {
 
     initialDiary.data = initialDiary.data.filter((item) => item.id !== id);
     initialDiary.length = initialDiary.length - 1;
-
-    res.send(response);
   }
+  res.status(foundItem ? 200 : 404).send(response);
 };
 
 export const editDiary = (req: Request, res: Response) => {
