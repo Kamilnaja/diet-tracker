@@ -1,9 +1,12 @@
+import { IResponse } from "../../shared/models/response.interface";
 import { shouldLoadInitialData } from "../../shared/utils";
 import { Food } from "../builders/food";
 import { IFood } from "../models/food.interface";
 import { NutriScore } from "../models/nutri-score.enum";
 
-const createNonEmptyFoods = () => {
+type Response = IResponse<IFood[]>;
+
+const createNonEmptyFoods = (): Response => {
   const cottage = new Food()
     .setId("1")
     .setName("Cottage Cheese")
@@ -52,7 +55,7 @@ const createNonEmptyFoods = () => {
   };
 };
 
-const createEmptyFoods = () => {
+const createEmptyFoods = (): Response => {
   const foods: IFood[] = [];
   return {
     data: foods,
@@ -60,5 +63,5 @@ const createEmptyFoods = () => {
   };
 };
 
-export const getInitialFoods = () =>
+export const getInitialFoods = (): Response =>
   shouldLoadInitialData() ? createNonEmptyFoods() : createEmptyFoods();

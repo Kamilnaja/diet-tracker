@@ -18,6 +18,7 @@ app.use(morgan("tiny"));
 
 app.use("/api/foods", foodsRouter);
 app.use("/api/diary", diaryRouter);
+
 app.use("/", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 app.listen(port, () => {

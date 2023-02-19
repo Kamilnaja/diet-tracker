@@ -1,6 +1,11 @@
+import { IResponse } from "../../shared/models/response.interface";
+import { shouldLoadInitialData } from "../../shared/utils";
 import { Diary } from "../builders/diary";
+import { IDiary } from "../models/diary.interface";
 
-export const createDiary = () => {
+type Response = IResponse<IDiary[]>;
+
+const createNonEmptyDiary = (): Response => {
   const day1 = new Diary()
     .setId("0")
     .setDate("2022-01-01")
@@ -24,3 +29,13 @@ export const createDiary = () => {
     length: days.length,
   };
 };
+
+const createEmptyDiary = (): Response => {
+  return {
+    data: [],
+    length: 0,
+  };
+};
+
+export const getInitialDiary = (): Response =>
+  shouldLoadInitialData() ? createNonEmptyDiary() : createEmptyDiary();

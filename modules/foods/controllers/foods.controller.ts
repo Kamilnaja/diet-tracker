@@ -101,6 +101,8 @@ export const deleteFoodById = (req: Request, res: Response) => {
     );
     initialFood.length = initialFood.length - 1;
   }
+  console.log(response);
+
   res.send(response);
 };
 
