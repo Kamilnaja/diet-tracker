@@ -83,27 +83,24 @@ export const addNewFood = (req: Request, res: Response) => {
 export const deleteFoodById = (req: Request, res: Response) => {
   // #swagger.tags = ['Foods']
 
-  const id = Number(req.params.id);
+  const id = req.params.id;
   let response: IResponse<IFood | undefined> = {
     data: undefined,
     length: 0,
   };
 
-  let foundItem = initialFood.data.find((item) => item.id === String(id));
+  let foundItem = initialFood.data.find((item) => item.id === id);
 
   if (foundItem) {
     response = {
       data: foundItem,
       length: 1,
     };
-    initialFood.data = initialFood.data.filter(
-      (item) => item.id !== String(id)
-    );
+
+    initialFood.data = initialFood.data.filter((item) => item.id !== id);
     initialFood.length = initialFood.length - 1;
   }
-  console.log(response);
-
-  res.send(response);
+  res.status(foundItem ? 200 : 404).send(response);
 };
 
 export const editFood = (req: Request, res: Response) => {

@@ -69,6 +69,7 @@ export const addNewDiaryEntry = (req: Request, res: Response) => {
 
 export const deleteDiaryItemById = (req: Request, res: Response) => {
   // #swagger.tags = ['Diary']
+
   const id = req.params.id;
 
   let response: IResponse<IDiary | undefined> = {
@@ -87,6 +88,7 @@ export const deleteDiaryItemById = (req: Request, res: Response) => {
     initialDiary.data = initialDiary.data.filter((item) => item.id !== id);
     initialDiary.length = initialDiary.length - 1;
   }
+  res.status(foundItem ? 200 : 404).send(response);
 };
 
 export const editDiary = (req: Request, res: Response) => {

@@ -1,18 +1,21 @@
 {
   "name": "diet",
   "version": "1.0.0",
-  "description": "",
+  "description": "Awesome web api for diet counter",
   "main": "index.js",
   "scripts": {
     "build": "npx tsc",
-    "start": "concurrently \"npx tsc --watch\" \"node dist/index.js\" \"npm run swagger-autogen\"",
-    "dev": "concurrently \"npx tsc --watch\" \"node dist/index.js -initialData=true\"",
-    "watch": "npx tsc --watch",
-    "test": "concurrently \"npx tsc --watch\" \"node dist/index.js -initialData=false\" \"jest\"",
+    "start": "concurrently \"ts-node index.ts -initialData=true\" \"npm run swagger-autogen\"",
+    "dev": "ts-node index.ts -initialData=true",
+    "test": "concurrently \"ts-node index.ts -initialData=false\" \"jest\"",
     "swagger-autogen": "node swagger.js"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "api",
+    "diet",
+    "express"
+  ],
+  "author": "KamilNaja",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
