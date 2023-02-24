@@ -4,6 +4,7 @@ import express from "express";
 import morgan from "morgan";
 import swaggerUi from "swagger-ui-express";
 import { diaryRouter } from "./modules/diary/routes/diary.routes";
+import { dictRouter } from "./modules/dict/routes/dict.routes";
 import { foodsRouter } from "./modules/foods/routes/foods.routes";
 import { shouldLoadInitialData } from "./modules/shared/utils";
 import * as swaggerFile from "./swagger-output.json";
@@ -18,6 +19,7 @@ app.use(morgan("tiny"));
 
 app.use("/api/foods", foodsRouter);
 app.use("/api/diary", diaryRouter);
+app.use("/api/dicts", dictRouter);
 
 app.use("/", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 

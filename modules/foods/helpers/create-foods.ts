@@ -13,6 +13,7 @@ const createNonEmptyFoods = (): Response => {
     .setCaloriesPer100g(100)
     .setWeight(180)
     .setNutriScore(NutriScore.B)
+    .setTags([1, 2, 3])
     .getFood();
   const tomato = new Food()
     .setId("2")
@@ -20,12 +21,14 @@ const createNonEmptyFoods = (): Response => {
     .setCaloriesPer100g(40)
     .setWeight(100)
     .setNutriScore(NutriScore.A)
+    .setTags([2, 3])
     .getFood();
   const chicken = new Food()
     .setId("3")
     .setName("Chicken Breast")
     .setCaloriesPer100g(100)
     .setWeight(100)
+    .setTags([1])
     .getFood();
   const beef = new Food()
     .setId("4")
@@ -33,6 +36,7 @@ const createNonEmptyFoods = (): Response => {
     .setCaloriesPer100g(140)
     .setNutriScore(NutriScore.C)
     .setWeight(100)
+    .setTags([3])
     .getFood();
   const orangeJuice = new Food()
     .setId("5")

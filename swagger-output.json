@@ -240,6 +240,20 @@
           }
         }
       }
+    },
+    "/api/dicts/tags": {
+      "get": {
+        "tags": [
+          "Tags"
+        ],
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
     }
   }
 }
