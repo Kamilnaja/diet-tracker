@@ -46,7 +46,18 @@ export const getFoodById = (req: Request, res: Response) => {
 
 export const addNewFood = (req: Request, res: Response) => {
   // #swagger.tags = ['Foods']
-
+  // #swagger.description = 'Add new Food'
+  /*  #swagger.parameters['body'] = {
+                in: 'body',
+                description: 'Food Body',
+                schema: {
+                  $name: "Orange",
+                  $weight: 100,
+                  caloriesPer100g: 30,
+                  id: "39393993",
+                  tags: ["1", "2"]
+                }
+        } */
   const {
     name,
     weight,
@@ -107,7 +118,17 @@ export const deleteFoodById = (req: Request, res: Response) => {
 
 export const editFood = (req: Request, res: Response) => {
   // #swagger.tags = ['Foods']
-
+  /*  #swagger.parameters['body'] = {
+                in: 'body',
+                description: 'Food Body',
+                schema: {
+                  $name: "Orange",
+                  $weight: 100,
+                  caloriesPer100g: 30,
+                  id: "39393993",
+                  tags: ["1", "2"]
+                }
+        } */
   const id = req.params.id;
 
   let foundItemIdx = initialFood.data.findIndex((item) => item.id === id);

@@ -28,30 +28,46 @@
         "tags": [
           "Foods"
         ],
-        "description": "",
+        "description": "Add new Food",
         "parameters": [
           {
             "name": "body",
             "in": "body",
+            "description": "Food Body",
             "schema": {
               "type": "object",
               "properties": {
                 "name": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "Orange"
                 },
                 "weight": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 100
                 },
                 "caloriesPer100g": {
-                  "example": "any"
-                },
-                "nutriScore": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 30
                 },
                 "id": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 39393993
+                },
+                "tags": {
+                  "type": "array",
+                  "example": [
+                    "1",
+                    "2"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
                 }
-              }
+              },
+              "required": [
+                "name",
+                "weight"
+              ]
             }
           }
         ],
@@ -124,6 +140,46 @@
             "in": "path",
             "required": true,
             "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Food Body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "Orange"
+                },
+                "weight": {
+                  "type": "number",
+                  "example": 100
+                },
+                "caloriesPer100g": {
+                  "type": "number",
+                  "example": 30
+                },
+                "id": {
+                  "type": "number",
+                  "example": 39393993
+                },
+                "tags": {
+                  "type": "array",
+                  "example": [
+                    "1",
+                    "2"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "required": [
+                "name",
+                "weight"
+              ]
+            }
           }
         ],
         "responses": {
