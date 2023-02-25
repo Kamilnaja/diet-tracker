@@ -8,7 +8,7 @@ export class Food {
   private _weight: number;
   private _caloriesPer100g: number;
   private _nutriScore?: NutriScore;
-  private _tags: string[];
+  private _tags: ITag["id"][];
 
   setId(id: string): Food {
     this._id = id;

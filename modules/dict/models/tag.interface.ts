@@ -1,6 +1,4 @@
-export type TagId = string;
-
 export interface ITag {
-  id: TagId;
+  id: string;
   name: string;
 }
