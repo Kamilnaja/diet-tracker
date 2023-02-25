@@ -2,14 +2,14 @@ import request from "supertest";
 import { baseURL } from "../../shared/utils";
 import { IFood } from "../models/food.interface";
 import { NutriScore } from "../models/nutri-score.enum";
-import { Tag } from "../models/tag.interface";
+
 const newFood: IFood = {
   name: "Banana",
   weight: 100,
   nutriScore: NutriScore.D,
   caloriesPer100g: 10,
   id: "10",
-  tags: [Tag.GlutenFree, Tag.Vegan],
+  tags: ["1", "2"],
 };
 const partURL = "/foods";
 
@@ -52,8 +52,7 @@ describe("GET /foods", () => {
     expect(response.statusCode).toBe(200);
     expect(body.name).toEqual(newFood.name);
     expect(body.weight).toEqual(newFood.weight);
-
-    // expect(body.tags).toEqual(newFood.tags);
+    expect(body.tags).toEqual(newFood.tags);
   });
 
   it("should return 204 when couldn't find item by id", async () => {

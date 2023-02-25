@@ -53,6 +53,7 @@ export const addNewFood = (req: Request, res: Response) => {
     caloriesPer100g,
     nutriScore,
     id = new Date().getTime().toString(),
+    tags = [],
   } = req.body;
 
   if (!name || !weight) {
@@ -72,7 +73,8 @@ export const addNewFood = (req: Request, res: Response) => {
     .setWeight(weight)
     .setCaloriesPer100g(caloriesPer100g)
     .setNutriScore(nutriScore)
-    .setName(name);
+    .setName(name)
+    .setTags(tags);
 
   initialFood.data.push(food.getFood());
   initialFood.length++;
