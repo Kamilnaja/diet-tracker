@@ -216,7 +216,7 @@
                 "date": {
                   "example": "any"
                 },
-                "foodIds": {
+                "foods": {
                   "example": "any"
                 },
                 "id": {

@@ -66,4 +66,22 @@ describe("diary", () => {
       await request(baseURL).delete(`${partURL}/10`).expect(200);
     });
   });
+
+  describe("POST /diary/id/food", () => {
+    const foodEntry = {
+      foods: [{ id: "1", weight: 100 }],
+    };
+
+    it("should add foods to item", async () => {
+      await request(baseURL).post(`${partURL}/10/foods`).send(foodEntry);
+
+      await request(baseURL)
+        .get(`${partURL}/10`)
+        .expect(200)
+        .then((resp) => {
+          expect(resp.body.foods.length).toEqual(4);
+          expect(resp.body.foods[3]).toEqual(foodEntry.foods[0]);
+        });
+    });
+  });
 });

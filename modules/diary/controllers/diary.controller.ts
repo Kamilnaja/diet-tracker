@@ -129,7 +129,7 @@ export const addFoodsToDiary = (req: Request, res: Response) => {
 
   const itemToReplace: IDiary = {
     ...foundItem,
-    foods: body.foods,
+    foods: foundItem?.foods.concat(body.foods),
   } as IDiary;
 
   initialDiary.data.splice(foundItemIdx, 1, itemToReplace);
