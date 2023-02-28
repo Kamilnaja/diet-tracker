@@ -9,17 +9,17 @@ const createNonEmptyDiary = (): Response => {
   const day1 = new Diary()
     .setId("0")
     .setDate("2022-01-01")
-    .setFoodIds(["1"])
+    .setFoods([{ id: "1", weight: 100, tags: [] }])
     .getDiary();
   const day2 = new Diary()
     .setId("1")
     .setDate("2022-01-02")
-    .setFoodIds(["2"])
+    .setFoods([{ id: "2", weight: 200 }])
     .getDiary();
   const day3 = new Diary()
     .setId("2")
     .setDate("2022-01-02")
-    .setFoodIds(["3"])
+    .setFoods([{ id: "3", weight: 50 }])
     .getDiary();
 
   const days = [day1, day2, day3];

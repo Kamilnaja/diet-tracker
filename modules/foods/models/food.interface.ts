@@ -4,11 +4,11 @@ import { ITag } from "../../dict/models/tag.interface";
 
 export interface IFood {
   id: string;
-  name: string;
+  name?: string;
+  caloriesPer100g?: number;
   weight: number;
-  caloriesPer100g: number;
   nutriScore?: NutriScore;
-  tags: ITag["id"][];
+  tags?: ITag["id"][];
 }
 
 export type IFoodListResponse = IResponse<IFood>;

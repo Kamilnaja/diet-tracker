@@ -50,8 +50,8 @@
                   "example": 30
                 },
                 "id": {
-                  "type": "number",
-                  "example": 39393993
+                  "type": "string",
+                  "example": "39393993"
                 },
                 "tags": {
                   "type": "array",
@@ -161,8 +161,8 @@
                   "example": 30
                 },
                 "id": {
-                  "type": "number",
-                  "example": 39393993
+                  "type": "string",
+                  "example": "39393993"
                 },
                 "tags": {
                   "type": "array",
@@ -275,6 +275,30 @@
         }
       },
       "put": {
+        "tags": [
+          "Diary"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/api/diary/{id}/foods": {
+      "post": {
         "tags": [
           "Diary"
         ],

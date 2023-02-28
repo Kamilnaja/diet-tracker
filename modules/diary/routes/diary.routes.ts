@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  addFoodsToDiary,
   addNewDiaryEntry,
   deleteDiaryItemById,
   editDiary,
@@ -18,3 +19,5 @@ diaryRouter.post("/", addNewDiaryEntry);
 diaryRouter.delete("/:id", deleteDiaryItemById);
 
 diaryRouter.put("/:id", editDiary);
+
+diaryRouter.post("/:id/foods", addFoodsToDiary);

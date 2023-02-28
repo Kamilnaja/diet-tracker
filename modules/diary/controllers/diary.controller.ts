@@ -45,7 +45,7 @@ export const addNewDiaryEntry = (req: Request, res: Response) => {
   // #swagger.tags = ['Diary']
   const {
     date = new Date().toISOString().split("T")[0],
-    foodIds,
+    foods,
     id = new Date().getTime().toString(),
   } = req.body;
 
@@ -58,7 +58,7 @@ export const addNewDiaryEntry = (req: Request, res: Response) => {
   const diaryEntry = new Diary()
     .setId(id)
     .setDate(date)
-    .setFoodIds(foodIds)
+    .setFoods(foods)
     .getDiary();
 
   initialDiary.data.push(diaryEntry);
@@ -95,17 +95,17 @@ export const editDiary = (req: Request, res: Response) => {
   // #swagger.tags = ['Diary']
   const { id } = req.params;
 
-  let foundItemIdx = initialDiary.data.findIndex((item) => item.id === id);
+  let foundItemIdx = findItemIdx(id);
 
-  if (foundItemIdx > -1) {
-    res.status(204).send(Error.getError("no id found"));
+  if (foundItemIdx < -1) {
+    return res.status(204).send(Error.getError("no id found"));
   }
 
   const { body } = req;
 
   const itemToReplace: IDiary = {
     id: id,
-    foodIds: body.foodIds,
+    foods: body.foods,
     date: body.date,
   };
 
@@ -113,3 +113,30 @@ export const editDiary = (req: Request, res: Response) => {
 
   return res.status(201).send(req.body);
 };
+
+export const addFoodsToDiary = (req: Request, res: Response) => {
+  // #swagger.tags = ['Diary']
+  const { id } = req.params;
+
+  let foundItemIdx = findItemIdx(id);
+  let foundItem = initialDiary.data.find((item) => item.id === id);
+
+  if (foundItemIdx < -1) {
+    return res.status(204).send(Error.getError("no such an item found"));
+  }
+
+  const { body } = req;
+
+  const itemToReplace: IDiary = {
+    ...foundItem,
+    foods: body.foods,
+  } as IDiary;
+
+  initialDiary.data.splice(foundItemIdx, 1, itemToReplace);
+
+  return res.status(201).send(req.body);
+};
+
+function findItemIdx(id: string) {
+  return initialDiary.data.findIndex((item) => item.id === id);
+}

@@ -16,7 +16,7 @@ export const getFoods = (req: Request, res: Response) => {
 
   if (searchBy) {
     const results = initialFood.data.filter((item) =>
-      item.name.toLocaleLowerCase().includes(searchBy)
+      item.name?.toLocaleLowerCase().includes(searchBy)
     );
 
     response = {
