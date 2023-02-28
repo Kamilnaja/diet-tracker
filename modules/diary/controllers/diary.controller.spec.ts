@@ -68,9 +68,7 @@ describe("diary", () => {
   });
 
   describe("POST /diary/id/food", () => {
-    const foodEntry = {
-      foods: [{ id: "1", weight: 100 }],
-    };
+    const foodEntry = [{ id: "1", weight: 100 }];
 
     it("should add foods to item", async () => {
       await request(baseURL).post(`${partURL}/10/foods`).send(foodEntry);
@@ -80,7 +78,7 @@ describe("diary", () => {
         .expect(200)
         .then((resp) => {
           expect(resp.body.foods.length).toEqual(4);
-          expect(resp.body.foods[3]).toEqual(foodEntry.foods[0]);
+          expect(resp.body.foods[3]).toEqual(foodEntry);
         });
     });
   });

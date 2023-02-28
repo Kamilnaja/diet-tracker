@@ -302,13 +302,38 @@
         "tags": [
           "Diary"
         ],
-        "description": "",
+        "description": "Add new Food to Diary",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
             "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Food Body",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "weight": {
+                    "type": "number",
+                    "example": 100
+                  },
+                  "id": {
+                    "type": "string",
+                    "example": "3"
+                  }
+                },
+                "required": [
+                  "weight",
+                  "id"
+                ]
+              }
+            }
           }
         ],
         "responses": {

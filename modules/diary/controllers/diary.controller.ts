@@ -4,6 +4,7 @@ import { Error } from "../../shared/models/error";
 import { IResponse } from "../../shared/models/response.interface";
 import { Diary } from "../builders/diary";
 import { getInitialDiary } from "../helpers/create-diary";
+import { IFood } from "../../foods/models/food.interface";
 
 const initialDiary = getInitialDiary();
 
@@ -116,6 +117,16 @@ export const editDiary = (req: Request, res: Response) => {
 
 export const addFoodsToDiary = (req: Request, res: Response) => {
   // #swagger.tags = ['Diary']
+  // #swagger.description = 'Add new Food to Diary'
+  /*  #swagger.parameters['body'] = {
+                in: 'body',
+                description: 'Food Body',
+                schema: [{
+                  $weight: 100,
+                  $id: "3",
+                }]
+        } */
+
   const { id } = req.params;
 
   let foundItemIdx = findItemIdx(id);
@@ -127,12 +138,9 @@ export const addFoodsToDiary = (req: Request, res: Response) => {
 
   const { body } = req;
 
-  const itemToReplace: IDiary = {
-    ...foundItem,
-    foods: foundItem?.foods.concat(body.foods),
-  } as IDiary;
+  foundItem?.foods.push(body);
 
-  initialDiary.data.splice(foundItemIdx, 1, itemToReplace);
+  initialDiary.data.splice(foundItemIdx, 1, foundItem!);
 
   return res.status(201).send(req.body);
 };
