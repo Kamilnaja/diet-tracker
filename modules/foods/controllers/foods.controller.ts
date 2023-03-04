@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { Food } from "../builders/food";
+import { FoodBuilder } from "../builders/food";
 import { getInitialFoods } from "../helpers/create-foods";
 import { Error } from "../../shared/models/error";
 import { IFood } from "../models/food.interface";
@@ -79,7 +79,7 @@ export const addNewFood = (req: Request, res: Response) => {
       .json(Error.getError("Food with this name already exists"));
   }
 
-  const food = new Food()
+  const food = new FoodBuilder()
     .setId(id)
     .setWeight(weight)
     .setCaloriesPer100g(caloriesPer100g)

@@ -1,12 +1,12 @@
 import request from "supertest";
 import { baseURL } from "../../shared/utils";
-import { Diary } from "../builders/diary";
+import { DiaryBuilder } from "../builders/diary";
 
 describe("diary", () => {
   const partURL = "/diary";
 
   beforeEach(async () => {
-    const diaryEntry = new Diary()
+    const diaryEntry = new DiaryBuilder()
       .setId("10")
       .setDate("2023-01-01")
       .setFoods([

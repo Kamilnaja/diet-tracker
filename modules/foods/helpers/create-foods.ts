@@ -1,13 +1,13 @@
 import { IResponse } from "../../shared/models/response.interface";
 import { shouldLoadInitialData } from "../../shared/utils";
-import { Food } from "../builders/food";
+import { FoodBuilder } from "../builders/food";
 import { IFood } from "../models/food.interface";
 import { NutriScore } from "../models/nutri-score.enum";
 
 type Response = IResponse<IFood[]>;
 
 const createNonEmptyFoods = (): Response => {
-  const cottage = new Food()
+  const cottage = new FoodBuilder()
     .setId("1")
     .setName("Cottage Cheese")
     .setCaloriesPer100g(100)
@@ -15,7 +15,7 @@ const createNonEmptyFoods = (): Response => {
     .setNutriScore(NutriScore.B)
     .setTags(["1", "2", "3"])
     .getFood();
-  const tomato = new Food()
+  const tomato = new FoodBuilder()
     .setId("2")
     .setName("Tomato")
     .setCaloriesPer100g(40)
@@ -23,14 +23,14 @@ const createNonEmptyFoods = (): Response => {
     .setNutriScore(NutriScore.A)
     .setTags(["2", "3"])
     .getFood();
-  const chicken = new Food()
+  const chicken = new FoodBuilder()
     .setId("3")
     .setName("Chicken Breast")
     .setCaloriesPer100g(100)
     .setWeight(100)
     .setTags(["1"])
     .getFood();
-  const beef = new Food()
+  const beef = new FoodBuilder()
     .setId("4")
     .setName("Beef Steak")
     .setCaloriesPer100g(140)
@@ -38,13 +38,13 @@ const createNonEmptyFoods = (): Response => {
     .setWeight(100)
     .setTags(["3"])
     .getFood();
-  const orangeJuice = new Food()
+  const orangeJuice = new FoodBuilder()
     .setId("5")
     .setName("Orange juice")
     .setCaloriesPer100g(150)
     .setWeight(100)
     .getFood();
-  const beeHoney = new Food()
+  const beeHoney = new FoodBuilder()
     .setId("6")
     .setName("Bee Honey")
     .setCaloriesPer100g(350)

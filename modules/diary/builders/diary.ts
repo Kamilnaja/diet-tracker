@@ -1,7 +1,7 @@
 import { IFood } from "../../foods/models/food.interface";
 import { IDiary } from "../models/diary.interface";
 
-export class Diary {
+export class DiaryBuilder {
   private _id: string;
   private _date: string;
   private _foods: IFood[];
@@ -10,7 +10,7 @@ export class Diary {
     return this._id;
   }
 
-  setId(id: string): Diary {
+  setId(id: string): DiaryBuilder {
     this._id = id;
     return this;
   }
@@ -19,7 +19,7 @@ export class Diary {
     return this._date;
   }
 
-  setDate(value: string): Diary {
+  setDate(value: string): DiaryBuilder {
     this._date = value;
     return this;
   }
@@ -28,7 +28,7 @@ export class Diary {
     return this._foods;
   }
 
-  setFoods(value: IFood[]): Diary {
+  setFoods(value: IFood[]): DiaryBuilder {
     this._foods = value;
     return this;
   }

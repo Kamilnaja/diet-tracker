@@ -2,7 +2,7 @@ import { ITag } from "../../dict/models/tag.interface";
 import { IFood } from "../models/food.interface";
 import { NutriScore } from "../models/nutri-score.enum";
 
-export class Food {
+export class FoodBuilder {
   private _id: string;
   private _name: string;
   private _weight: number;
@@ -10,27 +10,27 @@ export class Food {
   private _nutriScore?: NutriScore;
   private _tags: ITag["id"][];
 
-  setId(id: string): Food {
+  setId(id: string): FoodBuilder {
     this._id = id;
     return this;
   }
 
-  setName(name: string): Food {
+  setName(name: string): FoodBuilder {
     this._name = name;
     return this;
   }
 
-  setWeight(weight: number): Food {
+  setWeight(weight: number): FoodBuilder {
     this._weight = weight;
     return this;
   }
 
-  setCaloriesPer100g(calories: number): Food {
+  setCaloriesPer100g(calories: number): FoodBuilder {
     this._caloriesPer100g = calories;
     return this;
   }
 
-  setNutriScore(nutriScore: NutriScore): Food {
+  setNutriScore(nutriScore: NutriScore): FoodBuilder {
     this._nutriScore = nutriScore;
     return this;
   }

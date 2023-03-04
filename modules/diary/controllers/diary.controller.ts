@@ -2,9 +2,8 @@ import { Request, Response } from "express";
 import { IDiary } from "../models/diary.interface";
 import { Error } from "../../shared/models/error";
 import { IResponse } from "../../shared/models/response.interface";
-import { Diary } from "../builders/diary";
+import { DiaryBuilder } from "../builders/diary";
 import { getInitialDiary } from "../helpers/create-diary";
-import { IFood } from "../../foods/models/food.interface";
 
 const initialDiary = getInitialDiary();
 
@@ -56,7 +55,7 @@ export const addNewDiaryEntry = (req: Request, res: Response) => {
       .json(Error.getError("Diary entry with this id already exists"));
   }
 
-  const diaryEntry = new Diary()
+  const diaryEntry = new DiaryBuilder()
     .setId(id)
     .setDate(date)
     .setFoods(foods)
