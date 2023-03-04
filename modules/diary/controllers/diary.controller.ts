@@ -1,9 +1,14 @@
 import { Request, Response } from "express";
-import { Diary } from "../models/diary.interface";
+import {
+  filterItemById,
+  findItemById,
+  findItemIdxById,
+} from "../../helpers/array-helpers";
 import { Error } from "../../shared/models/error";
 import { HttpResponse } from "../../shared/models/http-response.interface";
 import { DiaryBuilder } from "../builders/diary-builder";
 import { getInitialDiary } from "../helpers/create-diary";
+import { Diary, DiaryAllReponse } from "../models/diary.interface";
 
 const initialDiary = getInitialDiary();
 
@@ -11,7 +16,7 @@ export const getDiary = (req: Request, res: Response): void => {
   // #swagger.tags = ['Diary']
   let searchBy = req.query?.data as string;
   searchBy = searchBy?.trim().toLocaleLowerCase();
-  let response: HttpResponse<Diary[] | undefined>;
+  let response: DiaryAllReponse;
 
   if (searchBy) {
     const results = initialDiary.data.filter((item) => item.date === searchBy);
@@ -34,7 +39,7 @@ export const getDiaryById = (req: Request, res: Response): void => {
   // #swagger.tags = ['Diary']
   const { id } = req.params;
 
-  const foundItem = initialDiary.data.find((item) => item.id === id);
+  const foundItem = findItemById(id, initialDiary);
 
   foundItem
     ? res.status(200).json(foundItem)
@@ -49,7 +54,7 @@ export const addNewDiaryEntry = (req: Request, res: Response) => {
     id = new Date().getTime().toString(),
   } = req.body;
 
-  if (initialDiary.data.find((item) => item.id === id)) {
+  if (findItemById(id, initialDiary)) {
     return res
       .status(409)
       .json(Error.getError("Diary entry with this id already exists"));
@@ -69,7 +74,6 @@ export const addNewDiaryEntry = (req: Request, res: Response) => {
 
 export const deleteDiaryItemById = (req: Request, res: Response) => {
   // #swagger.tags = ['Diary']
-
   const id = req.params.id;
 
   let response: HttpResponse<Diary | undefined> = {
@@ -77,7 +81,7 @@ export const deleteDiaryItemById = (req: Request, res: Response) => {
     length: 0,
   };
 
-  let foundItem = initialDiary.data.find((item) => item.id === id);
+  let foundItem = findItemById(id, initialDiary);
 
   if (foundItem) {
     response = {
@@ -85,7 +89,7 @@ export const deleteDiaryItemById = (req: Request, res: Response) => {
       length: 1,
     };
 
-    initialDiary.data = initialDiary.data.filter((item) => item.id !== id);
+    initialDiary.data = filterItemById(id, initialDiary);
     initialDiary.length = initialDiary.length - 1;
   }
   res.status(foundItem ? 200 : 404).send(response);
@@ -95,7 +99,7 @@ export const editDiary = (req: Request, res: Response) => {
   // #swagger.tags = ['Diary']
   const { id } = req.params;
 
-  let foundItemIdx = findItemIdx(id);
+  let foundItemIdx = findItemIdxById(id, initialDiary);
 
   if (foundItemIdx < -1) {
     return res.status(204).send(Error.getError("no id found"));
@@ -128,8 +132,8 @@ export const addFoodsToDiary = (req: Request, res: Response) => {
 
   const { id } = req.params;
 
-  let foundItemIdx = findItemIdx(id);
-  let foundItem = initialDiary.data.find((item) => item.id === id);
+  let foundItemIdx = findItemIdxById(id, initialDiary);
+  let foundItem = findItemById(id, initialDiary);
 
   if (foundItemIdx < -1) {
     return res.status(204).send(Error.getError("no such an item found"));
@@ -143,7 +147,3 @@ export const addFoodsToDiary = (req: Request, res: Response) => {
 
   return res.status(201).send(req.body);
 };
-
-function findItemIdx(id: string) {
-  return initialDiary.data.findIndex((item) => item.id === id);
-}
