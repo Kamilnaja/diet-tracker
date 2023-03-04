@@ -1,5 +1,5 @@
 import { NutriScore } from "./nutri-score.enum";
-import { IResponse } from "../../shared/models/response.interface";
+import { HttpResponse } from "../../shared/models/http-response.interface";
 import { ITag } from "../../dict/models/tag.interface";
 
 export interface Food {
@@ -11,4 +11,4 @@ export interface Food {
   tags?: ITag["id"][];
 }
 
-export type IFoodListResponse = IResponse<Food>;
+export type FoodListResponse = HttpResponse<Food>;

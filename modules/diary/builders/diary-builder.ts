@@ -1,5 +1,5 @@
 import { Food } from "../../foods/models/food.interface";
-import { IDiary } from "../models/diary.interface";
+import { Diary } from "../models/diary.interface";
 
 export class DiaryBuilder {
   private _id: string;
@@ -33,8 +33,8 @@ export class DiaryBuilder {
     return this;
   }
 
-  getDiary(): IDiary {
-    const diary: IDiary = {
+  getDiary(): Diary {
+    const diary: Diary = {
       id: this._id,
       foods: this._foods,
       date: this._date,

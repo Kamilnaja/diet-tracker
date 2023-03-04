@@ -1,10 +1,10 @@
-import { IResponse } from "../../shared/models/response.interface";
+import { HttpResponse } from "../../shared/models/http-response.interface";
 import { shouldLoadInitialData } from "../../shared/utils";
 import { FoodBuilder } from "../builders/food-builder";
 import { Food } from "../models/food.interface";
 import { NutriScore } from "../models/nutri-score.enum";
 
-type Response = IResponse<Food[]>;
+type Response = HttpResponse<Food[]>;
 
 const createNonEmptyFoods = (): Response => {
   const cottage = new FoodBuilder()

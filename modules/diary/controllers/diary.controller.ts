@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import { IDiary } from "../models/diary.interface";
+import { Diary } from "../models/diary.interface";
 import { Error } from "../../shared/models/error";
-import { IResponse } from "../../shared/models/response.interface";
+import { HttpResponse } from "../../shared/models/http-response.interface";
 import { DiaryBuilder } from "../builders/diary-builder";
 import { getInitialDiary } from "../helpers/create-diary";
 
@@ -11,7 +11,7 @@ export const getDiary = (req: Request, res: Response): void => {
   // #swagger.tags = ['Diary']
   let searchBy = req.query?.data as string;
   searchBy = searchBy?.trim().toLocaleLowerCase();
-  let response: IResponse<IDiary[] | undefined>;
+  let response: HttpResponse<Diary[] | undefined>;
 
   if (searchBy) {
     const results = initialDiary.data.filter((item) => item.date === searchBy);
@@ -72,7 +72,7 @@ export const deleteDiaryItemById = (req: Request, res: Response) => {
 
   const id = req.params.id;
 
-  let response: IResponse<IDiary | undefined> = {
+  let response: HttpResponse<Diary | undefined> = {
     data: undefined,
     length: 0,
   };
@@ -103,7 +103,7 @@ export const editDiary = (req: Request, res: Response) => {
 
   const { body } = req;
 
-  const itemToReplace: IDiary = {
+  const itemToReplace: Diary = {
     id: id,
     foods: body.foods,
     date: body.date,

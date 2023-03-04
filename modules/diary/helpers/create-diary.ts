@@ -1,9 +1,9 @@
-import { IResponse } from "../../shared/models/response.interface";
+import { HttpResponse } from "../../shared/models/http-response.interface";
 import { shouldLoadInitialData } from "../../shared/utils";
 import { DiaryBuilder } from "../builders/diary-builder";
-import { IDiary } from "../models/diary.interface";
+import { Diary } from "../models/diary.interface";
 
-type Response = IResponse<IDiary[]>;
+type Response = HttpResponse<Diary[]>;
 
 const createNonEmptyDiary = (): Response => {
   const day1 = new DiaryBuilder()

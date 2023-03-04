@@ -3,7 +3,7 @@ import { FoodBuilder } from "../builders/food-builder";
 import { getInitialFoods } from "../helpers/create-foods";
 import { Error } from "../../shared/models/error";
 import { Food } from "../models/food.interface";
-import { IResponse } from "../../shared/models/response.interface";
+import { HttpResponse } from "../../shared/models/http-response.interface";
 
 const initialFood = getInitialFoods();
 
@@ -12,7 +12,7 @@ export const getFoods = (req: Request, res: Response) => {
 
   let searchBy = req.query?.name as string;
   searchBy = searchBy?.trim().toLocaleLowerCase();
-  let response: IResponse<Food[]>;
+  let response: HttpResponse<Food[]>;
 
   if (searchBy) {
     const results = initialFood.data.filter((item) =>
@@ -97,7 +97,7 @@ export const deleteFoodById = (req: Request, res: Response) => {
   // #swagger.tags = ['Foods']
 
   const id = req.params.id;
-  let response: IResponse<Food | undefined> = {
+  let response: HttpResponse<Food | undefined> = {
     data: undefined,
     length: 0,
   };
