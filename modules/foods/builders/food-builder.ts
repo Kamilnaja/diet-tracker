@@ -1,5 +1,5 @@
 import { ITag } from "../../dict/models/tag.interface";
-import { IFood } from "../models/food.interface";
+import { Food } from "../models/food.interface";
 import { NutriScore } from "../models/nutri-score.enum";
 
 export class FoodBuilder {
@@ -40,8 +40,8 @@ export class FoodBuilder {
     return this;
   }
 
-  getFood(): IFood {
-    const food: IFood = {
+  getFood(): Food {
+    const food: Food = {
       id: this._id,
       name: this._name,
       weight: this._weight,

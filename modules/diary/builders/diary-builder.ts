@@ -1,10 +1,10 @@
-import { IFood } from "../../foods/models/food.interface";
+import { Food } from "../../foods/models/food.interface";
 import { IDiary } from "../models/diary.interface";
 
 export class DiaryBuilder {
   private _id: string;
   private _date: string;
-  private _foods: IFood[];
+  private _foods: Food[];
 
   get id(): string {
     return this._id;
@@ -24,11 +24,11 @@ export class DiaryBuilder {
     return this;
   }
 
-  get foods(): IFood[] {
+  get foods(): Food[] {
     return this._foods;
   }
 
-  setFoods(value: IFood[]): DiaryBuilder {
+  setFoods(value: Food[]): DiaryBuilder {
     this._foods = value;
     return this;
   }

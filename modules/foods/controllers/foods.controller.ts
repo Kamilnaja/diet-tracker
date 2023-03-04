@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-import { FoodBuilder } from "../builders/food";
+import { FoodBuilder } from "../builders/food-builder";
 import { getInitialFoods } from "../helpers/create-foods";
 import { Error } from "../../shared/models/error";
-import { IFood } from "../models/food.interface";
+import { Food } from "../models/food.interface";
 import { IResponse } from "../../shared/models/response.interface";
 
 const initialFood = getInitialFoods();
@@ -12,7 +12,7 @@ export const getFoods = (req: Request, res: Response) => {
 
   let searchBy = req.query?.name as string;
   searchBy = searchBy?.trim().toLocaleLowerCase();
-  let response: IResponse<IFood[]>;
+  let response: IResponse<Food[]>;
 
   if (searchBy) {
     const results = initialFood.data.filter((item) =>
@@ -97,7 +97,7 @@ export const deleteFoodById = (req: Request, res: Response) => {
   // #swagger.tags = ['Foods']
 
   const id = req.params.id;
-  let response: IResponse<IFood | undefined> = {
+  let response: IResponse<Food | undefined> = {
     data: undefined,
     length: 0,
   };
@@ -139,7 +139,7 @@ export const editFood = (req: Request, res: Response) => {
 
   const { body } = req;
 
-  const itemToReplace: IFood = {
+  const itemToReplace: Food = {
     id: id,
     name: body.name,
     weight: body.weight,

@@ -1,10 +1,10 @@
 import { IResponse } from "../../shared/models/response.interface";
 import { shouldLoadInitialData } from "../../shared/utils";
-import { FoodBuilder } from "../builders/food";
-import { IFood } from "../models/food.interface";
+import { FoodBuilder } from "../builders/food-builder";
+import { Food } from "../models/food.interface";
 import { NutriScore } from "../models/nutri-score.enum";
 
-type Response = IResponse<IFood[]>;
+type Response = IResponse<Food[]>;
 
 const createNonEmptyFoods = (): Response => {
   const cottage = new FoodBuilder()
@@ -60,7 +60,7 @@ const createNonEmptyFoods = (): Response => {
 };
 
 const createEmptyFoods = (): Response => {
-  const foods: IFood[] = [];
+  const foods: Food[] = [];
   return {
     data: foods,
     length: foods.length,

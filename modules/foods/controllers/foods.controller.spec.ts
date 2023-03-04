@@ -1,9 +1,9 @@
 import request from "supertest";
 import { baseURL } from "../../shared/utils";
-import { IFood } from "../models/food.interface";
+import { Food } from "../models/food.interface";
 import { NutriScore } from "../models/nutri-score.enum";
 
-const newFood: IFood = {
+const newFood: Food = {
   name: "Banana",
   weight: 100,
   nutriScore: NutriScore.D,
@@ -38,7 +38,7 @@ describe("GET /foods", () => {
 
     expect(responseGet.statusCode).toBe(200);
     expect(
-      responseGet.body.data.find((item: IFood) => item.name === newFood.name)
+      responseGet.body.data.find((item: Food) => item.name === newFood.name)
     ).not.toBeFalsy();
     expect(responseGet.body.length).toBeGreaterThan(0);
   });
@@ -76,13 +76,13 @@ describe("POST /foods", () => {
       id: "1000330300303",
       name: "Owsianka",
       weight: 100,
-    } as IFood;
+    } as Food;
     const response = await request(baseURL).post(partURL).send(newFood);
 
     expect([201, 409]).toContain(response.statusCode);
 
     const responseGet = await request(baseURL).get(partURL);
-    const foods: IFood[] = responseGet.body.data;
+    const foods: Food[] = responseGet.body.data;
     const createdFood = foods.find((item) => item.id === newFood.id);
 
     expect(createdFood).not.toBeFalsy();
@@ -100,7 +100,7 @@ describe("DELETE /foods", () => {
     const response = await request(baseURL).get(partURL);
     const foods = response.body.data;
 
-    const exists = foods.find((food: IFood) => {
+    const exists = foods.find((food: Food) => {
       newFood.id === food.id;
     });
 

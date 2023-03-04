@@ -2,7 +2,7 @@ import { NutriScore } from "./nutri-score.enum";
 import { IResponse } from "../../shared/models/response.interface";
 import { ITag } from "../../dict/models/tag.interface";
 
-export interface IFood {
+export interface Food {
   id: string;
   name?: string;
   caloriesPer100g?: number;
@@ -11,4 +11,4 @@ export interface IFood {
   tags?: ITag["id"][];
 }
 
-export type IFoodListResponse = IResponse<IFood>;
+export type IFoodListResponse = IResponse<Food>;

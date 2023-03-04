@@ -1,7 +1,7 @@
-import { IFood } from "../../foods/models/food.interface";
+import { Food } from "../../foods/models/food.interface";
 
 export interface IDiary {
   id: string;
-  foods: IFood[];
+  foods: Food[];
   date: string;
 }

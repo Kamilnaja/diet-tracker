@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { IDiary } from "../models/diary.interface";
 import { Error } from "../../shared/models/error";
 import { IResponse } from "../../shared/models/response.interface";
-import { DiaryBuilder } from "../builders/diary";
+import { DiaryBuilder } from "../builders/diary-builder";
 import { getInitialDiary } from "../helpers/create-diary";
 
 const initialDiary = getInitialDiary();
