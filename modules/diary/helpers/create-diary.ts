@@ -1,5 +1,5 @@
+import { shouldLoadInitialData } from "../../../src/shared/utils";
 import { HttpResponse } from "../../shared/models/http-response.interface";
-import { shouldLoadInitialData } from "../../shared/utils";
 import { DiaryBuilder } from "../builders/diary-builder";
 import { Diary } from "../models/diary.interface";
 

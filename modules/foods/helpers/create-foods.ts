@@ -1,5 +1,5 @@
+import { shouldLoadInitialData } from "../../../src/shared/utils";
 import { HttpResponse } from "../../shared/models/http-response.interface";
-import { shouldLoadInitialData } from "../../shared/utils";
 import { FoodBuilder } from "../builders/food-builder";
 import { Food } from "../models/food.interface";
 import { NutriScore } from "../models/nutri-score.enum";

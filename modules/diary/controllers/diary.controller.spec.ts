@@ -1,5 +1,5 @@
 import request from "supertest";
-import { baseURL } from "../../shared/utils";
+import { baseURL } from "../../../src/shared/utils";
 import { DiaryBuilder } from "../builders/diary-builder";
 
 describe("diary", () => {
