@@ -1,7 +1,7 @@
-import { NutriScore } from "./nutri-score.enum";
-import { HttpResponse } from "../../shared/models/http-response.interface";
+import { Entry } from "@models/entry.interface";
+import { HttpResponse } from "@models/http-response.interface";
 import { ITag } from "../../dict/models/tag.interface";
-import { Entry } from "../../shared/models/entry.interface";
+import { NutriScore } from "./nutri-score.enum";
 
 export interface Food extends Entry {
   name?: string;

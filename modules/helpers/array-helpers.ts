@@ -1,5 +1,5 @@
-import { Entry } from "../shared/models/entry.interface";
-import { HttpResponse } from "../shared/models/http-response.interface";
+import { Entry } from "@models/entry.interface";
+import { HttpResponse } from "@models/http-response.interface";
 
 export const findItemIdxById = <T extends Entry>(
   id: string,
