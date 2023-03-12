@@ -1,4 +1,4 @@
-import { shouldLoadInitialData } from "../../../src/shared/utils";
+import { shouldLoadInitialData } from "@shared/utils";
 import { HttpResponse } from "../../shared/models/http-response.interface";
 import { FoodBuilder } from "../builders/food-builder";
 import { Food } from "../models/food.interface";
