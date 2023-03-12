@@ -95,7 +95,7 @@ export const addNewFood = (req: Request, res: Response) => {
     .setName(name)
     .setTags(tags);
 
-  initialFoods.data.push(food.getFood());
+  initialFoods.data.push(food.build());
   initialFoods.length++;
 
   res.status(201).json(food);

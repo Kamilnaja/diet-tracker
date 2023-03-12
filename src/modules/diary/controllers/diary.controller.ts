@@ -64,7 +64,7 @@ export const addNewDiaryEntry = (req: Request, res: Response) => {
     .setId(id)
     .setDate(date)
     .setFoods(foods)
-    .getDiary();
+    .build();
 
   initialDiary.data.push(diaryEntry);
   initialDiary.length++;

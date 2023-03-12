@@ -14,7 +14,7 @@ describe("diary", () => {
         { id: "2", weight: 100 },
         { id: "3", weight: 82 },
       ])
-      .getDiary();
+      .build();
 
     await request(baseURL).post(partURL).send(diaryEntry);
   });
