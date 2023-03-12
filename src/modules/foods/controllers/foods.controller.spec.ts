@@ -1,4 +1,4 @@
-import { baseURL } from "@shared/utils";
+import { baseURL } from "@shared/helpers/utils";
 import request from "supertest";
 import { Food } from "../models/food.interface";
 import { NutriScore } from "../models/nutri-score.enum";

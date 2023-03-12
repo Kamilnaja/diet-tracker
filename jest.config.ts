@@ -85,8 +85,16 @@ export default {
   //   "node"
   // ],
 
-  // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
-  // moduleNameMapper: {},
+  roots: ["<rootDir>/src"],
+  transform: {
+    "^.+\\.tsx?$": "ts-jest",
+  },
+  moduleNameMapper: {
+    "@shared/(.*)": ["<rootDir>/src/shared/$1"],
+    "@helpers/(.*)": ["<rootDir>/src/shared/helpers/$1"],
+    "@models/(.*)": ["<rootDir>/src/shared/models/$1"],
+    "@modules/(.*)": ["<rootDir>/src/modules/$1"],
+  },
 
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
   // modulePathIgnorePatterns: [],

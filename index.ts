@@ -1,12 +1,12 @@
-import { shouldLoadInitialData } from "@shared/utils";
+import { diaryRouter } from "@modules/diary/routes/diary.routes";
+import { dictRouter } from "@modules/dict/routes/dict.routes";
+import { foodsRouter } from "@modules/foods/routes/foods.routes";
+import { shouldLoadInitialData } from "@shared/helpers/utils";
 import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
 import morgan from "morgan";
 import swaggerUi from "swagger-ui-express";
-import { diaryRouter } from "./modules/diary/routes/diary.routes";
-import { dictRouter } from "./modules/dict/routes/dict.routes";
-import { foodsRouter } from "./modules/foods/routes/foods.routes";
 import * as swaggerFile from "./swagger-output.json";
 
 dotenv.config();
