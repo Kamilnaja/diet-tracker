@@ -1,11 +1,11 @@
+import { Error } from "@models/error";
+import { HttpResponse } from "@models/http-response.interface";
 import { Request, Response } from "express";
 import {
   filterItemById,
   findItemById,
   findItemIdxById,
 } from "../../helpers/array-helpers";
-import { Error } from "../../shared/models/error";
-import { HttpResponse } from "../../shared/models/http-response.interface";
 import { DiaryBuilder } from "../builders/diary-builder";
 import { getInitialDiary } from "../helpers/create-diary";
 import { Diary, DiaryAllReponse } from "../models/diary.interface";

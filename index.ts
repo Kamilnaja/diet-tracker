@@ -1,3 +1,4 @@
+import { shouldLoadInitialData } from "@shared/utils";
 import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
@@ -6,7 +7,6 @@ import swaggerUi from "swagger-ui-express";
 import { diaryRouter } from "./modules/diary/routes/diary.routes";
 import { dictRouter } from "./modules/dict/routes/dict.routes";
 import { foodsRouter } from "./modules/foods/routes/foods.routes";
-import { shouldLoadInitialData } from "./modules/shared/utils";
 import * as swaggerFile from "./swagger-output.json";
 
 dotenv.config();

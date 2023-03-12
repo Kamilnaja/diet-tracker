@@ -1,6 +1,6 @@
+import { Entry } from "@models/entry.interface";
+import { HttpResponse } from "@models/http-response.interface";
 import { Food } from "../../foods/models/food.interface";
-import { Entry } from "../../shared/models/entry.interface";
-import { HttpResponse } from "../../shared/models/http-response.interface";
 
 export interface Diary extends Entry {
   foods: Food[];

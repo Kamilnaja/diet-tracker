@@ -1,10 +1,10 @@
+import { Error } from "@models/error";
 import { Request, Response } from "express";
 import {
   filterItemById,
   findItemById,
   findItemIdxById,
 } from "../../helpers/array-helpers";
-import { Error } from "../../shared/models/error";
 import { FoodBuilder } from "../builders/food-builder";
 import { getInitialFoods } from "../helpers/create-foods";
 import {
