@@ -40,7 +40,7 @@ export class FoodBuilder {
     return this;
   }
 
-  getFood(): Food {
+  build(): Food {
     const food: Food = {
       id: this._id,
       name: this._name,

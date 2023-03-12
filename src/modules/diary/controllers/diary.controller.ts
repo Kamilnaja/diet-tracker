@@ -1,11 +1,11 @@
 import { Error } from "@models/error";
 import { HttpResponse } from "@models/http-response.interface";
-import { Request, Response } from "express";
 import {
   filterItemById,
   findItemById,
   findItemIdxById,
-} from "../../helpers/array-helpers";
+} from "@shared/helpers/array-helpers";
+import { Request, Response } from "express";
 import { DiaryBuilder } from "../builders/diary-builder";
 import { getInitialDiary } from "../helpers/create-diary";
 import { Diary, DiaryAllReponse } from "../models/diary.interface";
@@ -64,7 +64,7 @@ export const addNewDiaryEntry = (req: Request, res: Response) => {
     .setId(id)
     .setDate(date)
     .setFoods(foods)
-    .getDiary();
+    .build();
 
   initialDiary.data.push(diaryEntry);
   initialDiary.length++;

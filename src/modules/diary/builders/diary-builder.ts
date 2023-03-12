@@ -33,7 +33,7 @@ export class DiaryBuilder {
     return this;
   }
 
-  getDiary(): Diary {
+  build(): Diary {
     const diary: Diary = {
       id: this._id,
       foods: this._foods,
