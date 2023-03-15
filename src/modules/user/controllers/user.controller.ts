@@ -5,17 +5,23 @@ import { getInitialUsers } from "../helpers/create-users";
 
 const initialUsers = getInitialUsers();
 
-export const createUser = (req: Request, res: Response) => {
+export const registerUser = (req: Request, res: Response) => {
   // #swagger.tags = ['User']
 
   const { name, email, password } = req.body;
 
-  // Walidacja danych
   if (!name || !email || !password) {
     return res.status(400).json(Error.getError("Missing data"));
   }
 
-  // Tworzenie użytkownika
+  if (initialUsers.data.find((u) => u.name === name)) {
+    return res.status(400).json(Error.getError("Username already exists"));
+  }
+
+  if (initialUsers.data.find((u) => u.email === email)) {
+    return res.status(400).json(Error.getError("Email already exists"));
+  }
+
   const newUser = new UserBuilder()
     .setEmail(email)
     .setPassword(password)

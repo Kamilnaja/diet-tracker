@@ -4,6 +4,12 @@ export class UserBuilder {
   private name: string;
   private email: string;
   private password: string;
+  private id: string;
+
+  setId(id: string): UserBuilder {
+    this.id = id;
+    return this;
+  }
 
   setName(name: string): UserBuilder {
     this.name = name;
@@ -25,6 +31,7 @@ export class UserBuilder {
       name: this.name,
       email: this.email,
       password: this.password,
+      id: this.id,
     };
   }
 }

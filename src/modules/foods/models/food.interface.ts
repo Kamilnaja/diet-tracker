@@ -1,6 +1,6 @@
 import { Entry } from "@models/entry.interface";
 import { HttpResponse } from "@models/http-response.interface";
-import { ITag } from "../../dict/models/tag.interface";
+import { Tag } from "../../dict/models/tag.interface";
 import { NutriScore } from "./nutri-score.enum";
 
 export interface Food extends Entry {
@@ -8,7 +8,7 @@ export interface Food extends Entry {
   caloriesPer100g?: number;
   weight: number;
   nutriScore?: NutriScore;
-  tags?: ITag["id"][];
+  tags?: Tag["id"][];
 }
 
 export type FoodListResponse = HttpResponse<Food | undefined>;

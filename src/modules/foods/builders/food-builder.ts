@@ -1,4 +1,4 @@
-import { ITag } from "../../dict/models/tag.interface";
+import { Tag } from "../../dict/models/tag.interface";
 import { Food } from "../models/food.interface";
 import { NutriScore } from "../models/nutri-score.enum";
 
@@ -8,7 +8,7 @@ export class FoodBuilder {
   private _weight: number;
   private _caloriesPer100g: number;
   private _nutriScore?: NutriScore;
-  private _tags: ITag["id"][];
+  private _tags: Tag["id"][];
 
   setId(id: string): FoodBuilder {
     this._id = id;
