@@ -19,9 +19,13 @@ export const getDiary = (req: Request, res: Response): void => {
   res.json(initialDiary.getResponse);
 };
 
-export const getDiaryById = (req: Request, res: Response): void => {
+export const getDiaryById = (req: Request, res: Response) => {
   // #swagger.tags = ['Diary']
   const { id } = req.params;
+
+  if (!id) {
+    return res.send(Error.getError("No entry found"));
+  }
 
   const foundItem = initialDiary.find("id", id);
 
@@ -84,6 +88,10 @@ export const deleteDiaryItemById = (req: Request, res: Response) => {
 export const editDiary = (req: Request, res: Response) => {
   // #swagger.tags = ['Diary']
   const { id } = req.params;
+
+  if (!id) {
+    return res.status(404).send(Error.getError("id not found"));
+  }
 
   const foundItemId = initialDiary.find("id", id)?.id;
 

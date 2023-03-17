@@ -45,6 +45,10 @@ export const getFoodById = (req: Request, res: Response) => {
   // #swagger.tags = ['Foods']
   const { id } = req.params;
 
+  if (!id) {
+    return res.send(Error.getError("No entry found"));
+  }
+
   let foundItem = findItemById(id, initialFoods);
 
   foundItem
@@ -110,6 +114,10 @@ export const deleteFoodById = (req: Request, res: Response) => {
     length: 0,
   };
 
+  if (!id) {
+    return res.send(Error.getError("No entry found"));
+  }
+
   let foundItem = findItemById(id, initialFoods);
 
   if (foundItem) {
@@ -138,6 +146,10 @@ export const editFood = (req: Request, res: Response) => {
                 }
         } */
   const id = req.params.id;
+
+  if (!id) {
+    return res.send(Error.getError("No entry found"));
+  }
 
   let foundItemIdx = findItemIdxById(id, initialFoods);
 
