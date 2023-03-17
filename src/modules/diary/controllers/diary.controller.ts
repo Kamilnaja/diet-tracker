@@ -59,6 +59,10 @@ export const deleteDiaryItemById = (req: Request, res: Response) => {
   // #swagger.tags = ['Diary']
   const id = req.params.id;
 
+  if (!id) {
+    return res.send(Error.getError("No entry found"));
+  }
+
   let response: HttpResponse<Diary | undefined> = {
     data: undefined,
     length: 0,

@@ -8,9 +8,16 @@ const createNonEmptyUsers = (): User[] => {
   const user1 = new UserBuilder()
     .setEmail("test@example.com")
     .setName("test1")
+    .setId("1")
     .build();
 
-  const users: User[] = [user1];
+  const user2 = new UserBuilder()
+    .setEmail("test@example.com")
+    .setName("test1")
+    .setId("2")
+    .build();
+
+  const users: User[] = [user1, user2];
   return users;
 };
 

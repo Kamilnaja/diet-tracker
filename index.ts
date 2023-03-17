@@ -21,7 +21,7 @@ app.use(morgan("tiny"));
 app.use("/api/foods", foodsRouter);
 app.use("/api/diary", diaryRouter);
 app.use("/api/dicts", dictRouter);
-app.use("/api/user", userRouter);
+app.use("/api/users", userRouter);
 
 app.use("/", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
