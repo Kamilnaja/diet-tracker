@@ -1,23 +1,20 @@
 import { createEmptyResponse } from "@shared/helpers/create-empty-response";
 import { shouldLoadInitialData } from "@shared/helpers/utils";
-import { HttpResponse } from "@shared/models/http-response.interface";
 import { UserBuilder } from "../builders/user-builder";
+import { UserResponse } from "../models/user-response";
 import { User } from "../models/user.interface";
 
-type Response = HttpResponse<User[]>;
-
-const createNonEmptyUsers = (): Response => {
+const createNonEmptyUsers = (): User[] => {
   const user1 = new UserBuilder()
     .setEmail("test@example.com")
     .setName("test1")
     .build();
 
   const users: User[] = [user1];
-  return {
-    data: users,
-    length: users.length,
-  };
+  return users;
 };
 
-export const getInitialUsers = (): Response =>
-  shouldLoadInitialData() ? createNonEmptyUsers() : createEmptyResponse();
+export const getInitialUsers = (): UserResponse =>
+  shouldLoadInitialData()
+    ? new UserResponse(createNonEmptyUsers())
+    : createEmptyResponse();

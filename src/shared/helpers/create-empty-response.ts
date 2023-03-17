@@ -1,10 +1,5 @@
-import { HttpResponse } from "@shared/models/http-response.interface";
+import { ApiResponse } from "@shared/models/api-response";
 
-type Response = HttpResponse<any>;
-
-export const createEmptyResponse = (): Response => {
-  return {
-    data: [],
-    length: 0,
-  };
+export const createEmptyResponse = (): ApiResponse<any> => {
+  return new ApiResponse([]);
 };

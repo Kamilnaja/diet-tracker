@@ -1,14 +1,9 @@
 import { Error } from "@models/error";
 import { HttpResponse } from "@models/http-response.interface";
-import {
-  filterItemById,
-  findItemById,
-  findItemIdxById,
-} from "@shared/helpers/array-helpers";
 import { Request, Response } from "express";
 import { DiaryBuilder } from "../builders/diary-builder";
 import { getInitialDiary } from "../helpers/create-diary";
-import { Diary, DiaryAllReponse } from "../models/diary.interface";
+import { Diary } from "../models/diary.interface";
 
 const initialDiary = getInitialDiary();
 
@@ -16,30 +11,19 @@ export const getDiary = (req: Request, res: Response): void => {
   // #swagger.tags = ['Diary']
   let searchBy = req.query?.data as string;
   searchBy = searchBy?.trim().toLocaleLowerCase();
-  let response: DiaryAllReponse;
 
   if (searchBy) {
-    const results = initialDiary.data.filter((item) => item.date === searchBy);
-
-    response = {
-      data: results,
-      length: 1,
-    };
-  } else {
-    response = {
-      ...initialDiary,
-      data: initialDiary.data,
-    };
+    initialDiary.filter("date", searchBy);
   }
 
-  res.json(response);
+  res.json(initialDiary.getResponse);
 };
 
 export const getDiaryById = (req: Request, res: Response): void => {
   // #swagger.tags = ['Diary']
   const { id } = req.params;
 
-  const foundItem = findItemById(id, initialDiary);
+  const foundItem = initialDiary.find("id", id);
 
   foundItem
     ? res.status(200).json(foundItem)
@@ -54,7 +38,7 @@ export const addNewDiaryEntry = (req: Request, res: Response) => {
     id = new Date().getTime().toString(),
   } = req.body;
 
-  if (findItemById(id, initialDiary)) {
+  if (initialDiary.find("id", id)) {
     return res
       .status(409)
       .json(Error.getError("Diary entry with this id already exists"));
@@ -66,8 +50,7 @@ export const addNewDiaryEntry = (req: Request, res: Response) => {
     .setFoods(foods)
     .build();
 
-  initialDiary.data.push(diaryEntry);
-  initialDiary.length++;
+  initialDiary.add(diaryEntry);
 
   res.send(diaryEntry);
 };
@@ -81,7 +64,7 @@ export const deleteDiaryItemById = (req: Request, res: Response) => {
     length: 0,
   };
 
-  let foundItem = findItemById(id, initialDiary);
+  let foundItem = initialDiary.find("id", id);
 
   if (foundItem) {
     response = {
@@ -89,8 +72,7 @@ export const deleteDiaryItemById = (req: Request, res: Response) => {
       length: 1,
     };
 
-    initialDiary.data = filterItemById(id, initialDiary);
-    initialDiary.length = initialDiary.length - 1;
+    initialDiary.filter("id", id);
   }
   res.status(foundItem ? 200 : 404).send(response);
 };
@@ -99,9 +81,9 @@ export const editDiary = (req: Request, res: Response) => {
   // #swagger.tags = ['Diary']
   const { id } = req.params;
 
-  let foundItemIdx = findItemIdxById(id, initialDiary);
+  const foundItemId = initialDiary.find("id", id)?.id;
 
-  if (foundItemIdx < -1) {
+  if (foundItemId) {
     return res.status(204).send(Error.getError("no id found"));
   }
 
@@ -113,7 +95,7 @@ export const editDiary = (req: Request, res: Response) => {
     date: body.date,
   };
 
-  initialDiary.data.splice(foundItemIdx, 1, itemToReplace);
+  initialDiary.replace(foundItemId!, itemToReplace);
 
   return res.status(201).send(req.body);
 };
@@ -129,11 +111,14 @@ export const addFoodsToDiary = (req: Request, res: Response) => {
                   $id: "3",
                 }]
         } */
-
   const { id } = req.params;
 
-  let foundItemIdx = findItemIdxById(id, initialDiary);
-  let foundItem = findItemById(id, initialDiary);
+  if (!id) {
+    return res.send(Error.getError("No id"));
+  }
+
+  let foundItemIdx = initialDiary.findIdx("id", id);
+  let foundItem = initialDiary.find("id", id);
 
   if (foundItemIdx < -1) {
     return res.status(204).send(Error.getError("no such an item found"));
@@ -143,7 +128,7 @@ export const addFoodsToDiary = (req: Request, res: Response) => {
 
   foundItem?.foods.push(body);
 
-  initialDiary.data.splice(foundItemIdx, 1, foundItem!);
+  initialDiary.replace(foundItem!.id, foundItem!);
 
   return res.status(201).send(req.body);
 };

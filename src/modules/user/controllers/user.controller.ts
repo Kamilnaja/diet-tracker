@@ -14,11 +14,11 @@ export const registerUser = (req: Request, res: Response) => {
     return res.status(400).json(Error.getError("Missing data"));
   }
 
-  if (initialUsers.data.find((u) => u.name === name)) {
+  if (initialUsers.find("name", name)) {
     return res.status(400).json(Error.getError("Username already exists"));
   }
 
-  if (initialUsers.data.find((u) => u.email === email)) {
+  if (initialUsers.find("email", email)) {
     return res.status(400).json(Error.getError("Email already exists"));
   }
 
@@ -28,8 +28,7 @@ export const registerUser = (req: Request, res: Response) => {
     .setName(name)
     .build();
 
-  initialUsers.data.push(newUser);
-  initialUsers.length++;
+  initialUsers.add(newUser);
 
   res.send(newUser);
 };
