@@ -1,26 +1,24 @@
 import { baseURL } from "@shared/helpers/utils";
 import { RESPONSE_CODES } from "@shared/models/response-codes.const";
 import request from "supertest";
-import { Food } from "../models/food.interface";
-import { NutriScore } from "../models/nutri-score.enum";
+import { Fluid } from "../models/fluid.interface";
 
-const newFood: Food = {
-  name: "Banana",
-  weight: 100,
-  nutriScore: NutriScore.D,
+const newFluid: Fluid = {
+  name: "Juice",
+  capacity: 100,
   caloriesPer100g: 10,
   id: "10",
-  tags: ["1", "2"],
+  icon: "🧪",
 };
-const partURL = "/foods";
+const partURL = "/fluids";
 
-describe("GET /foods", () => {
+describe("GET /fluids", () => {
   beforeAll(async () => {
-    await request(baseURL).post(partURL).send(newFood);
+    await request(baseURL).post(partURL).send(newFluid);
   });
 
   afterAll(async () => {
-    await request(baseURL).delete(`${partURL}/${newFood.id}`);
+    await request(baseURL).delete(`${partURL}/${newFluid.id}`);
   });
 
   it("should return 200", async () => {
@@ -32,28 +30,27 @@ describe("GET /foods", () => {
   });
 
   it("should find item by string param", async () => {
-    await request(baseURL).post(partURL).send(newFood);
+    await request(baseURL).post(partURL).send(newFluid);
     const responseGet = await request(baseURL)
       .get(partURL)
-      .query({ name: "banana" });
+      .query({ name: "Juice" });
 
     expect(responseGet.statusCode).toBe(RESPONSE_CODES.OK);
     expect(
-      responseGet.body.data.find((item: Food) => item.name === newFood.name)
+      responseGet.body.data.find((item: Fluid) => item.name === newFluid.name)
     ).not.toBeFalsy();
     expect(responseGet.body.length).toBeGreaterThan(0);
   });
 
-  it("should find item by id", async () => {
-    await request(baseURL).post(partURL).send(newFood);
+  it("should find fluid by id", async () => {
+    await request(baseURL).post(partURL).send(newFluid);
 
     const response = await request(baseURL).get(`${partURL}/10`);
     const { body } = response;
 
     expect(response.statusCode).toBe(RESPONSE_CODES.OK);
-    expect(body.name).toEqual(newFood.name);
-    expect(body.weight).toEqual(newFood.weight);
-    expect(body.tags).toEqual(newFood.tags);
+    expect(body.name).toEqual(newFluid.name);
+    expect(body.capacity).toEqual(newFluid.capacity);
   });
 
   it("should return 404 when couldn't find item by id", async () => {
@@ -63,48 +60,50 @@ describe("GET /foods", () => {
   });
 });
 
-describe("POST /foods", () => {
-  it("should not create new food without name", async () => {
-    const newFood = {
+describe("POST /fluids", () => {
+  it("should not create new fluid without name", async () => {
+    const newFluid = {
       id: 1000330300303,
     };
-    const response = await request(baseURL).post(partURL).send(newFood);
+    const response = await request(baseURL).post(partURL).send(newFluid);
     expect(response.statusCode).toBe(RESPONSE_CODES.UNPROCESSABLE_ENTITY);
   });
 
-  it("should create new food with id", async () => {
-    const newFood = {
+  it("should create new fluid with id", async () => {
+    const newFluid: Fluid = {
       id: "1000330300303",
-      name: "Porridge",
-      weight: 100,
-    } as Food;
-    const response = await request(baseURL).post(partURL).send(newFood);
+      name: "Tea",
+      capacity: 100,
+      icon: "",
+    };
+    const response = await request(baseURL).post(partURL).send(newFluid);
 
     expect([RESPONSE_CODES.CREATED, RESPONSE_CODES.CONFLICT]).toContain(
       response.statusCode
     );
 
     const responseGet = await request(baseURL).get(partURL);
-    const foods: Food[] = responseGet.body.data;
-    const createdFood = foods.find((item) => item.id === newFood.id);
+    const fluids: Fluid[] = responseGet.body.data;
+    const createdFood = fluids.find((item) => item.id === newFluid.id);
 
     expect(createdFood).not.toBeFalsy();
-    expect(createdFood?.name).toEqual(newFood.name);
+    expect(createdFood?.name).toEqual(newFluid.name);
+    expect(createdFood?.capacity).toEqual(newFluid.capacity);
   });
 });
 
-describe("DELETE /foods", () => {
+describe("DELETE /fluid", () => {
   beforeAll(async () => {
-    await request(baseURL).post(partURL).send(newFood);
+    await request(baseURL).post(partURL).send(newFluid);
   });
 
-  it("Should delete one item", async () => {
-    await request(baseURL).delete(`${partURL}/${newFood.id}`);
+  it("Should delete one fluid item", async () => {
+    await request(baseURL).delete(`${partURL}/${newFluid.id}`);
     const response = await request(baseURL).get(partURL);
     const foods = response.body.data;
 
-    const exists = foods.find((food: Food) => {
-      newFood.id === food.id;
+    const exists = foods.find((fluid: Fluid) => {
+      newFluid.id === fluid.id;
     });
 
     expect(exists).toBe(undefined);

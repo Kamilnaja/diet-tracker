@@ -1,11 +1,11 @@
 import { createEmptyResponse } from "@shared/helpers/create-empty-response";
 import { shouldLoadInitialData } from "@shared/helpers/utils";
-import { FoodBuilder } from "../builders/food-builder";
+import { FoodBuilder } from "../builders/food.builder";
 import { FoodResponse } from "../models/food-response";
 import { Food } from "../models/food.interface";
 import { NutriScore } from "../models/nutri-score.enum";
 
-const createNonEmptyFoods = (): Food[] => {
+const createFoods = (): Food[] => {
   const cottage = new FoodBuilder()
     .setId("1")
     .setName("Cottage Cheese")
@@ -57,5 +57,5 @@ const createNonEmptyFoods = (): Food[] => {
 
 export const getInitialFoods = (): FoodResponse =>
   shouldLoadInitialData()
-    ? new FoodResponse(createNonEmptyFoods())
+    ? new FoodResponse(createFoods())
     : createEmptyResponse();

@@ -4,7 +4,7 @@ import { DiaryBuilder } from "../builders/diary-builder";
 import { DiaryResponse } from "../models/diary-response";
 import { Diary } from "../models/diary.interface";
 
-const createNonEmptyDiary = (): Diary[] => {
+const createDiary = (): Diary[] => {
   const day1 = new DiaryBuilder()
     .setId("0")
     .setDate("2022-01-01")
@@ -28,5 +28,5 @@ const createNonEmptyDiary = (): Diary[] => {
 
 export const getInitialDiary = (): DiaryResponse =>
   shouldLoadInitialData()
-    ? new DiaryResponse(createNonEmptyDiary())
+    ? new DiaryResponse(createDiary())
     : createEmptyResponse();

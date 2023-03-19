@@ -1,5 +1,6 @@
 import { diaryRouter } from "@modules/diary/routes/diary.routes";
 import { dictRouter } from "@modules/dict/routes/dict.routes";
+import { fluidsRouter } from "@modules/fluids/routes/fluid.routes";
 import { foodsRouter } from "@modules/foods/routes/foods.routes";
 import { userRouter } from "@modules/user/routes/user.routes";
 import { shouldLoadInitialData } from "@shared/helpers/utils";
@@ -22,6 +23,7 @@ app.use("/api/foods", foodsRouter);
 app.use("/api/diary", diaryRouter);
 app.use("/api/dicts", dictRouter);
 app.use("/api/users", userRouter);
+app.use("/api/fluids", fluidsRouter);
 
 app.use("/", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 

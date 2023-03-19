@@ -4,7 +4,7 @@ import { UserBuilder } from "../builders/user-builder";
 import { UserResponse } from "../models/user-response";
 import { User } from "../models/user.interface";
 
-const createNonEmptyUsers = (): User[] => {
+const createUsers = (): User[] => {
   const user1 = new UserBuilder()
     .setEmail("test@example.com")
     .setName("test1")
@@ -23,5 +23,5 @@ const createNonEmptyUsers = (): User[] => {
 
 export const getInitialUsers = (): UserResponse =>
   shouldLoadInitialData()
-    ? new UserResponse(createNonEmptyUsers())
+    ? new UserResponse(createUsers())
     : createEmptyResponse();

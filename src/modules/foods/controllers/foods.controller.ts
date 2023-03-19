@@ -1,9 +1,9 @@
 import { Error } from "@models/error";
 import { RESPONSE_CODES } from "@shared/models/response-codes.const";
 import { Request, Response } from "express";
-import { FoodBuilder } from "../builders/food-builder";
+import { FoodBuilder } from "../builders/food.builder";
 import { getInitialFoods } from "../helpers/create-foods";
-import { Food, FoodListResponse } from "../models/food.interface";
+import { Food } from "../models/food.interface";
 
 const initialFoods = getInitialFoods();
 
@@ -16,7 +16,7 @@ export const getFoods = (req: Request, res: Response) => {
     const filterFn = (item: Food) =>
       item.name?.toLocaleLowerCase().includes(searchBy);
 
-    const results = initialFoods.filterByFn(filterFn);
+    initialFoods.filterByFn(filterFn);
   }
 
   res.json(initialFoods.getResponse);
@@ -91,11 +91,6 @@ export const deleteFoodById = (req: Request, res: Response) => {
   // #swagger.tags = ['Foods']
   const { id } = req.params;
 
-  let response: FoodListResponse = {
-    data: undefined,
-    length: 0,
-  };
-
   if (!id) {
     return res.send(Error.getError("No entry found"));
   }
@@ -103,16 +98,11 @@ export const deleteFoodById = (req: Request, res: Response) => {
   let foundItem = initialFoods.find("id", id);
 
   if (foundItem) {
-    response = {
-      data: foundItem,
-      length: 1,
-    };
-
     initialFoods.filter("id", id);
   }
   res
     .status(foundItem ? RESPONSE_CODES.OK : RESPONSE_CODES.NOT_FOUND)
-    .send(response);
+    .send(foundItem);
 };
 
 export const editFood = (req: Request, res: Response) => {
