@@ -1,6 +1,7 @@
+import { Builder } from "@shared/models/builder.interface";
 import { User } from "../models/user.interface";
 
-export class UserBuilder {
+export class UserBuilder implements Builder<User> {
   private name: string;
   private email: string;
   private password: string;

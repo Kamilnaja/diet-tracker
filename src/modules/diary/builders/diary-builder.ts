@@ -1,7 +1,8 @@
+import { Builder } from "@shared/models/builder.interface";
 import { Food } from "../../foods/models/food.interface";
 import { Diary } from "../models/diary.interface";
 
-export class DiaryBuilder {
+export class DiaryBuilder implements Builder<Diary> {
   private _id: string;
   private _date: string;
   private _foods: Food[];
