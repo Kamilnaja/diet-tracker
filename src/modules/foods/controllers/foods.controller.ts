@@ -1,4 +1,5 @@
 import { Error } from "@models/error";
+import { RESPONSE_CODES } from "@shared/models/response-codes.const";
 import { Request, Response } from "express";
 import { FoodBuilder } from "../builders/food-builder";
 import { getInitialFoods } from "../helpers/create-foods";
@@ -32,8 +33,10 @@ export const getFoodById = (req: Request, res: Response) => {
   let foundItem = initialFoods.find("id", id);
 
   foundItem
-    ? res.status(200).json(foundItem)
-    : res.status(204).json(Error.getError("Item not found"));
+    ? res.status(RESPONSE_CODES.OK).json(foundItem)
+    : res
+        .status(RESPONSE_CODES.NOT_FOUND)
+        .json(Error.getError("Item not found"));
 };
 
 export const addNewFood = (req: Request, res: Response) => {
@@ -61,13 +64,13 @@ export const addNewFood = (req: Request, res: Response) => {
 
   if (!name || !weight) {
     return res
-      .status(400)
+      .status(RESPONSE_CODES.UNPROCESSABLE_ENTITY)
       .json(Error.getError("Both name and weight are required"));
   }
 
   if (initialFoods.find("name", name)) {
     return res
-      .status(409)
+      .status(RESPONSE_CODES.CONFLICT)
       .json(Error.getError("Food with this name already exists"));
   }
 
@@ -81,7 +84,7 @@ export const addNewFood = (req: Request, res: Response) => {
 
   initialFoods.add(food.build());
 
-  res.status(201).json(food);
+  res.status(RESPONSE_CODES.CREATED).json(food);
 };
 
 export const deleteFoodById = (req: Request, res: Response) => {
@@ -107,7 +110,9 @@ export const deleteFoodById = (req: Request, res: Response) => {
 
     initialFoods.filter("id", id);
   }
-  res.status(foundItem ? 200 : 404).send(response);
+  res
+    .status(foundItem ? RESPONSE_CODES.OK : RESPONSE_CODES.NOT_FOUND)
+    .send(response);
 };
 
 export const editFood = (req: Request, res: Response) => {
@@ -132,7 +137,9 @@ export const editFood = (req: Request, res: Response) => {
   let foundItemId = initialFoods.find("id", id)?.id;
 
   if (!foundItemId) {
-    return res.status(404).send(Error.getError("no id found"));
+    return res
+      .status(RESPONSE_CODES.NOT_FOUND)
+      .send(Error.getError("no id found"));
   }
 
   const { body } = req;
@@ -148,5 +155,5 @@ export const editFood = (req: Request, res: Response) => {
 
   initialFoods.replace(foundItemId, itemToReplace);
 
-  return res.status(201).send(req.body);
+  return res.status(RESPONSE_CODES.CREATED).send(req.body);
 };

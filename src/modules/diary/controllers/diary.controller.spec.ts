@@ -1,4 +1,5 @@
 import { baseURL } from "@shared/helpers/utils";
+import { RESPONSE_CODES } from "@shared/models/response-codes.const";
 import request from "supertest";
 import { DiaryBuilder } from "../builders/diary-builder";
 
@@ -27,7 +28,7 @@ describe("diary", () => {
     it("should return items", async () => {
       await request(baseURL)
         .get(partURL)
-        .expect(200)
+        .expect(RESPONSE_CODES.OK)
         .then((resp) => {
           expect(resp.body.data.length).toBe(1);
           expect(resp.body.length).toBe(1);
@@ -39,14 +40,14 @@ describe("diary", () => {
     it("should return one item", async () => {
       await request(baseURL)
         .get(partURL)
-        .expect(200)
+        .expect(RESPONSE_CODES.OK)
         .then((resp) => {
           expect(resp.body.data.length).toBe(1);
         });
 
       await request(baseURL)
         .get(`${partURL}/10`)
-        .expect(200)
+        .expect(RESPONSE_CODES.OK)
         .then((resp) => {
           expect(resp.body.id).toBe("10");
           expect(resp.body.date).toBe("2023-01-01");
@@ -57,13 +58,15 @@ describe("diary", () => {
           ]);
         });
 
-      await request(baseURL).get(`${partURL}/fdasdfads`).expect(204);
+      await request(baseURL)
+        .get(`${partURL}/fdasdfads`)
+        .expect(RESPONSE_CODES.NOT_FOUND);
     });
   });
 
   describe("DELETE /diary", () => {
     it("should delete item", async () => {
-      await request(baseURL).delete(`${partURL}/10`).expect(200);
+      await request(baseURL).delete(`${partURL}/10`).expect(RESPONSE_CODES.OK);
     });
   });
 
@@ -75,7 +78,7 @@ describe("diary", () => {
 
       await request(baseURL)
         .get(`${partURL}/10`)
-        .expect(200)
+        .expect(RESPONSE_CODES.OK)
         .then((resp) => {
           expect(resp.body.foods.length).toEqual(4);
           expect(resp.body.foods[3]).toEqual(foodEntry);

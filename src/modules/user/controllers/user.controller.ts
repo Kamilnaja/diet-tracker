@@ -1,5 +1,6 @@
 import { Error } from "@models/error";
 import { HttpResponse } from "@shared/models/http-response.interface";
+import { RESPONSE_CODES } from "@shared/models/response-codes.const";
 import { Request, Response } from "express";
 import { UserBuilder } from "../builders/user-builder";
 import { getInitialUsers } from "../helpers/create-users";
@@ -13,16 +14,22 @@ export const registerUser = (req: Request, res: Response) => {
 
   if (!name || !email || !id) {
     return res
-      .status(400)
+      .status(RESPONSE_CODES.UNPROCESSABLE_ENTITY)
       .json(Error.getError("Name, email and id is required"));
   }
 
   if (initialUsers.find("name", name)) {
-    return res.status(400).json(Error.getError("Username already exists"));
+    return res
+      .status(RESPONSE_CODES.UNPROCESSABLE_ENTITY)
+      .json(Error.getError("Username already exists"));
   } else if (initialUsers.find("email", email)) {
-    return res.status(400).json(Error.getError("Email already exists"));
-  } else if (initialUsers.find("id", email)) {
-    return res.status(400).json(Error.getError("Email already exists"));
+    return res
+      .status(RESPONSE_CODES.UNPROCESSABLE_ENTITY)
+      .json(Error.getError("Email already exists"));
+  } else if (initialUsers.find("id", id)) {
+    return res
+      .status(RESPONSE_CODES.UNPROCESSABLE_ENTITY)
+      .json(Error.getError("ID already exists"));
   }
 
   const newUser = new UserBuilder()
@@ -65,5 +72,7 @@ export const deleteUserById = (req: Request, res: Response) => {
 
     initialUsers.filter("id", id);
   }
-  res.status(foundItem ? 200 : 404).send(response);
+  res
+    .status(foundItem ? RESPONSE_CODES.OK : RESPONSE_CODES.NOT_FOUND)
+    .send(response);
 };

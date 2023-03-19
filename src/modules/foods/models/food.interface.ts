@@ -4,7 +4,6 @@ import { Tag } from "../../dict/models/tag.interface";
 import { NutriScore } from "./nutri-score.enum";
 
 export interface Food extends Entry {
-  name?: string;
   caloriesPer100g?: number;
   weight: number;
   nutriScore?: NutriScore;

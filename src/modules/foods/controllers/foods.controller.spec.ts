@@ -1,4 +1,5 @@
 import { baseURL } from "@shared/helpers/utils";
+import { RESPONSE_CODES } from "@shared/models/response-codes.const";
 import request from "supertest";
 import { Food } from "../models/food.interface";
 import { NutriScore } from "../models/nutri-score.enum";
@@ -25,7 +26,7 @@ describe("GET /foods", () => {
   it("Should return 200", async () => {
     const response = await request(baseURL).get(partURL);
 
-    expect(response.statusCode).toBe(200);
+    expect(response.statusCode).toBe(RESPONSE_CODES.OK);
     expect(!!response.body.error).toBe(false);
     expect(response.body.length).toBe(1);
   });
@@ -36,7 +37,7 @@ describe("GET /foods", () => {
       .get("/foods")
       .query({ name: "banana" });
 
-    expect(responseGet.statusCode).toBe(200);
+    expect(responseGet.statusCode).toBe(RESPONSE_CODES.OK);
     expect(
       responseGet.body.data.find((item: Food) => item.name === newFood.name)
     ).not.toBeFalsy();
@@ -49,7 +50,7 @@ describe("GET /foods", () => {
     const response = await request(baseURL).get(`${partURL}/10`);
     const { body } = response;
 
-    expect(response.statusCode).toBe(200);
+    expect(response.statusCode).toBe(RESPONSE_CODES.OK);
     expect(body.name).toEqual(newFood.name);
     expect(body.weight).toEqual(newFood.weight);
     expect(body.tags).toEqual(newFood.tags);
@@ -58,7 +59,7 @@ describe("GET /foods", () => {
   it("should return 204 when couldn't find item by id", async () => {
     const response = await request(baseURL).get(`${partURL}/1001010`);
 
-    expect(response.statusCode).toBe(204);
+    expect(response.statusCode).toBe(RESPONSE_CODES.NOT_FOUND);
   });
 });
 
@@ -68,7 +69,7 @@ describe("POST /foods", () => {
       id: 1000330300303,
     };
     const response = await request(baseURL).post(partURL).send(newFood);
-    expect(response.statusCode).toBe(400);
+    expect(response.statusCode).toBe(RESPONSE_CODES.UNPROCESSABLE_ENTITY);
   });
 
   it("should create new food with id", async () => {
@@ -79,7 +80,9 @@ describe("POST /foods", () => {
     } as Food;
     const response = await request(baseURL).post(partURL).send(newFood);
 
-    expect([201, 409]).toContain(response.statusCode);
+    expect([RESPONSE_CODES.CREATED, RESPONSE_CODES.CONFLICT]).toContain(
+      response.statusCode
+    );
 
     const responseGet = await request(baseURL).get(partURL);
     const foods: Food[] = responseGet.body.data;
