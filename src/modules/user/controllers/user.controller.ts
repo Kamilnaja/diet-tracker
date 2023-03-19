@@ -44,7 +44,7 @@ export const getUsers = (req: Request, res: Response) => {
 
 export const deleteUserById = (req: Request, res: Response) => {
   // #swagger.tags = ['User']
-  const id = req.params.id;
+  const { id } = req.params;
 
   if (!id) {
     return res.send(Error.getError("No user found"));

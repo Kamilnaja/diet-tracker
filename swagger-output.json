@@ -183,6 +183,9 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK"
+          },
           "201": {
             "description": "Created"
           },
@@ -300,6 +303,9 @@
           },
           "204": {
             "description": "No Content"
+          },
+          "404": {
+            "description": "Not Found"
           }
         }
       }

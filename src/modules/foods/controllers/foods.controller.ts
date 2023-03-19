@@ -107,7 +107,7 @@ export const addNewFood = (req: Request, res: Response) => {
 
 export const deleteFoodById = (req: Request, res: Response) => {
   // #swagger.tags = ['Foods']
-  const id = req.params.id;
+  const { id } = req.params;
 
   let response: FoodListResponse = {
     data: undefined,
@@ -145,7 +145,7 @@ export const editFood = (req: Request, res: Response) => {
                   tags: ["1", "2"]
                 }
         } */
-  const id = req.params.id;
+  const { id } = req.params;
 
   if (!id) {
     return res.send(Error.getError("No entry found"));

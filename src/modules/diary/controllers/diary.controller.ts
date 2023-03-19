@@ -61,7 +61,7 @@ export const addNewDiaryEntry = (req: Request, res: Response) => {
 
 export const deleteDiaryItemById = (req: Request, res: Response) => {
   // #swagger.tags = ['Diary']
-  const id = req.params.id;
+  const { id } = req.params;
 
   if (!id) {
     return res.send(Error.getError("No entry found"));
