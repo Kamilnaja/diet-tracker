@@ -1,44 +1,24 @@
 import { Error } from "@models/error";
-import {
-  filterItemById,
-  findItemById,
-  findItemIdxById,
-} from "@shared/helpers/array-helpers";
 import { Request, Response } from "express";
 import { FoodBuilder } from "../builders/food-builder";
 import { getInitialFoods } from "../helpers/create-foods";
-import {
-  Food,
-  FoodListResponse,
-  FoodListResponseAll,
-} from "../models/food.interface";
+import { Food, FoodListResponse } from "../models/food.interface";
 
 const initialFoods = getInitialFoods();
 
 export const getFoods = (req: Request, res: Response) => {
   // #swagger.tags = ['Foods']
-
   let searchBy = req.query?.name as string;
   searchBy = searchBy?.trim().toLocaleLowerCase();
-  let response: FoodListResponseAll;
 
   if (searchBy) {
-    const results = initialFoods.data.filter((item) =>
-      item.name?.toLocaleLowerCase().includes(searchBy)
-    );
+    const filterFn = (item: Food) =>
+      item.name?.toLocaleLowerCase().includes(searchBy);
 
-    response = {
-      data: results,
-      length: results.length,
-    };
-  } else {
-    response = {
-      ...initialFoods,
-      data: initialFoods.data,
-    };
+    const results = initialFoods.filterByFn(filterFn);
   }
 
-  res.json(response);
+  res.json(initialFoods.getResponse);
 };
 
 export const getFoodById = (req: Request, res: Response) => {
@@ -49,7 +29,7 @@ export const getFoodById = (req: Request, res: Response) => {
     return res.send(Error.getError("No entry found"));
   }
 
-  let foundItem = findItemById(id, initialFoods);
+  let foundItem = initialFoods.find("id", id);
 
   foundItem
     ? res.status(200).json(foundItem)
@@ -85,7 +65,7 @@ export const addNewFood = (req: Request, res: Response) => {
       .json(Error.getError("Both name and weight are required"));
   }
 
-  if (initialFoods.data.find((item) => item.name === name)) {
+  if (initialFoods.find("name", name)) {
     return res
       .status(409)
       .json(Error.getError("Food with this name already exists"));
@@ -99,8 +79,7 @@ export const addNewFood = (req: Request, res: Response) => {
     .setName(name)
     .setTags(tags);
 
-  initialFoods.data.push(food.build());
-  initialFoods.length++;
+  initialFoods.add(food.build());
 
   res.status(201).json(food);
 };
@@ -118,7 +97,7 @@ export const deleteFoodById = (req: Request, res: Response) => {
     return res.send(Error.getError("No entry found"));
   }
 
-  let foundItem = findItemById(id, initialFoods);
+  let foundItem = initialFoods.find("id", id);
 
   if (foundItem) {
     response = {
@@ -126,8 +105,7 @@ export const deleteFoodById = (req: Request, res: Response) => {
       length: 1,
     };
 
-    initialFoods.data = filterItemById(id, initialFoods);
-    initialFoods.length = initialFoods.length - 1;
+    initialFoods.filter("id", id);
   }
   res.status(foundItem ? 200 : 404).send(response);
 };
@@ -151,10 +129,10 @@ export const editFood = (req: Request, res: Response) => {
     return res.send(Error.getError("No entry found"));
   }
 
-  let foundItemIdx = findItemIdxById(id, initialFoods);
+  let foundItemId = initialFoods.find("id", id)?.id;
 
-  if (foundItemIdx > -1) {
-    res.status(204).send(Error.getError("no id found"));
+  if (!foundItemId) {
+    return res.status(404).send(Error.getError("no id found"));
   }
 
   const { body } = req;
@@ -168,7 +146,7 @@ export const editFood = (req: Request, res: Response) => {
     tags: body.tags,
   };
 
-  initialFoods.data.splice(foundItemIdx, 1, itemToReplace);
+  initialFoods.replace(foundItemId, itemToReplace);
 
   return res.status(201).send(req.body);
 };

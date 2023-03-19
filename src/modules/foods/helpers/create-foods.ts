@@ -1,12 +1,11 @@
-import { HttpResponse } from "@models/http-response.interface";
+import { createEmptyResponse } from "@shared/helpers/create-empty-response";
 import { shouldLoadInitialData } from "@shared/helpers/utils";
 import { FoodBuilder } from "../builders/food-builder";
+import { FoodResponse } from "../models/food-response";
 import { Food } from "../models/food.interface";
 import { NutriScore } from "../models/nutri-score.enum";
 
-type Response = HttpResponse<Food[]>;
-
-const createNonEmptyFoods = (): Response => {
+const createNonEmptyFoods = (): Food[] => {
   const cottage = new FoodBuilder()
     .setId("1")
     .setName("Cottage Cheese")
@@ -53,19 +52,10 @@ const createNonEmptyFoods = (): Response => {
 
   const foods = [cottage, tomato, chicken, beef, orangeJuice, beeHoney];
 
-  return {
-    data: foods,
-    length: foods.length,
-  };
+  return foods;
 };
 
-const createEmptyFoods = (): Response => {
-  const foods: Food[] = [];
-  return {
-    data: foods,
-    length: foods.length,
-  };
-};
-
-export const getInitialFoods = (): Response =>
-  shouldLoadInitialData() ? createNonEmptyFoods() : createEmptyFoods();
+export const getInitialFoods = (): FoodResponse =>
+  shouldLoadInitialData()
+    ? new FoodResponse(createNonEmptyFoods())
+    : createEmptyResponse();

@@ -38,4 +38,8 @@ export class ApiResponse<T extends Entry> {
   filter<K extends keyof T>(key: K, value: string): void {
     this.data = this._data.filter((item) => item[key] === value);
   }
+
+  filterByFn(cb: (item: T) => boolean | undefined): void {
+    this.data = this._data.filter(cb);
+  }
 }

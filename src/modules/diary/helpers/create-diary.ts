@@ -1,11 +1,8 @@
-import { HttpResponse } from "@models/http-response.interface";
 import { createEmptyResponse } from "@shared/helpers/create-empty-response";
 import { shouldLoadInitialData } from "@shared/helpers/utils";
 import { DiaryBuilder } from "../builders/diary-builder";
 import { DiaryResponse } from "../models/diary-response";
 import { Diary } from "../models/diary.interface";
-
-type Response = HttpResponse<Diary>;
 
 const createNonEmptyDiary = (): Diary[] => {
   const day1 = new DiaryBuilder()

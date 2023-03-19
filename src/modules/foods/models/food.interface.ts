@@ -12,4 +12,3 @@ export interface Food extends Entry {
 }
 
 export type FoodListResponse = HttpResponse<Food | undefined>;
-export type FoodListResponseAll = HttpResponse<Food[] | undefined>;
