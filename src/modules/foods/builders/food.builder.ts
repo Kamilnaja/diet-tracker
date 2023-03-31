@@ -1,7 +1,7 @@
 import { Builder } from "@shared/models/builder.interface";
 import { Tag } from "../../dict/models/tag.interface";
 import { Food } from "../models/food.interface";
-import { NutriScore } from "../models/nutri-score.enum";
+import { NutriScore } from "../models/nutri-score.model";
 
 export class FoodBuilder implements Builder<Food> {
   private _id: string;

@@ -2,12 +2,11 @@ import { baseURL } from "@shared/helpers/utils";
 import { RESPONSE_CODES } from "@shared/models/response-codes.const";
 import request from "supertest";
 import { Food } from "../models/food.interface";
-import { NutriScore } from "../models/nutri-score.enum";
 
 const newFood: Food = {
   name: "Banana",
   weight: 100,
-  nutriScore: NutriScore.D,
+  nutriScore: "D",
   caloriesPer100g: 10,
   id: "10",
   tags: ["1", "2"],
