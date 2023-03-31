@@ -71,17 +71,7 @@
             }
           }
         ],
-        "responses": {
-          "201": {
-            "description": "Created"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "409": {
-            "description": "Conflict"
-          }
-        }
+        "responses": {}
       }
     },
     "/api/foods/{id}": {
@@ -101,9 +91,6 @@
         "responses": {
           "200": {
             "description": "OK"
-          },
-          "204": {
-            "description": "No Content"
           }
         }
       },
@@ -123,9 +110,6 @@
         "responses": {
           "200": {
             "description": "OK"
-          },
-          "404": {
-            "description": "Not Found"
           }
         }
       },
@@ -185,12 +169,6 @@
         "responses": {
           "200": {
             "description": "OK"
-          },
-          "201": {
-            "description": "Created"
-          },
-          "204": {
-            "description": "No Content"
           }
         }
       }
@@ -232,9 +210,6 @@
         "responses": {
           "200": {
             "description": "OK"
-          },
-          "409": {
-            "description": "Conflict"
           }
         }
       }
@@ -256,9 +231,6 @@
         "responses": {
           "200": {
             "description": "OK"
-          },
-          "204": {
-            "description": "No Content"
           }
         }
       },
@@ -278,9 +250,6 @@
         "responses": {
           "200": {
             "description": "OK"
-          },
-          "404": {
-            "description": "Not Found"
           }
         }
       },
@@ -297,17 +266,7 @@
             "type": "string"
           }
         ],
-        "responses": {
-          "201": {
-            "description": "Created"
-          },
-          "204": {
-            "description": "No Content"
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        }
+        "responses": {}
       }
     },
     "/api/diary/{id}/foods": {
@@ -352,12 +311,6 @@
         "responses": {
           "200": {
             "description": "OK"
-          },
-          "201": {
-            "description": "Created"
-          },
-          "204": {
-            "description": "No Content"
           }
         }
       }
@@ -420,9 +373,6 @@
         "responses": {
           "200": {
             "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
           }
         }
       }
@@ -444,11 +394,154 @@
         "responses": {
           "200": {
             "description": "OK"
-          },
-          "404": {
-            "description": "Not Found"
           }
         }
+      }
+    },
+    "/api/fluids/": {
+      "get": {
+        "tags": [
+          "Fluids"
+        ],
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Fluids"
+        ],
+        "description": "Add new Fluid",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Fluid Body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "Orange"
+                },
+                "capacity": {
+                  "type": "number",
+                  "example": 100
+                },
+                "caloriesPer100g": {
+                  "type": "number",
+                  "example": 30
+                },
+                "id": {
+                  "type": "string",
+                  "example": "39393993"
+                },
+                "icon": {
+                  "type": "string",
+                  "example": "☕"
+                }
+              },
+              "required": [
+                "name",
+                "capacity"
+              ]
+            }
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/api/fluids/{id}": {
+      "get": {
+        "tags": [
+          "Fluids"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Fluids"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Fluids"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Fluid Body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "Orange"
+                },
+                "capacity": {
+                  "type": "number",
+                  "example": 100
+                },
+                "caloriesPer100g": {
+                  "type": "number",
+                  "example": 30
+                },
+                "id": {
+                  "type": "string",
+                  "example": "39393993"
+                },
+                "icons": {
+                  "type": "string",
+                  "example": "☕"
+                }
+              },
+              "required": [
+                "name",
+                "capacity"
+              ]
+            }
+          }
+        ],
+        "responses": {}
       }
     }
   }
