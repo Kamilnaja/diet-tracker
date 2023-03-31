@@ -274,7 +274,7 @@
         "tags": [
           "Diary"
         ],
-        "description": "Add new Food to Diary",
+        "description": "Add new Meal to Diary",
         "parameters": [
           {
             "name": "id",
@@ -298,11 +298,16 @@
                   "id": {
                     "type": "string",
                     "example": "3"
+                  },
+                  "type": {
+                    "type": "string",
+                    "example": "breakfast"
                   }
                 },
                 "required": [
                   "weight",
-                  "id"
+                  "id",
+                  "type"
                 ]
               }
             }

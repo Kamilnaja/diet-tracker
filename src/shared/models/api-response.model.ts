@@ -1,4 +1,4 @@
-import { Entry } from "./entry.interface";
+import { Entry } from "./entry.model";
 
 export class ApiResponse<T extends Entry> {
   private _data: T[];

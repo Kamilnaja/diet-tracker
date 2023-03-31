@@ -1,7 +1,8 @@
-import { Builder } from "@shared/models/builder.interface";
+import { Builder } from "@shared/models/builder.model";
 import { Tag } from "../../dict/models/tag.interface";
-import { Food } from "../models/food.interface";
-import { NutriScore } from "../models/nutri-score.enum";
+import { Food } from "../models/food.model";
+import { MealType } from "../models/meal-type.model";
+import { NutriScore } from "../models/nutri-score.model";
 
 export class FoodBuilder implements Builder<Food> {
   private _id: string;
@@ -10,6 +11,7 @@ export class FoodBuilder implements Builder<Food> {
   private _caloriesPer100g: number;
   private _nutriScore?: NutriScore;
   private _tags: Tag["id"][];
+  private _mealType: MealType;
 
   setId(id: string): FoodBuilder {
     this._id = id;
@@ -36,6 +38,11 @@ export class FoodBuilder implements Builder<Food> {
     return this;
   }
 
+  setMealType(mealType: MealType): FoodBuilder {
+    this._mealType = mealType;
+    return this;
+  }
+
   setTags(value: string[]) {
     this._tags = value;
     return this;
@@ -49,6 +56,7 @@ export class FoodBuilder implements Builder<Food> {
       caloriesPer100g: this._caloriesPer100g,
       nutriScore: this._nutriScore,
       tags: this._tags,
+      mealType: this._mealType,
     };
     return food;
   }

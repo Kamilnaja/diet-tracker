@@ -3,7 +3,7 @@ import { RESPONSE_CODES } from "@shared/models/response-codes.const";
 import { Request, Response } from "express";
 import { FoodBuilder } from "../builders/food.builder";
 import { getInitialFoods } from "../helpers/create-foods";
-import { Food } from "../models/food.interface";
+import { Food } from "../models/food.model";
 
 const initialFoods = getInitialFoods();
 
@@ -141,6 +141,7 @@ export const editFood = (req: Request, res: Response) => {
     caloriesPer100g: body.caloriesPer100g,
     nutriScore: body.nutriScore,
     tags: body.tags,
+    mealType: body.mealType,
   };
 
   initialFoods.replace(foundItemId, itemToReplace);

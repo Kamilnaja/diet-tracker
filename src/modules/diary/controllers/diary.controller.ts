@@ -1,5 +1,5 @@
 import { Error } from "@models/error";
-import { HttpResponse } from "@models/http-response.interface";
+import { HttpResponse } from "@shared/models/http-response.model";
 import { RESPONSE_CODES } from "@shared/models/response-codes.const";
 import { Request, Response } from "express";
 import { DiaryBuilder } from "../builders/diary-builder";
@@ -123,13 +123,14 @@ export const editDiary = (req: Request, res: Response) => {
 
 export const addFoodsToDiary = (req: Request, res: Response) => {
   // #swagger.tags = ['Diary']
-  // #swagger.description = 'Add new Food to Diary'
+  // #swagger.description = 'Add new Meal to Diary'
   /*  #swagger.parameters['body'] = {
                 in: 'body',
                 description: 'Food Body',
                 schema: [{
                   $weight: 100,
                   $id: "3",
+                  $type: "breakfast",
                 }]
         } */
   const { id } = req.params;

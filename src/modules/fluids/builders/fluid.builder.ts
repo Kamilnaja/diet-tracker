@@ -1,4 +1,4 @@
-import { Builder } from "@shared/models/builder.interface";
+import { Builder } from "@shared/models/builder.model";
 import { Fluid } from "../models/fluid.interface";
 
 export class FluidBuilder implements Builder<Fluid> {

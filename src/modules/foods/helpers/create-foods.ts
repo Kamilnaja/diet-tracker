@@ -2,8 +2,7 @@ import { createEmptyResponse } from "@shared/helpers/create-empty-response";
 import { shouldLoadInitialData } from "@shared/helpers/utils";
 import { FoodBuilder } from "../builders/food.builder";
 import { FoodResponse } from "../models/food-response";
-import { Food } from "../models/food.interface";
-import { NutriScore } from "../models/nutri-score.enum";
+import { Food } from "../models/food.model";
 
 const createFoods = (): Food[] => {
   const cottage = new FoodBuilder()
@@ -11,7 +10,7 @@ const createFoods = (): Food[] => {
     .setName("Cottage Cheese")
     .setCaloriesPer100g(100)
     .setWeight(180)
-    .setNutriScore(NutriScore.B)
+    .setNutriScore("B")
     .setTags(["1", "2", "3"])
     .build();
   const tomato = new FoodBuilder()
@@ -19,7 +18,7 @@ const createFoods = (): Food[] => {
     .setName("Tomato")
     .setCaloriesPer100g(40)
     .setWeight(100)
-    .setNutriScore(NutriScore.A)
+    .setNutriScore("A")
     .setTags(["2", "3"])
     .build();
   const chicken = new FoodBuilder()
@@ -33,7 +32,7 @@ const createFoods = (): Food[] => {
     .setId("4")
     .setName("Beef Steak")
     .setCaloriesPer100g(140)
-    .setNutriScore(NutriScore.C)
+    .setNutriScore("C")
     .setWeight(100)
     .setTags(["3"])
     .build();
