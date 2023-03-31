@@ -1,4 +1,4 @@
-import { Builder } from "@shared/models/builder.interface";
+import { Builder } from "@shared/models/builder.model";
 import { User } from "../models/user.interface";
 
 export class UserBuilder implements Builder<User> {

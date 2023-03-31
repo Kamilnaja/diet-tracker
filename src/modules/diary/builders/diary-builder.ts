@@ -1,5 +1,5 @@
-import { Builder } from "@shared/models/builder.interface";
-import { Food } from "../../foods/models/food.interface";
+import { Builder } from "@shared/models/builder.model";
+import { Food } from "../../foods/models/food.model";
 import { Diary } from "../models/diary.interface";
 
 export class DiaryBuilder implements Builder<Diary> {

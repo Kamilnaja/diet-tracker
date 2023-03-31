@@ -1,7 +1,7 @@
 const swaggerAutogen = require("swagger-autogen")();
 
 const outputFile = "./swagger-output.json";
-const endpointsFiles = ["./index.ts"];
+const endpointsFiles = ["./src/index.ts"];
 const doc = {
   host: "localhost:8080",
   info: {

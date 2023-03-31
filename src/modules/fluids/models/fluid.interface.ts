@@ -1,4 +1,4 @@
-import { Entry } from "@shared/models/entry.interface";
+import { Entry } from "@shared/models/entry.model";
 
 export interface Fluid extends Entry {
   caloriesPer100g?: number;

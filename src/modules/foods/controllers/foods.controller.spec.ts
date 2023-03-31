@@ -1,7 +1,7 @@
 import { baseURL } from "@shared/helpers/utils";
 import { RESPONSE_CODES } from "@shared/models/response-codes.const";
 import request from "supertest";
-import { Food } from "../models/food.interface";
+import { Food } from "../models/food.model";
 
 const newFood: Food = {
   name: "Banana",
@@ -10,6 +10,7 @@ const newFood: Food = {
   caloriesPer100g: 10,
   id: "10",
   tags: ["1", "2"],
+  mealType: "breakfast",
 };
 const partURL = "/foods";
 

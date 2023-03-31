@@ -1,5 +1,5 @@
 import { Error } from "@models/error";
-import { HttpResponse } from "@shared/models/http-response.interface";
+import { HttpResponse } from "@shared/models/http-response.model";
 import { RESPONSE_CODES } from "@shared/models/response-codes.const";
 import { Request, Response } from "express";
 import { UserBuilder } from "../builders/user-builder";

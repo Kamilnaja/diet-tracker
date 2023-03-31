@@ -2,7 +2,7 @@ import { createEmptyResponse } from "@shared/helpers/create-empty-response";
 import { shouldLoadInitialData } from "@shared/helpers/utils";
 import { FoodBuilder } from "../builders/food.builder";
 import { FoodResponse } from "../models/food-response";
-import { Food } from "../models/food.interface";
+import { Food } from "../models/food.model";
 
 const createFoods = (): Food[] => {
   const cottage = new FoodBuilder()
