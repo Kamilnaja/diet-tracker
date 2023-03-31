@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "build": "npx tsc",
-    "start": "concurrently \"ts-node -r tsconfig-paths/register index.ts -initialData=true\" \"npm run swagger-autogen\"",
-    "dev": "ts-node -r tsconfig-paths/register index.ts -initialData=true",
-    "test": "concurrently \"ts-node -r tsconfig-paths/register index.ts -initialData=false\" \"jest\"",
+    "start": "concurrently \"ts-node -r tsconfig-paths/register src/index.ts -initialData=true\" \"npm run swagger-autogen\"",
+    "dev": "ts-node -r tsconfig-paths/register src/index.ts -initialData=true",
+    "test": "concurrently \"ts-node -r tsconfig-paths/register src/index.ts -initialData=false\" \"jest\"",
     "swagger-autogen": "node swagger.js",
     "sa": "node swagger.js"
   },

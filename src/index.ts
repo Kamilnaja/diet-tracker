@@ -9,7 +9,7 @@ import dotenv from "dotenv";
 import express from "express";
 import morgan from "morgan";
 import swaggerUi from "swagger-ui-express";
-import * as swaggerFile from "./swagger-output.json";
+import * as swaggerFile from "../swagger-output.json";
 
 dotenv.config();
 
@@ -28,5 +28,5 @@ app.use("/api/fluids", fluidsRouter);
 app.use("/", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 app.listen(port, () => {
-  console.log(`[server]: 🌩️Server is running at https://localhost:${port}`);
+  console.log(`[server]: 🌩️Server is running at http://localhost:${port}`);
 });
