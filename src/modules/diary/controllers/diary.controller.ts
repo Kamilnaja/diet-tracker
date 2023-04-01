@@ -266,6 +266,8 @@ export const deleteFoodDiaryItemById = (req: Request, res: Response) => {
       },
       length: 1,
     };
+
+    foundItem.foods = foundItem?.foods.filter((food) => food.id !== foodId);
   }
 
   res

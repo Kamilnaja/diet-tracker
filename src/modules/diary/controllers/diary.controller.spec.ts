@@ -2,6 +2,7 @@ import { baseURL } from "@shared/helpers/utils";
 import { RESPONSE_CODES } from "@shared/models/response-codes.const";
 import request from "supertest";
 import { DiaryBuilder } from "../builders/diary.builder";
+import { FoodInDiary } from "../models/food-in-diary";
 
 describe("diary", () => {
   const partURL = "/diary";
@@ -71,7 +72,10 @@ describe("diary", () => {
   });
 
   describe("POST /diary/id/food", () => {
-    const foodEntry = [{ id: "1", weight: 100 }];
+    afterEach(async () => {
+      await request(baseURL).delete(`${partURL}/10/foods/8`);
+    });
+    const foodEntry: FoodInDiary = { id: "8", weight: 100, mealType: "dinner" };
 
     it("should add foods to item", async () => {
       await request(baseURL).post(`${partURL}/10/foods`).send(foodEntry);
@@ -94,8 +98,13 @@ describe("diary", () => {
 
       await request(baseURL)
         .get(`${partURL}/10`)
-        .expect((resp) => {
-          expect(resp.body.foods.length).toEqual(2);
+        .then((resp) => {
+          let { foods } = resp.body;
+
+          expect(foods.length).toEqual(2);
+          expect(
+            foods.find((food: FoodInDiary) => food.id === "1")
+          ).toBeUndefined();
         });
     });
   });
