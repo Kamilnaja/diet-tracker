@@ -1,7 +1,8 @@
 import { baseURL } from "@shared/helpers/utils";
 import { RESPONSE_CODES } from "@shared/models/response-codes.const";
 import request from "supertest";
-import { DiaryBuilder } from "../builders/diary-builder";
+import { DiaryBuilder } from "../builders/diary.builder";
+import { FoodInDiary } from "../models/food-in-diary";
 
 describe("diary", () => {
   const partURL = "/diary";
@@ -11,9 +12,9 @@ describe("diary", () => {
       .setId("10")
       .setDate("2023-01-01")
       .setFoods([
-        { id: "1", weight: 50 },
-        { id: "2", weight: 100 },
-        { id: "3", weight: 82 },
+        { id: "1", weight: 50, mealType: "breakfast" },
+        { id: "2", weight: 100, mealType: "snack" },
+        { id: "3", weight: 82, mealType: "dinner" },
       ])
       .build();
 
@@ -52,9 +53,9 @@ describe("diary", () => {
           expect(resp.body.id).toBe("10");
           expect(resp.body.date).toBe("2023-01-01");
           expect(resp.body.foods).toEqual([
-            { id: "1", weight: 50 },
-            { id: "2", weight: 100 },
-            { id: "3", weight: 82 },
+            { id: "1", weight: 50, mealType: "breakfast" },
+            { id: "2", weight: 100, mealType: "snack" },
+            { id: "3", weight: 82, mealType: "dinner" },
           ]);
         });
 
@@ -71,7 +72,10 @@ describe("diary", () => {
   });
 
   describe("POST /diary/id/food", () => {
-    const foodEntry = [{ id: "1", weight: 100 }];
+    afterEach(async () => {
+      await request(baseURL).delete(`${partURL}/10/foods/8`);
+    });
+    const foodEntry: FoodInDiary = { id: "8", weight: 100, mealType: "dinner" };
 
     it("should add foods to item", async () => {
       await request(baseURL).post(`${partURL}/10/foods`).send(foodEntry);
@@ -82,6 +86,25 @@ describe("diary", () => {
         .then((resp) => {
           expect(resp.body.foods.length).toEqual(4);
           expect(resp.body.foods[3]).toEqual(foodEntry);
+        });
+    });
+  });
+
+  describe("DELETE /diary/:id/food/:foodId", () => {
+    it("should remove food from diary", async () => {
+      await request(baseURL)
+        .delete(`${partURL}/10/foods/1`)
+        .expect(RESPONSE_CODES.OK);
+
+      await request(baseURL)
+        .get(`${partURL}/10`)
+        .then((resp) => {
+          let { foods } = resp.body;
+
+          expect(foods.length).toEqual(2);
+          expect(
+            foods.find((food: FoodInDiary) => food.id === "1")
+          ).toBeUndefined();
         });
     });
   });

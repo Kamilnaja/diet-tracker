@@ -2,14 +2,22 @@ import { Error } from "@models/error";
 import { HttpResponse } from "@shared/models/http-response.model";
 import { RESPONSE_CODES } from "@shared/models/response-codes.const";
 import { Request, Response } from "express";
-import { DiaryBuilder } from "../builders/diary-builder";
+import { DiaryBuilder } from "../builders/diary.builder";
 import { getInitialDiary } from "../helpers/create-diary";
-import { Diary } from "../models/diary.interface";
+import { Diary } from "../models/diary.model";
 
 const initialDiary = getInitialDiary();
 
 export const getDiary = (req: Request, res: Response): void => {
-  // #swagger.tags = ['Diary']
+  /* 
+    #swagger.tags = ['Diary']
+    #swagger.description = 'Get all Diary entries'
+    #swagger.responses[200] = {
+      description: 'Diary entries successfully obtained',
+      schema: { $ref: '#/definitions/DiaryResponse'}
+    }
+  */
+
   let searchBy = req.query?.data as string;
   searchBy = searchBy?.trim().toLocaleLowerCase();
 
@@ -21,11 +29,23 @@ export const getDiary = (req: Request, res: Response): void => {
 };
 
 export const getDiaryById = (req: Request, res: Response) => {
-  /* #swagger.tags = ['Diary'] */
+  /* 
+    #swagger.tags = ['Diary'] 
+    #swagger.description = 'Get Diary entry by ID'
+    #swagger.responses[200] = {
+      description: 'Diary entry successfully obtained',
+      schema: { $ref: '#/definitions/DiaryEntry' }
+    }
+    #swagger.responses[404] = {
+      description: 'No such item',
+      schema: { $ref: '#/definitions/ErrorSearch' }
+    }
+  */
+
   const { id } = req.params;
 
   if (!id) {
-    return res.send(Error.getError("No entry found"));
+    return res.send(Error.getError("Item not found"));
   }
 
   const foundItem = initialDiary.find("id", id);
@@ -38,7 +58,26 @@ export const getDiaryById = (req: Request, res: Response) => {
 };
 
 export const addNewDiaryEntry = (req: Request, res: Response) => {
-  // #swagger.tags = ['Diary']
+  /* 
+    #swagger.tags = ['Diary'] 
+    #swagger.description = 'Add new Diary entry'
+    #swagger.parameters['body'] = {
+      in: 'body',
+      description: 'Diary entry',
+      required: true,
+      type: 'object',
+      schema: { $ref: '#/definitions/DiaryEntry' }
+    }
+    #swagger.responses[200] = {
+      description: 'Diary entry successfully added',
+      schema: { $ref: '#/definitions/DiaryEntry' }
+    }
+    #swagger.responses[409] = {
+      description: 'Diary entry with this id already exists',
+      schema: { $ref: '#/definitions/ErrorConflict' }
+    }
+  */
+
   const {
     date = new Date().toISOString().split("T")[0],
     foods,
@@ -63,7 +102,18 @@ export const addNewDiaryEntry = (req: Request, res: Response) => {
 };
 
 export const deleteDiaryItemById = (req: Request, res: Response) => {
-  // #swagger.tags = ['Diary']
+  /* 
+    #swagger.tags = ['Diary']
+    #swagger.description = 'Delete Diary entry by ID'
+    #swagger.responses[200] = {
+      description: 'Diary entry successfully deleted',
+      schema: { $ref: '#/definitions/DiaryEntry' }
+  }
+    #swagger.responses[404] = {
+      description: 'No such item',
+      schema: { $ref: '#/definitions/ErrorSearch' }
+  }
+   */
   const { id } = req.params;
 
   if (!id) {
@@ -91,7 +141,26 @@ export const deleteDiaryItemById = (req: Request, res: Response) => {
 };
 
 export const editDiary = (req: Request, res: Response) => {
-  // #swagger.tags = ['Diary']
+  /* 
+    #swagger.tags = ['Diary'] 
+    #swagger.description = 'Edit Diary entry'
+    #swagger.parameters['body'] = {
+      in: 'body',
+      description: 'Diary entry',
+      required: true,
+      type: 'object',
+      schema: { $ref: '#/definitions/DiaryEntry' }
+    }
+    #swagger.responses[200] = {
+      description: 'Diary entry successfully edited',
+      schema: { $ref: '#/definitions/DiaryEntry' }
+    }
+    #swagger.responses[404] = {
+      description: 'No such item',
+      schema: { $ref: '#/definitions/ErrorSearch' }
+    }
+  */
+
   const { id } = req.params;
 
   if (!id) {
@@ -122,17 +191,23 @@ export const editDiary = (req: Request, res: Response) => {
 };
 
 export const addFoodsToDiary = (req: Request, res: Response) => {
-  // #swagger.tags = ['Diary']
-  // #swagger.description = 'Add new Meal to Diary'
-  /*  #swagger.parameters['body'] = {
+  /* 
+    #swagger.tags = ['Diary']
+    #swagger.description = 'Add new Meal to Diary'
+    #swagger.parameters['body'] = {
                 in: 'body',
                 description: 'Food Body',
-                schema: [{
-                  $weight: 100,
-                  $id: "3",
-                  $type: "breakfast",
-                }]
-        } */
+                schema: [{ $ref: '#/definitions/FoodInDiary' }]
+        }
+    #swagger.responses[201] = {
+      description: 'Food successfully added',
+      schema: { $ref: '#/definitions/DiaryEntry' }
+    }
+    #swagger.responses[404] = {
+      description: 'No such item',
+      schema: { $ref: '#/definitions/ErrorSearch' }
+    }
+  */
   const { id } = req.params;
 
   if (!id) {
@@ -145,7 +220,7 @@ export const addFoodsToDiary = (req: Request, res: Response) => {
   if (foundItemIdx < -1) {
     return res
       .status(RESPONSE_CODES.NOT_FOUND)
-      .send(Error.getError("no such an item found"));
+      .send(Error.getError("No such item"));
   }
 
   const { body } = req;
@@ -155,4 +230,47 @@ export const addFoodsToDiary = (req: Request, res: Response) => {
   initialDiary.replace(foundItem!.id, foundItem!);
 
   return res.status(RESPONSE_CODES.CREATED).send(req.body);
+};
+
+export const deleteFoodDiaryItemById = (req: Request, res: Response) => {
+  /* 
+    #swagger.tags = ['Diary']
+    #swagger.description = 'Delete Food Diary entry by ID'
+    #swagger.responses[200] = {
+      description: 'Diary entry successfully deleted',
+      schema: { $ref: '#/definitions/DiaryEntry' }
+  }
+    #swagger.responses[404] = {
+      description: 'No such item',
+      schema: { $ref: '#/definitions/ErrorSearch' }
+  }
+   */
+  const { id, foodId } = req.params;
+
+  if (!id || !foodId) {
+    return res.send(Error.getError("No entry found"));
+  }
+
+  let response: HttpResponse<Diary | undefined> = {
+    data: undefined,
+    length: 0,
+  };
+
+  let foundItem = initialDiary.find("id", id);
+
+  if (foundItem) {
+    response = {
+      data: {
+        ...foundItem,
+        foods: foundItem.foods.filter((food) => food.id !== foodId),
+      },
+      length: 1,
+    };
+
+    foundItem.foods = foundItem?.foods.filter((food) => food.id !== foodId);
+  }
+
+  res
+    .status(foundItem ? RESPONSE_CODES.OK : RESPONSE_CODES.NOT_FOUND)
+    .send(response);
 };

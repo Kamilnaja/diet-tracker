@@ -35,7 +35,7 @@ export const getFoodById = (req: Request, res: Response) => {
     #swagger.description = 'Get Food by ID'
     #swagger.responses[200] = {
       description: 'Food successfully obtained',
-      schema: { $ref: '#/definitions/Food' }
+      schema: { $ref: '#/definitions/FoodEntry' }
      }
      #swagger.responses[404] = {
       description: 'No such item',
