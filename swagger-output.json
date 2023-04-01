@@ -16,11 +16,14 @@
         "tags": [
           "Foods"
         ],
-        "description": "",
+        "description": "Get all Foods",
         "parameters": [],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Foods successfully obtained",
+            "schema": {
+              "$ref": "#/definitions/FoodResponse"
+            }
           }
         }
       },
@@ -35,43 +38,18 @@
             "in": "body",
             "description": "Food Body",
             "schema": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "type": "string",
-                  "example": "Orange"
-                },
-                "weight": {
-                  "type": "number",
-                  "example": 100
-                },
-                "caloriesPer100g": {
-                  "type": "number",
-                  "example": 30
-                },
-                "id": {
-                  "type": "string",
-                  "example": "39393993"
-                },
-                "tags": {
-                  "type": "array",
-                  "example": [
-                    "1",
-                    "2"
-                  ],
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              },
-              "required": [
-                "name",
-                "weight"
-              ]
+              "$ref": "#/definitions/FoodEntry"
             }
           }
         ],
-        "responses": {}
+        "responses": {
+          "200": {
+            "description": "Success when adding new food",
+            "schema": {
+              "$ref": "#/definitions/FoodEntry"
+            }
+          }
+        }
       }
     },
     "/api/foods/{id}": {
@@ -79,7 +57,7 @@
         "tags": [
           "Foods"
         ],
-        "description": "",
+        "description": "Get Food by ID",
         "parameters": [
           {
             "name": "id",
@@ -90,7 +68,16 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Food successfully obtained",
+            "schema": {
+              "$ref": "#/definitions/Food"
+            }
+          },
+          "404": {
+            "description": "No such item",
+            "schema": {
+              "$ref": "#/definitions/ErrorSearch"
+            }
           }
         }
       },
@@ -109,7 +96,16 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Item deleted successfully",
+            "schema": {
+              "$ref": "#/definitions/FoodEntry"
+            }
+          },
+          "404": {
+            "description": "Item not found",
+            "schema": {
+              "$ref": "#/definitions/ErrorSearch"
+            }
           }
         }
       },
@@ -130,45 +126,25 @@
             "in": "body",
             "description": "Food Body",
             "schema": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "type": "string",
-                  "example": "Orange"
-                },
-                "weight": {
-                  "type": "number",
-                  "example": 100
-                },
-                "caloriesPer100g": {
-                  "type": "number",
-                  "example": 30
-                },
-                "id": {
-                  "type": "string",
-                  "example": "39393993"
-                },
-                "tags": {
-                  "type": "array",
-                  "example": [
-                    "1",
-                    "2"
-                  ],
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              },
-              "required": [
-                "name",
-                "weight"
-              ]
+              "$ref": "#/definitions/FoodEntry"
             }
           }
         ],
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "201": {
+            "description": "Success when editing food",
+            "schema": {
+              "$ref": "#/definitions/FoodEntry"
+            }
+          },
+          "404": {
+            "description": "No such item",
+            "schema": {
+              "$ref": "#/definitions/ErrorSearch"
+            }
           }
         }
       }
@@ -547,6 +523,76 @@
           }
         ],
         "responses": {}
+      }
+    }
+  },
+  "definitions": {
+    "FoodInDiary": {
+      "$ref": "#/definitions/FoodEntry"
+    },
+    "FoodEntry": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "Orange"
+        },
+        "id": {
+          "type": "string",
+          "example": "39393993"
+        },
+        "caloriesPer100g": {
+          "type": "number",
+          "example": 100
+        },
+        "weight": {
+          "type": "number",
+          "example": 100
+        },
+        "nutriScore": {
+          "type": "string",
+          "example": "e"
+        },
+        "tags": {
+          "type": "array",
+          "example": [
+            "1"
+          ],
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "FoodResponse": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FoodEntry"
+          }
+        },
+        "lenght": {
+          "type": "number",
+          "example": 10
+        }
+      }
+    },
+    "Diary": {
+      "type": "object",
+      "properties": {}
+    },
+    "ErrorSearch": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "Item not found"
+        }
       }
     }
   }

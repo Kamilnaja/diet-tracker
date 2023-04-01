@@ -21,7 +21,7 @@ export const getDiary = (req: Request, res: Response): void => {
 };
 
 export const getDiaryById = (req: Request, res: Response) => {
-  // #swagger.tags = ['Diary']
+  /* #swagger.tags = ['Diary'] */
   const { id } = req.params;
 
   if (!id) {
