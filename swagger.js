@@ -46,6 +46,7 @@ const doc = {
       ],
       lenght: 10,
     },
+    Fluid: {},
     ErrorSearch: {
       message: "Item not found",
     },

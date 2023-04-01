@@ -231,3 +231,44 @@ export const addFoodsToDiary = (req: Request, res: Response) => {
 
   return res.status(RESPONSE_CODES.CREATED).send(req.body);
 };
+
+export const deleteFoodDiaryItemById = (req: Request, res: Response) => {
+  /* 
+    #swagger.tags = ['Diary']
+    #swagger.description = 'Delete Food Diary entry by ID'
+    #swagger.responses[200] = {
+      description: 'Diary entry successfully deleted',
+      schema: { $ref: '#/definitions/DiaryEntry' }
+  }
+    #swagger.responses[404] = {
+      description: 'No such item',
+      schema: { $ref: '#/definitions/ErrorSearch' }
+  }
+   */
+  const { id, foodId } = req.params;
+
+  if (!id || !foodId) {
+    return res.send(Error.getError("No entry found"));
+  }
+
+  let response: HttpResponse<Diary | undefined> = {
+    data: undefined,
+    length: 0,
+  };
+
+  let foundItem = initialDiary.find("id", id);
+
+  if (foundItem) {
+    response = {
+      data: {
+        ...foundItem,
+        foods: foundItem.foods.filter((food) => food.id !== foodId),
+      },
+      length: 1,
+    };
+  }
+
+  res
+    .status(foundItem ? RESPONSE_CODES.OK : RESPONSE_CODES.NOT_FOUND)
+    .send(response);
+};

@@ -8,7 +8,15 @@ import { Fluid } from "../models/fluid.interface";
 const initialFluids = getInitialFluids();
 
 export const getFluids = (req: Request, res: Response) => {
-  // #swagger.tags = ['Fluids']
+  /* 
+    #swagger.tags = ['Fluids'] 
+    #swagger.description = 'Get all Fluids'
+    #swagger.responses[200] = {
+      description: 'Fluids successfully obtained',
+      schema: { $ref: '#/definitions/Fluid'}
+    }
+  */
+
   let searchBy = req.query?.name as string;
   searchBy = searchBy?.trim().toLocaleLowerCase();
 
@@ -40,19 +48,25 @@ export const getFluidById = (req: Request, res: Response) => {
 };
 
 export const addNewFluid = (req: Request, res: Response) => {
-  // #swagger.tags = ['Fluids']
-  // #swagger.description = 'Add new Fluid'
-  /*  #swagger.parameters['body'] = {
-                in: 'body',
-                description: 'Fluid Body',
-                schema: {
-                  $name: "Orange",
-                  $capacity: 100,
-                  caloriesPer100g: 30,
-                  id: "39393993",
-                  icon: "☕"
-                }
-        } */
+  /* 
+    #swagger.tags = ['Fluids']
+    #swagger.description = 'Add new Fluid'
+    #swagger.parameters['body'] = {
+      in: 'body',
+      description: 'Fluid Body',
+      schema: {
+        $name: "Orange",
+        $capacity: 100,
+        caloriesPer100g: 30,
+        id: "39393993",
+        icon: "☕"
+      }
+    }
+    #swagger.responses[201] = {
+      description: 'Fluid successfully added',
+      schema: { $ref: '#/definitions/Fluid' }
+  } 
+  */
   const {
     name,
     capacity,
@@ -103,18 +117,24 @@ export const deleteFluidById = (req: Request, res: Response) => {
 };
 
 export const editFluid = (req: Request, res: Response) => {
-  // #swagger.tags = ['Fluids']
-  /*  #swagger.parameters['body'] = {
-                in: 'body',
-                description: 'Fluid Body',
-                schema: {
-                  $name: "Orange",
-                  $capacity: 100,
-                  caloriesPer100g: 30,
-                  id: "39393993",
-                  icons: "☕",
-                }
-        } */
+  /*
+    #swagger.tags = ['Fluids']
+    #swagger.parameters['body'] = {
+      in: 'body',
+      description: 'Fluid Body',
+      schema: {
+        $name: "Orange",
+        $capacity: 100,
+        caloriesPer100g: 30,
+        id: "39393993",
+        icons: "☕",
+      }
+    } 
+    #swagger.responses[201] = {
+      description: 'Fluid successfully edited',
+      schema: { $ref: '#/definitions/Fluid' }
+    }
+  */
   const { id } = req.params;
 
   if (!id) {

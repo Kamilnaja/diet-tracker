@@ -52,9 +52,9 @@ describe("diary", () => {
           expect(resp.body.id).toBe("10");
           expect(resp.body.date).toBe("2023-01-01");
           expect(resp.body.foods).toEqual([
-            { id: "1", weight: 50 },
-            { id: "2", weight: 100 },
-            { id: "3", weight: 82 },
+            { id: "1", weight: 50, mealType: "breakfast" },
+            { id: "2", weight: 100, mealType: "snack" },
+            { id: "3", weight: 82, mealType: "dinner" },
           ]);
         });
 
@@ -82,6 +82,20 @@ describe("diary", () => {
         .then((resp) => {
           expect(resp.body.foods.length).toEqual(4);
           expect(resp.body.foods[3]).toEqual(foodEntry);
+        });
+    });
+  });
+
+  describe("DELETE /diary/:id/food/:foodId", () => {
+    it("should remove food from diary", async () => {
+      await request(baseURL)
+        .delete(`${partURL}/10/foods/1`)
+        .expect(RESPONSE_CODES.OK);
+
+      await request(baseURL)
+        .get(`${partURL}/10`)
+        .expect((resp) => {
+          expect(resp.body.foods.length).toEqual(2);
         });
     });
   });

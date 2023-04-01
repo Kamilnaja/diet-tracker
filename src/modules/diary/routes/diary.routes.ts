@@ -3,6 +3,7 @@ import {
   addFoodsToDiary,
   addNewDiaryEntry,
   deleteDiaryItemById,
+  deleteFoodDiaryItemById,
   editDiary,
   getDiary,
   getDiaryById,
@@ -21,3 +22,5 @@ diaryRouter.delete("/:id", deleteDiaryItemById);
 diaryRouter.put("/:id", editDiary);
 
 diaryRouter.post("/:id/foods", addFoodsToDiary);
+
+diaryRouter.delete("/:id/foods/:foodId", deleteFoodDiaryItemById);

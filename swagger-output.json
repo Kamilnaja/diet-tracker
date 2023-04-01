@@ -336,6 +336,42 @@
         }
       }
     },
+    "/api/diary/{id}/foods/{foodId}": {
+      "delete": {
+        "tags": [
+          "Diary"
+        ],
+        "description": "Delete Food Diary entry by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "foodId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Diary entry successfully deleted",
+            "schema": {
+              "$ref": "#/definitions/DiaryEntry"
+            }
+          },
+          "404": {
+            "description": "No such item",
+            "schema": {
+              "$ref": "#/definitions/ErrorSearch"
+            }
+          }
+        }
+      }
+    },
     "/api/dicts/tags": {
       "get": {
         "tags": [
@@ -424,11 +460,14 @@
         "tags": [
           "Fluids"
         ],
-        "description": "",
+        "description": "Get all Fluids",
         "parameters": [],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Fluids successfully obtained",
+            "schema": {
+              "$ref": "#/definitions/Fluid"
+            }
           }
         }
       },
@@ -473,7 +512,14 @@
             }
           }
         ],
-        "responses": {}
+        "responses": {
+          "201": {
+            "description": "Fluid successfully added",
+            "schema": {
+              "$ref": "#/definitions/Fluid"
+            }
+          }
+        }
       }
     },
     "/api/fluids/{id}": {
@@ -562,7 +608,14 @@
             }
           }
         ],
-        "responses": {}
+        "responses": {
+          "201": {
+            "description": "Fluid successfully edited",
+            "schema": {
+              "$ref": "#/definitions/Fluid"
+            }
+          }
+        }
       }
     }
   },
@@ -673,6 +726,10 @@
           "example": 10
         }
       }
+    },
+    "Fluid": {
+      "type": "object",
+      "properties": {}
     },
     "ErrorSearch": {
       "type": "object",
