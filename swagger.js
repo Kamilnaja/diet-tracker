@@ -7,6 +7,32 @@ const doc = {
   info: {
     description: "Awesome app for tracking your diet",
   },
+  definitions: {
+    FoodInDiary: {
+      $ref: "#/definitions/FoodEntry",
+      mealType: "breakfast",
+    },
+    FoodEntry: {
+      $name: "Orange",
+      id: "39393993",
+      caloriesPer100g: 100,
+      weight: 100,
+      nutriScore: "e",
+      tags: ["1"],
+    },
+    FoodResponse: {
+      data: [
+        {
+          $ref: "#/definitions/FoodEntry",
+        },
+      ],
+      lenght: 10,
+    },
+    Diary: {},
+    ErrorSearch: {
+      message: "Item not found",
+    },
+  },
 };
 
 swaggerAutogen(outputFile, endpointsFiles, doc);

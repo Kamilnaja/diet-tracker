@@ -8,7 +8,14 @@ import { Food } from "../models/food.model";
 const initialFoods = getInitialFoods();
 
 export const getFoods = (req: Request, res: Response) => {
-  // #swagger.tags = ['Foods']
+  /* 
+    #swagger.tags = ['Foods']
+    #swagger.description = 'Get all Foods'
+    #swagger.responses[200] = {
+      description: 'Foods successfully obtained',
+      schema: { $ref: '#/definitions/FoodResponse'}
+    }
+  */
   let searchBy = req.query?.name as string;
   searchBy = searchBy?.trim().toLocaleLowerCase();
 
@@ -23,7 +30,18 @@ export const getFoods = (req: Request, res: Response) => {
 };
 
 export const getFoodById = (req: Request, res: Response) => {
-  // #swagger.tags = ['Foods']
+  /* 
+    #swagger.tags = ['Foods'] 
+    #swagger.description = 'Get Food by ID'
+    #swagger.responses[200] = {
+      description: 'Food successfully obtained',
+      schema: { $ref: '#/definitions/Food' }
+     }
+     #swagger.responses[404] = {
+      description: 'No such item',
+      schema: { $ref: '#/definitions/ErrorSearch' }
+     }
+  */
   const { id } = req.params;
 
   if (!id) {
@@ -40,19 +58,22 @@ export const getFoodById = (req: Request, res: Response) => {
 };
 
 export const addNewFood = (req: Request, res: Response) => {
-  // #swagger.tags = ['Foods']
-  // #swagger.description = 'Add new Food'
-  /*  #swagger.parameters['body'] = {
+  /*
+    #swagger.tags = ['Foods']
+    #swagger.description = 'Add new Food'
+    #swagger.parameters['body'] = {
                 in: 'body',
                 description: 'Food Body',
                 schema: {
-                  $name: "Orange",
-                  $weight: 100,
-                  caloriesPer100g: 30,
-                  id: "39393993",
-                  tags: ["1", "2"]
+                  $ref: '#/definitions/FoodEntry'
                 }
-        } */
+        } 
+
+    #swagger.responses[200] = {
+      description: 'Success when adding new food',
+      schema: { $ref: '#/definitions/FoodEntry' }
+     }
+  */
   const {
     name,
     weight,
@@ -88,7 +109,21 @@ export const addNewFood = (req: Request, res: Response) => {
 };
 
 export const deleteFoodById = (req: Request, res: Response) => {
-  // #swagger.tags = ['Foods']
+  /* 
+  #swagger.tags = ['Foods']
+  #swagger.responses[200] = {
+    description: 'Item deleted successfully',
+    schema: { 
+      $ref: '#/definitions/FoodEntry' 
+    }
+  }
+  #swagger.responses[404] = {
+    description: 'Item not found',
+    schema: { 
+      $ref: '#/definitions/ErrorSearch' 
+    }
+  }  
+  */
   const { id } = req.params;
 
   if (!id) {
@@ -106,18 +141,23 @@ export const deleteFoodById = (req: Request, res: Response) => {
 };
 
 export const editFood = (req: Request, res: Response) => {
-  // #swagger.tags = ['Foods']
-  /*  #swagger.parameters['body'] = {
+  /*  #swagger.tags = ['Foods']
+      #swagger.parameters['body'] = {
                 in: 'body',
                 description: 'Food Body',
                 schema: {
-                  $name: "Orange",
-                  $weight: 100,
-                  caloriesPer100g: 30,
-                  id: "39393993",
-                  tags: ["1", "2"]
+                  $ref: '#/definitions/FoodEntry'
                 }
-        } */
+        }
+      #swagger.responses[201] = {
+        description: 'Success when editing food',
+        schema: { $ref: '#/definitions/FoodEntry' }
+    }
+      #swagger.responses[404] = {
+        description: 'No such item',
+        schema: { $ref: '#/definitions/ErrorSearch' }
+    }
+  */
   const { id } = req.params;
 
   if (!id) {
@@ -129,7 +169,7 @@ export const editFood = (req: Request, res: Response) => {
   if (!foundItemId) {
     return res
       .status(RESPONSE_CODES.NOT_FOUND)
-      .send(Error.getError("no id found"));
+      .send(Error.getError("No such item"));
   }
 
   const { body } = req;
