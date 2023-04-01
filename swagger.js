@@ -8,8 +8,26 @@ const doc = {
     description: "Awesome app for tracking your diet",
   },
   definitions: {
+    DiaryEntry: {
+      id: "39393993",
+      $date: "2021-01-01",
+      $foods: [
+        {
+          $ref: "#/definitions/FoodInDiary",
+        },
+      ],
+    },
+    DiaryResponse: {
+      data: [
+        {
+          $ref: "#/definitions/DiaryEntry",
+        },
+      ],
+      length: 10,
+    },
     FoodInDiary: {
-      $ref: "#/definitions/FoodEntry",
+      id: "1",
+      weight: 100,
       mealType: "breakfast",
     },
     FoodEntry: {
@@ -28,9 +46,11 @@ const doc = {
       ],
       lenght: 10,
     },
-    Diary: {},
     ErrorSearch: {
       message: "Item not found",
+    },
+    ErrorConflict: {
+      message: "Item already exists",
     },
   },
 };

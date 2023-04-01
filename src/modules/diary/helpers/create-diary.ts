@@ -2,7 +2,7 @@ import { createEmptyResponse } from "@shared/helpers/create-empty-response";
 import { shouldLoadInitialData } from "@shared/helpers/utils";
 import { DiaryBuilder } from "../builders/diary-builder";
 import { DiaryResponse } from "../models/diary-response";
-import { Diary } from "../models/diary.interface";
+import { Diary } from "../models/diary.model";
 
 const createDiary = (): Diary[] => {
   const day1 = new DiaryBuilder()
