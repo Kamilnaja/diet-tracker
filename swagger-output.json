@@ -312,26 +312,7 @@
             "schema": {
               "type": "array",
               "items": {
-                "type": "object",
-                "properties": {
-                  "weight": {
-                    "type": "number",
-                    "example": 100
-                  },
-                  "id": {
-                    "type": "string",
-                    "example": "3"
-                  },
-                  "type": {
-                    "type": "string",
-                    "example": "breakfast"
-                  }
-                },
-                "required": [
-                  "weight",
-                  "id",
-                  "type"
-                ]
+                "$ref": "#/definitions/FoodInDiary"
               }
             }
           }
@@ -629,7 +610,7 @@
       "properties": {
         "id": {
           "type": "string",
-          "example": "39393993"
+          "example": "1"
         },
         "weight": {
           "type": "number",
@@ -662,7 +643,7 @@
         },
         "nutriScore": {
           "type": "string",
-          "example": "e"
+          "example": "E"
         },
         "tags": {
           "type": "array",

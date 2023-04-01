@@ -1,11 +1,11 @@
 import { Builder } from "@shared/models/builder.model";
-import { Food } from "../../foods/models/food.model";
 import { Diary } from "../models/diary.model";
+import { FoodInDiary } from "../models/food-in-diary";
 
 export class DiaryBuilder implements Builder<Diary> {
   private _id: string;
   private _date: string;
-  private _foods: Food[];
+  private _foods: FoodInDiary[];
 
   get id(): string {
     return this._id;
@@ -25,11 +25,11 @@ export class DiaryBuilder implements Builder<Diary> {
     return this;
   }
 
-  get foods(): Food[] {
+  get foods(): FoodInDiary[] {
     return this._foods;
   }
 
-  setFoods(value: Food[]): DiaryBuilder {
+  setFoods(value: FoodInDiary[]): DiaryBuilder {
     this._foods = value;
     return this;
   }

@@ -2,7 +2,7 @@ import { Error } from "@models/error";
 import { HttpResponse } from "@shared/models/http-response.model";
 import { RESPONSE_CODES } from "@shared/models/response-codes.const";
 import { Request, Response } from "express";
-import { DiaryBuilder } from "../builders/diary-builder";
+import { DiaryBuilder } from "../builders/diary.builder";
 import { getInitialDiary } from "../helpers/create-diary";
 import { Diary } from "../models/diary.model";
 
@@ -45,7 +45,7 @@ export const getDiaryById = (req: Request, res: Response) => {
   const { id } = req.params;
 
   if (!id) {
-    return res.send(Error.getError("No entry found"));
+    return res.send(Error.getError("Item not found"));
   }
 
   const foundItem = initialDiary.find("id", id);
@@ -197,11 +197,7 @@ export const addFoodsToDiary = (req: Request, res: Response) => {
     #swagger.parameters['body'] = {
                 in: 'body',
                 description: 'Food Body',
-                schema: [{
-                  $weight: 100,
-                  $id: "3",
-                  $type: "breakfast",
-                }]
+                schema: [{ $ref: '#/definitions/FoodInDiary' }]
         }
     #swagger.responses[201] = {
       description: 'Food successfully added',

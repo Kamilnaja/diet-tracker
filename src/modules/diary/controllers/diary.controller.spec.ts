@@ -1,7 +1,7 @@
 import { baseURL } from "@shared/helpers/utils";
 import { RESPONSE_CODES } from "@shared/models/response-codes.const";
 import request from "supertest";
-import { DiaryBuilder } from "../builders/diary-builder";
+import { DiaryBuilder } from "../builders/diary.builder";
 
 describe("diary", () => {
   const partURL = "/diary";
@@ -11,9 +11,9 @@ describe("diary", () => {
       .setId("10")
       .setDate("2023-01-01")
       .setFoods([
-        { id: "1", weight: 50 },
-        { id: "2", weight: 100 },
-        { id: "3", weight: 82 },
+        { id: "1", weight: 50, mealType: "breakfast" },
+        { id: "2", weight: 100, mealType: "snack" },
+        { id: "3", weight: 82, mealType: "dinner" },
       ])
       .build();
 

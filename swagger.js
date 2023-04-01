@@ -35,7 +35,7 @@ const doc = {
       id: "39393993",
       caloriesPer100g: 100,
       weight: 100,
-      nutriScore: "e",
+      nutriScore: "E",
       tags: ["1"],
     },
     FoodResponse: {
