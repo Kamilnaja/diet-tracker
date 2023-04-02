@@ -1,7 +1,7 @@
 import { baseURL } from "@shared/helpers/utils";
 import { RESPONSE_CODES } from "@shared/models/response-codes.const";
 import request from "supertest";
-import { UserBuilder } from "../builders/user-builder";
+import { UserBuilder } from "../builders/auth.builder";
 
 describe("user", () => {
   const partURL = "/users";

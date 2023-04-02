@@ -1,6 +1,6 @@
 import { createEmptyResponse } from "@shared/helpers/create-empty-response";
 import { shouldLoadInitialData } from "@shared/helpers/utils";
-import { UserBuilder } from "../builders/user-builder";
+import { UserBuilder } from "../builders/auth.builder";
 import { UserResponse } from "../models/user-response";
 import { User } from "../models/user.interface";
 

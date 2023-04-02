@@ -2,7 +2,7 @@ import { Error } from "@models/error";
 import { HttpResponse } from "@shared/models/http-response.model";
 import { RESPONSE_CODES } from "@shared/models/response-codes.const";
 import { Request, Response } from "express";
-import { UserBuilder } from "../builders/user-builder";
+import { UserBuilder } from "../builders/auth.builder";
 import { getInitialUsers } from "../helpers/create-users";
 import { User } from "../models/user.interface";
 
