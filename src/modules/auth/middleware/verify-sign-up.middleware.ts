@@ -1,9 +1,7 @@
 import { Request, Response } from "express";
-import { getInitialUsers } from "../helpers/create-users";
 import { RESPONSE_CODES } from "@shared/models/response-codes.const";
 import { Error } from "@models/error";
-
-const initialUsers = getInitialUsers();
+import { store } from "@shared/store";
 
 export const checkDuplicateUsernameOrEmail = async (
   req: Request,
@@ -19,13 +17,13 @@ export const checkDuplicateUsernameOrEmail = async (
         .json(Error.getError("Name, email and id are required"));
     }
 
-    let userByName = initialUsers.find("userName", userName);
+    let userByName = store.initialUsers.find("userName", userName);
     if (userByName) {
       res.status(400).send({ message: "Failed! Username is already in use!" });
       return;
     }
 
-    let userByEmail = initialUsers.find("email", email);
+    let userByEmail = store.initialUsers.find("email", email);
     if (userByEmail) {
       res.status(400).send({ message: "Failed! Email is already in use!" });
       return;

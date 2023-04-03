@@ -1,12 +1,10 @@
 import { Error } from "@models/error";
 import { HttpResponse } from "@shared/models/http-response.model";
 import { RESPONSE_CODES } from "@shared/models/response-codes.const";
+import { store } from "@shared/store";
 import { Request, Response } from "express";
 import { DiaryBuilder } from "../builders/diary.builder";
-import { getInitialDiary } from "../helpers/create-diary";
 import { Diary } from "../models/diary.model";
-
-const initialDiary = getInitialDiary();
 
 export const getDiary = (req: Request, res: Response): void => {
   /* 
@@ -22,10 +20,10 @@ export const getDiary = (req: Request, res: Response): void => {
   searchBy = searchBy?.trim().toLocaleLowerCase();
 
   if (searchBy) {
-    initialDiary.filter("date", searchBy);
+    store.initialDiary.filter("date", searchBy);
   }
 
-  res.json(initialDiary.getResponse);
+  res.json(store.initialDiary.getResponse);
 };
 
 export const getDiaryById = (req: Request, res: Response) => {
@@ -48,7 +46,7 @@ export const getDiaryById = (req: Request, res: Response) => {
     return res.send(Error.getError("Item not found"));
   }
 
-  const foundItem = initialDiary.find("id", id);
+  const foundItem = store.initialDiary.find("id", id);
 
   foundItem
     ? res.status(RESPONSE_CODES.OK).json(foundItem)
@@ -84,7 +82,7 @@ export const addNewDiaryEntry = (req: Request, res: Response) => {
     id = new Date().getTime().toString(),
   } = req.body;
 
-  if (initialDiary.find("id", id)) {
+  if (store.initialDiary.find("id", id)) {
     return res
       .status(RESPONSE_CODES.CONFLICT)
       .json(Error.getError("Diary entry with this id already exists"));
@@ -96,7 +94,7 @@ export const addNewDiaryEntry = (req: Request, res: Response) => {
     .setFoods(foods)
     .build();
 
-  initialDiary.add(diaryEntry);
+  store.initialDiary.add(diaryEntry);
 
   res.send(diaryEntry);
 };
@@ -125,7 +123,7 @@ export const deleteDiaryItemById = (req: Request, res: Response) => {
     length: 0,
   };
 
-  let foundItem = initialDiary.find("id", id);
+  let foundItem = store.initialDiary.find("id", id);
 
   if (foundItem) {
     response = {
@@ -133,7 +131,7 @@ export const deleteDiaryItemById = (req: Request, res: Response) => {
       length: 1,
     };
 
-    initialDiary.filter("id", id);
+    store.initialDiary.filter("id", id);
   }
   res
     .status(foundItem ? RESPONSE_CODES.OK : RESPONSE_CODES.NOT_FOUND)
@@ -169,7 +167,7 @@ export const editDiary = (req: Request, res: Response) => {
       .send(Error.getError("ID not found"));
   }
 
-  const foundItemId = initialDiary.find("id", id)?.id;
+  const foundItemId = store.initialDiary.find("id", id)?.id;
 
   if (!foundItemId) {
     return res
@@ -185,7 +183,7 @@ export const editDiary = (req: Request, res: Response) => {
     date: body.date,
   };
 
-  initialDiary.replace(foundItemId, itemToReplace);
+  store.initialDiary.replace(foundItemId, itemToReplace);
 
   return res.status(RESPONSE_CODES.CREATED).send(req.body);
 };
@@ -214,8 +212,8 @@ export const addFoodsToDiary = (req: Request, res: Response) => {
     return res.send(Error.getError("No id"));
   }
 
-  let foundItemIdx = initialDiary.findIdx("id", id);
-  let foundItem = initialDiary.find("id", id);
+  let foundItemIdx = store.initialDiary.findIdx("id", id);
+  let foundItem = store.initialDiary.find("id", id);
 
   if (foundItemIdx < -1) {
     return res
@@ -227,7 +225,7 @@ export const addFoodsToDiary = (req: Request, res: Response) => {
 
   foundItem?.foods.push(body);
 
-  initialDiary.replace(foundItem!.id, foundItem!);
+  store.initialDiary.replace(foundItem!.id, foundItem!);
 
   return res.status(RESPONSE_CODES.CREATED).send(req.body);
 };
@@ -256,7 +254,7 @@ export const deleteFoodDiaryItemById = (req: Request, res: Response) => {
     length: 0,
   };
 
-  let foundItem = initialDiary.find("id", id);
+  let foundItem = store.initialDiary.find("id", id);
 
   if (foundItem) {
     response = {

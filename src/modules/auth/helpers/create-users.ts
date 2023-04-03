@@ -4,7 +4,7 @@ import { AuthBuilder } from "../builders/auth.builder";
 import { UserResponse } from "../models/user-response";
 import { User } from "../models/user.interface";
 
-const createUsers = (): User[] => {
+export const createUsers = (): User[] => {
   const user1 = new AuthBuilder()
     .setEmail("test@example.com")
     .setUserName("test1")
@@ -20,8 +20,3 @@ const createUsers = (): User[] => {
   const users: User[] = [user1, user2];
   return users;
 };
-
-export const getInitialUsers = (): UserResponse =>
-  shouldLoadInitialData()
-    ? new UserResponse(createUsers())
-    : createEmptyResponse();

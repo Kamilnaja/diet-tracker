@@ -1,10 +1,7 @@
-import { createEmptyResponse } from "@shared/helpers/create-empty-response";
-import { shouldLoadInitialData } from "@shared/helpers/utils";
 import { FluidBuilder } from "../builders/fluid.builder";
-import { FluidResponse } from "../models/fluid-response";
 import { Fluid } from "../models/fluid.interface";
 
-const createFluids = (): Fluid[] => {
+export const createFluids = (): Fluid[] => {
   const tea = new FluidBuilder()
     .setName("tea")
     .setId("1")
@@ -31,8 +28,3 @@ const createFluids = (): Fluid[] => {
 
   return [tea, coffee, orangeJuice];
 };
-
-export const getInitialFluids = (): FluidResponse =>
-  shouldLoadInitialData()
-    ? new FluidResponse(createFluids())
-    : createEmptyResponse();

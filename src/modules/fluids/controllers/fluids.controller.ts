@@ -2,10 +2,8 @@ import { Error } from "@models/error";
 import { RESPONSE_CODES } from "@shared/models/response-codes.const";
 import { Request, Response } from "express";
 import { FluidBuilder } from "../builders/fluid.builder";
-import { getInitialFluids } from "../helpers/create-fluilds";
 import { Fluid } from "../models/fluid.interface";
-
-const initialFluids = getInitialFluids();
+import { store } from "@shared/store";
 
 export const getFluids = (req: Request, res: Response) => {
   /* 
@@ -24,10 +22,10 @@ export const getFluids = (req: Request, res: Response) => {
     const filterFn = (item: Fluid) =>
       item.name?.toLocaleLowerCase().includes(searchBy);
 
-    initialFluids.filterByFn(filterFn);
+    store.initialFluids.filterByFn(filterFn);
   }
 
-  res.json(initialFluids.getResponse);
+  res.json(store.initialFluids.getResponse);
 };
 
 export const getFluidById = (req: Request, res: Response) => {
@@ -38,7 +36,7 @@ export const getFluidById = (req: Request, res: Response) => {
     return res.send(Error.getError("No entry found"));
   }
 
-  let foundItem = initialFluids.find("id", id);
+  let foundItem = store.initialFluids.find("id", id);
 
   foundItem
     ? res.status(RESPONSE_CODES.OK).json(foundItem)
@@ -80,7 +78,7 @@ export const addNewFluid = (req: Request, res: Response) => {
       .json(Error.getError("Both name and capacity are required"));
   }
 
-  if (initialFluids.find("name", name)) {
+  if (store.initialFluids.find("name", name)) {
     return res
       .status(RESPONSE_CODES.CONFLICT)
       .json(Error.getError("Fluid with this name already exists"));
@@ -92,7 +90,7 @@ export const addNewFluid = (req: Request, res: Response) => {
     .setCaloriesPer100g(caloriesPer100g)
     .setName(name);
 
-  initialFluids.add(fluid.build());
+  store.initialFluids.add(fluid.build());
 
   res.status(RESPONSE_CODES.CREATED).json(fluid);
 };
@@ -105,10 +103,10 @@ export const deleteFluidById = (req: Request, res: Response) => {
     return res.send(Error.getError("No entry found"));
   }
 
-  let foundItem = initialFluids.find("id", id);
+  let foundItem = store.initialFluids.find("id", id);
 
   if (foundItem) {
-    initialFluids.filter("id", id);
+    store.initialFluids.filter("id", id);
   }
 
   res
@@ -143,7 +141,7 @@ export const editFluid = (req: Request, res: Response) => {
       .send(Error.getError("No entry found"));
   }
 
-  let foundItemId = initialFluids.find("id", id)?.id;
+  let foundItemId = store.initialFluids.find("id", id)?.id;
 
   if (!foundItemId) {
     return res
@@ -161,7 +159,7 @@ export const editFluid = (req: Request, res: Response) => {
     icon: body.icon,
   };
 
-  initialFluids.replace(foundItemId, itemToReplace);
+  store.initialFluids.replace(foundItemId, itemToReplace);
 
   return res.status(RESPONSE_CODES.CREATED).send(req.body);
 };

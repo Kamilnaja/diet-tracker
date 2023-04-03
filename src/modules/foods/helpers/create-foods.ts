@@ -1,10 +1,7 @@
-import { createEmptyResponse } from "@shared/helpers/create-empty-response";
-import { shouldLoadInitialData } from "@shared/helpers/utils";
 import { FoodBuilder } from "../builders/food.builder";
-import { FoodResponse } from "../models/food-response";
 import { Food } from "../models/food.model";
 
-const createFoods = (): Food[] => {
+export const createFoods = (): Food[] => {
   const cottage = new FoodBuilder()
     .setId("1")
     .setName("Cottage Cheese")
@@ -53,8 +50,3 @@ const createFoods = (): Food[] => {
 
   return foods;
 };
-
-export const getInitialFoods = (): FoodResponse =>
-  shouldLoadInitialData()
-    ? new FoodResponse(createFoods())
-    : createEmptyResponse();

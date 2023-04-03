@@ -3,10 +3,8 @@ import { HttpResponse } from "@shared/models/http-response.model";
 import { RESPONSE_CODES } from "@shared/models/response-codes.const";
 import { Request, Response } from "express";
 import { AuthBuilder } from "../builders/auth.builder";
-import { getInitialUsers } from "../helpers/create-users";
 import { User } from "../models/user.interface";
-
-const initialUsers = getInitialUsers();
+import { store } from "@shared/store";
 
 export const signup = (req: Request, res: Response) => {
   // #swagger.tags = ['Auth']
@@ -19,14 +17,14 @@ export const signup = (req: Request, res: Response) => {
     .setId()
     .build();
 
-  initialUsers.add(newUser);
+  store.initialUsers.add(newUser);
 
   res.send(newUser);
 };
 
 export const getUsers = (req: Request, res: Response) => {
   // #swagger.tags = ['Auth']
-  return res.json(initialUsers.getResponse);
+  return res.json(store.initialUsers.getResponse);
 };
 
 export const deleteUserById = (req: Request, res: Response) => {
@@ -42,7 +40,7 @@ export const deleteUserById = (req: Request, res: Response) => {
     length: 0,
   };
 
-  let foundItem = initialUsers.find("id", id);
+  let foundItem = store.initialUsers.find("id", id);
 
   if (foundItem) {
     response = {
@@ -50,7 +48,7 @@ export const deleteUserById = (req: Request, res: Response) => {
       length: 1,
     };
 
-    initialUsers.filter("id", id);
+    store.initialUsers.filter("id", id);
   }
   res
     .status(foundItem ? RESPONSE_CODES.OK : RESPONSE_CODES.NOT_FOUND)
