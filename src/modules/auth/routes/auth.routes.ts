@@ -1,12 +1,7 @@
 import express from "express";
-import {
-  deleteUserById,
-  getUsers,
-  registerUser,
-} from "../controllers/auth.controller";
+import { signup } from "../controllers/auth.controller";
+import { checkDuplicateUsernameOrEmail } from "../middleware/verify-sign-up.middleware";
 
 export const authRouter = express.Router();
 
-authRouter.get("/", getUsers);
-authRouter.post("/", registerUser);
-authRouter.delete("/:id", deleteUserById);
+authRouter.post("/signup", checkDuplicateUsernameOrEmail, signup);

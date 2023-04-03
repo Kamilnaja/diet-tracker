@@ -2,41 +2,21 @@ import { Error } from "@models/error";
 import { HttpResponse } from "@shared/models/http-response.model";
 import { RESPONSE_CODES } from "@shared/models/response-codes.const";
 import { Request, Response } from "express";
-import { UserBuilder } from "../builders/auth.builder";
+import { AuthBuilder } from "../builders/auth.builder";
 import { getInitialUsers } from "../helpers/create-users";
 import { User } from "../models/user.interface";
 
 const initialUsers = getInitialUsers();
 
-export const registerUser = (req: Request, res: Response) => {
-  // #swagger.tags = ['User']
-  const { name, email, password, id } = req.body;
+export const signup = (req: Request, res: Response) => {
+  // #swagger.tags = ['Auth']
+  const { userName, email, password } = req.body;
 
-  if (!name || !email || !id) {
-    return res
-      .status(RESPONSE_CODES.UNPROCESSABLE_ENTITY)
-      .json(Error.getError("Name, email and id is required"));
-  }
-
-  if (initialUsers.find("name", name)) {
-    return res
-      .status(RESPONSE_CODES.UNPROCESSABLE_ENTITY)
-      .json(Error.getError("Username already exists"));
-  } else if (initialUsers.find("email", email)) {
-    return res
-      .status(RESPONSE_CODES.UNPROCESSABLE_ENTITY)
-      .json(Error.getError("Email already exists"));
-  } else if (initialUsers.find("id", id)) {
-    return res
-      .status(RESPONSE_CODES.UNPROCESSABLE_ENTITY)
-      .json(Error.getError("ID already exists"));
-  }
-
-  const newUser = new UserBuilder()
+  const newUser = new AuthBuilder()
     .setEmail(email)
     .setPassword(password)
-    .setName(name)
-    .setId(id)
+    .setUserName(userName)
+    .setId()
     .build();
 
   initialUsers.add(newUser);
@@ -45,12 +25,12 @@ export const registerUser = (req: Request, res: Response) => {
 };
 
 export const getUsers = (req: Request, res: Response) => {
-  // #swagger.tags = ['User']
+  // #swagger.tags = ['Auth']
   return res.json(initialUsers.getResponse);
 };
 
 export const deleteUserById = (req: Request, res: Response) => {
-  // #swagger.tags = ['User']
+  // #swagger.tags = ['Auth']
   const { id } = req.params;
 
   if (!id) {

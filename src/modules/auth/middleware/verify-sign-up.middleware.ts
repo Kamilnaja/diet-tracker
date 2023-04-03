@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 import { getInitialUsers } from "../helpers/create-users";
+import { RESPONSE_CODES } from "@shared/models/response-codes.const";
+import { Error } from "@models/error";
 
 const initialUsers = getInitialUsers();
 
@@ -9,16 +11,22 @@ export const checkDuplicateUsernameOrEmail = async (
   next: () => void
 ) => {
   try {
-    let userByName = initialUsers.find("name", req.body.name);
+    const { userName, email } = req.body;
 
+    if (!userName || !email) {
+      return res
+        .status(RESPONSE_CODES.UNPROCESSABLE_ENTITY)
+        .json(Error.getError("Name, email and id are required"));
+    }
+
+    let userByName = initialUsers.find("userName", userName);
     if (userByName) {
       res.status(400).send({ message: "Failed! Username is already in use!" });
       return;
     }
 
-    let email = initialUsers.find("email", req.body.email);
-
-    if (email) {
+    let userByEmail = initialUsers.find("email", email);
+    if (userByEmail) {
       res.status(400).send({ message: "Failed! Email is already in use!" });
       return;
     }

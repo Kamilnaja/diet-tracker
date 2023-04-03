@@ -1,16 +1,16 @@
 import { baseURL } from "@shared/helpers/utils";
 import { RESPONSE_CODES } from "@shared/models/response-codes.const";
 import request from "supertest";
-import { UserBuilder } from "../builders/auth.builder";
+import { AuthBuilder } from "../builders/auth.builder";
 
 describe("user", () => {
   const partURL = "/users";
 
   beforeEach(async () => {
-    const userEntry = new UserBuilder()
+    const userEntry = new AuthBuilder()
       .setEmail("janusz@gmail.com")
       .setId("1")
-      .setName("Janusz")
+      .setUserName("Janusz")
       .build();
 
     await request(baseURL).post(partURL).send(userEntry);

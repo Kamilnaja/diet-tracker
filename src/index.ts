@@ -10,7 +10,6 @@ import express from "express";
 import morgan from "morgan";
 import swaggerUi from "swagger-ui-express";
 import * as swaggerFile from "../swagger-output.json";
-import { signupRouter } from "@modules/auth/signup/routes/signup.route";
 import cookieSession from "cookie-session";
 
 dotenv.config();

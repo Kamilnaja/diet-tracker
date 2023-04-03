@@ -386,22 +386,10 @@
         }
       }
     },
-    "/api/users/": {
-      "get": {
-        "tags": [
-          "User"
-        ],
-        "description": "",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      },
+    "/api/auth/signup": {
       "post": {
         "tags": [
-          "User"
+          "Auth"
         ],
         "description": "",
         "parameters": [
@@ -419,33 +407,9 @@
                 },
                 "password": {
                   "example": "any"
-                },
-                "id": {
-                  "example": "any"
                 }
               }
             }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/users/{id}": {
-      "delete": {
-        "tags": [
-          "User"
-        ],
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string"
           }
         ],
         "responses": {
