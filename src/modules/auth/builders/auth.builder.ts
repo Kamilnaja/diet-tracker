@@ -1,35 +1,35 @@
 import { Builder } from "@shared/models/builder.model";
 import { User } from "../models/user.interface";
 
-export class UserBuilder implements Builder<User> {
-  private name: string;
+export class AuthBuilder implements Builder<User> {
+  private userName: string;
   private email: string;
   private password: string;
   private id: string;
 
-  setId(id: string): UserBuilder {
-    this.id = id;
+  setId(id?: string): AuthBuilder {
+    this.id = id ? id : new Date().getTime().toString(); // just for testing
     return this;
   }
 
-  setName(name: string): UserBuilder {
-    this.name = name;
+  setUserName(userName: string): AuthBuilder {
+    this.userName = userName;
     return this;
   }
 
-  setEmail(email: string): UserBuilder {
+  setEmail(email: string): AuthBuilder {
     this.email = email;
     return this;
   }
 
-  setPassword(password: string): UserBuilder {
+  setPassword(password: string): AuthBuilder {
     this.password = password;
     return this;
   }
 
   build(): User {
     return {
-      name: this.name,
+      userName: this.userName,
       email: this.email,
       password: this.password,
       id: this.id,

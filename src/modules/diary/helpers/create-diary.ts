@@ -1,10 +1,7 @@
-import { createEmptyResponse } from "@shared/helpers/create-empty-response";
-import { shouldLoadInitialData } from "@shared/helpers/utils";
 import { DiaryBuilder } from "../builders/diary.builder";
-import { DiaryResponse } from "../models/diary-response";
 import { Diary } from "../models/diary.model";
 
-const createDiary = (): Diary[] => {
+export const createDiary = (): Diary[] => {
   const day1 = new DiaryBuilder()
     .setId("0")
     .setDate("2022-01-01")
@@ -25,8 +22,3 @@ const createDiary = (): Diary[] => {
 
   return days;
 };
-
-export const getInitialDiary = (): DiaryResponse =>
-  shouldLoadInitialData()
-    ? new DiaryResponse(createDiary())
-    : createEmptyResponse();

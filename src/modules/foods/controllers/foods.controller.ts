@@ -2,10 +2,8 @@ import { Error } from "@models/error";
 import { RESPONSE_CODES } from "@shared/models/response-codes.const";
 import { Request, Response } from "express";
 import { FoodBuilder } from "../builders/food.builder";
-import { getInitialFoods } from "../helpers/create-foods";
 import { Food } from "../models/food.model";
-
-const initialFoods = getInitialFoods();
+import { store } from "@shared/store";
 
 export const getFoods = (req: Request, res: Response) => {
   /* 
@@ -23,10 +21,10 @@ export const getFoods = (req: Request, res: Response) => {
     const filterFn = (item: Food) =>
       item.name?.toLocaleLowerCase().includes(searchBy);
 
-    initialFoods.filterByFn(filterFn);
+    store.initialFoods.filterByFn(filterFn);
   }
 
-  res.json(initialFoods.getResponse);
+  res.json(store.initialFoods.getResponse);
 };
 
 export const getFoodById = (req: Request, res: Response) => {
@@ -48,7 +46,7 @@ export const getFoodById = (req: Request, res: Response) => {
     return res.send(Error.getError("No entry found"));
   }
 
-  let foundItem = initialFoods.find("id", id);
+  let foundItem = store.initialFoods.find("id", id);
 
   foundItem
     ? res.status(RESPONSE_CODES.OK).json(foundItem)
@@ -89,7 +87,7 @@ export const addNewFood = (req: Request, res: Response) => {
       .json(Error.getError("Both name and weight are required"));
   }
 
-  if (initialFoods.find("name", name)) {
+  if (store.initialFoods.find("name", name)) {
     return res
       .status(RESPONSE_CODES.CONFLICT)
       .json(Error.getError("Food with this name already exists"));
@@ -103,7 +101,7 @@ export const addNewFood = (req: Request, res: Response) => {
     .setName(name)
     .setTags(tags);
 
-  initialFoods.add(food.build());
+  store.initialFoods.add(food.build());
 
   res.status(RESPONSE_CODES.CREATED).json(food);
 };
@@ -130,10 +128,10 @@ export const deleteFoodById = (req: Request, res: Response) => {
     return res.send(Error.getError("No entry found"));
   }
 
-  let foundItem = initialFoods.find("id", id);
+  let foundItem = store.initialFoods.find("id", id);
 
   if (foundItem) {
-    initialFoods.filter("id", id);
+    store.initialFoods.filter("id", id);
   }
   res
     .status(foundItem ? RESPONSE_CODES.OK : RESPONSE_CODES.NOT_FOUND)
@@ -164,7 +162,7 @@ export const editFood = (req: Request, res: Response) => {
     return res.send(Error.getError("No entry found"));
   }
 
-  let foundItemId = initialFoods.find("id", id)?.id;
+  let foundItemId = store.initialFoods.find("id", id)?.id;
 
   if (!foundItemId) {
     return res
@@ -184,7 +182,7 @@ export const editFood = (req: Request, res: Response) => {
     mealType: body.mealType,
   };
 
-  initialFoods.replace(foundItemId, itemToReplace);
+  store.initialFoods.replace(foundItemId, itemToReplace);
 
   return res.status(RESPONSE_CODES.CREATED).send(req.body);
 };

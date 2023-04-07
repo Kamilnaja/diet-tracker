@@ -7,5 +7,4 @@ export interface Diary extends Entry {
   date: string;
 }
 
-export type DiaryResponse = HttpResponse<Diary | undefined>;
 export type DiaryAllReponse = HttpResponse<Diary[] | undefined>;
