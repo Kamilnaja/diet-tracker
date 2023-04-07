@@ -404,7 +404,7 @@
           }
         ],
         "responses": {
-          "200": {
+          "201": {
             "description": "User successfully created",
             "schema": {
               "$ref": "#/definitions/User"

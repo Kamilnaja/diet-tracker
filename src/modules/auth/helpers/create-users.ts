@@ -1,7 +1,4 @@
-import { createEmptyResponse } from "@shared/helpers/create-empty-response";
-import { shouldLoadInitialData } from "@shared/helpers/utils";
 import { AuthBuilder } from "../builders/auth.builder";
-import { UserResponse } from "../models/user-response";
 import { User } from "../models/user.interface";
 
 export const createUsers = (): User[] => {
