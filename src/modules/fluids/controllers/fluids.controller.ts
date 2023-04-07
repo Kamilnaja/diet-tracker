@@ -1,9 +1,9 @@
 import { Error } from "@models/error";
 import { RESPONSE_CODES } from "@shared/models/response-codes.const";
+import { store } from "@shared/store";
 import { Request, Response } from "express";
 import { FluidBuilder } from "../builders/fluid.builder";
 import { Fluid } from "../models/fluid.interface";
-import { store } from "@shared/store";
 
 export const getFluids = (req: Request, res: Response) => {
   /* 
@@ -124,7 +124,7 @@ export const editFluid = (req: Request, res: Response) => {
         $name: "Orange",
         $capacity: 100,
         caloriesPer100g: 30,
-        id: "39393993",
+        id: "123",
         icons: "☕",
       }
     } 

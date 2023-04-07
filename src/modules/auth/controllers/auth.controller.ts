@@ -1,13 +1,31 @@
 import { Error } from "@models/error";
 import { HttpResponse } from "@shared/models/http-response.model";
 import { RESPONSE_CODES } from "@shared/models/response-codes.const";
+import { store } from "@shared/store";
 import { Request, Response } from "express";
 import { AuthBuilder } from "../builders/auth.builder";
 import { User } from "../models/user.interface";
-import { store } from "@shared/store";
 
 export const signup = (req: Request, res: Response) => {
-  // #swagger.tags = ['Auth']
+  /* #swagger.tags = ['Auth']
+   #swagger.description = 'Create new user'
+   #swagger.parameters['newUser'] = {
+     in: 'body',
+     description: 'New User object',
+     required: true,
+     type: 'object',
+     schema: { $ref: '#/definitions/User' }
+    }
+    #swagger.responses[200] = {
+      description: 'User successfully created',
+      schema: { $ref: '#/definitions/User' }
+    }
+    #swagger.responses[409] = {
+      description: 'User with this email already exists',
+      schema: { $ref: '#/definitions/ErrorConflict' }
+    }
+  */
+
   const { userName, email, password } = req.body;
 
   const newUser = new AuthBuilder()

@@ -46,6 +46,12 @@ const doc = {
       ],
       lenght: 10,
     },
+    User: {
+      id: "",
+      userName: "John",
+      email: "John@gmail.com",
+      password: "123456",
+    },
     Fluid: {},
     ErrorSearch: {
       message: "Item not found",

@@ -391,30 +391,30 @@
         "tags": [
           "Auth"
         ],
-        "description": "",
+        "description": "Create new user",
         "parameters": [
           {
-            "name": "body",
+            "name": "newUser",
             "in": "body",
+            "description": "New User object",
+            "required": true,
             "schema": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "example": "any"
-                },
-                "email": {
-                  "example": "any"
-                },
-                "password": {
-                  "example": "any"
-                }
-              }
+              "$ref": "#/definitions/User"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "User successfully created",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "409": {
+            "description": "User with this email already exists",
+            "schema": {
+              "$ref": "#/definitions/ErrorConflict"
+            }
           }
         }
       }
@@ -558,7 +558,7 @@
                 },
                 "id": {
                   "type": "string",
-                  "example": "39393993"
+                  "example": "123"
                 },
                 "icons": {
                   "type": "string",
@@ -688,6 +688,27 @@
         "lenght": {
           "type": "number",
           "example": 10
+        }
+      }
+    },
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "example": ""
+        },
+        "userName": {
+          "type": "string",
+          "example": "John"
+        },
+        "email": {
+          "type": "string",
+          "example": "John@gmail.com"
+        },
+        "password": {
+          "type": "string",
+          "example": "123456"
         }
       }
     },
