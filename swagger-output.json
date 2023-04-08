@@ -21,20 +21,7 @@
           {
             "name": "name",
             "in": "query",
-            "description": "Search by name",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "tags",
-            "in": "query",
-            "description": "Search by tags",
-            "required": false,
-            "type": "array"
-          },
-          {
-            "name": "includes(tag",
-            "in": "query",
+            "description": "Food name",
             "type": "string"
           }
         ],
@@ -167,6 +154,13 @@
             }
           }
         }
+      }
+    },
+    "/api/foods/SELECT*FROMfoodsWHEREid=?": {
+      "get": {
+        "description": "",
+        "parameters": [],
+        "responses": {}
       }
     },
     "/api/diary/": {

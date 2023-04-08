@@ -11,8 +11,9 @@ import express from "express";
 import morgan from "morgan";
 import swaggerUi from "swagger-ui-express";
 import * as swaggerFile from "../swagger-output.json";
-
 dotenv.config();
+
+let db = require("./db.ts");
 
 const app = express();
 const port = shouldLoadInitialData() ? 8080 : 8081;
@@ -37,3 +38,4 @@ app.use("/", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 app.listen(port, () => {
   console.log(`[server]: 🌩️Server is running at http://localhost:${port}`);
 });
+module.exports = db;
