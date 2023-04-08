@@ -1,11 +1,13 @@
 import { Error } from "@models/error";
+import { HttpResponse } from "@shared/models/http-response.model";
 import { RESPONSE_CODES } from "@shared/models/response-codes.const";
-import { Request, Response } from "express";
+import { store } from "@shared/store";
+import { NextFunction, Request, Response } from "express";
+import { db } from "../../../db";
 import { FoodBuilder } from "../builders/food.builder";
 import { Food } from "../models/food.model";
-import { store } from "@shared/store";
 
-export const getFoods = (req: Request, res: Response) => {
+export const getFoods = (req: Request, res: Response, next: NextFunction) => {
   /* 
     #swagger.tags = ['Foods']
     #swagger.description = 'Get all Foods'
@@ -14,17 +16,18 @@ export const getFoods = (req: Request, res: Response) => {
       schema: { $ref: '#/definitions/FoodResponse'}
     }
   */
-  let searchBy = req.query?.name as string;
-  searchBy = searchBy?.trim().toLocaleLowerCase();
-
-  if (searchBy) {
-    const filterFn = (item: Food) =>
-      item.name?.toLocaleLowerCase().includes(searchBy);
-
-    store.initialFoods.filterByFn(filterFn);
+  {
+    db.all("SELECT * FROM foods", (err: any, rows: any) => {
+      if (err) {
+        next(err);
+      }
+      let response: HttpResponse<Food> = {
+        data: rows,
+        length: rows.length,
+      };
+      res.status(RESPONSE_CODES.OK).json(response);
+    });
   }
-
-  res.json(store.initialFoods.getResponse);
 };
 
 export const getFoodById = (req: Request, res: Response) => {
