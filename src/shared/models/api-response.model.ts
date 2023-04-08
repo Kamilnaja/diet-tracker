@@ -2,9 +2,11 @@ import { Entry } from "./entry.model";
 
 export class ApiResponse<T extends Entry> {
   private _data: T[];
+  private _initialData: T[];
 
   constructor(data: T[]) {
-    this.data = data || [];
+    this._initialData = data;
+    this.data = this._initialData;
   }
 
   get getResponse() {
@@ -19,7 +21,7 @@ export class ApiResponse<T extends Entry> {
   }
 
   add(item: T) {
-    this._data.push(item);
+    this._initialData = [...this._initialData, item];
   }
 
   replace(id: string, item: T) {
@@ -28,18 +30,22 @@ export class ApiResponse<T extends Entry> {
   }
 
   find<K extends keyof T>(key: K, value: string): T | undefined {
-    return this._data.find((item) => item[key] === value);
+    return [...this._initialData].find((item) => item[key] === value);
   }
 
   findIdx<K extends keyof T>(key: K, value: string): number {
-    return this._data.findIndex((item) => item[key] === value);
+    return [...this._initialData].findIndex((item) => item[key] === value);
   }
 
   filter<K extends keyof T>(key: K, value: string): void {
-    this.data = this._data.filter((item) => item[key] === value);
+    this.data = [...this._initialData].filter((item) => item[key] === value);
   }
 
   filterByFn(cb: (item: T) => boolean | undefined): void {
-    this.data = this._data.filter(cb);
+    this.data = [...this._initialData].filter(cb);
+  }
+
+  reset() {
+    this.data = this._initialData;
   }
 }

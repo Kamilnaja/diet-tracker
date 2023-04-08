@@ -34,7 +34,5 @@ export const signup = (req: Request, res: Response) => {
 
   store.initialUsers.add(newUser);
 
-  console.log(newUser);
-
   res.status(RESPONSE_CODES.CREATED).json(newUser);
 };

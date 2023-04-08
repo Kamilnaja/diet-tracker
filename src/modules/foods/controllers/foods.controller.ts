@@ -1,26 +1,40 @@
 import { Error } from "@models/error";
 import { RESPONSE_CODES } from "@shared/models/response-codes.const";
+import { store } from "@shared/store";
 import { Request, Response } from "express";
 import { FoodBuilder } from "../builders/food.builder";
 import { Food } from "../models/food.model";
-import { store } from "@shared/store";
 
 export const getFoods = (req: Request, res: Response) => {
   /* 
     #swagger.tags = ['Foods']
     #swagger.description = 'Get all Foods'
+   #swagger.parameters['name'] = {
+      in: 'query',
+      description: 'Search by name',
+      required: false,
+      type: 'string'
+   }
+   #swagger.parameters['tags'] = {
+      in: 'query',
+      description: 'Search by tags',
+      required: false,
+      type: 'array'
+   }
     #swagger.responses[200] = {
       description: 'Foods successfully obtained',
       schema: { $ref: '#/definitions/FoodResponse'}
     }
   */
-  let searchBy = req.query?.name as string;
-  searchBy = searchBy?.trim().toLocaleLowerCase();
 
-  if (searchBy) {
+  filterFoodsByName(req);
+
+  let tags = req.query?.tags as string[];
+  tags = tags?.map((tag) => tag.trim().toLocaleLowerCase());
+
+  if (tags) {
     const filterFn = (item: Food) =>
-      item.name?.toLocaleLowerCase().includes(searchBy);
-
+      item.tags?.some((tag) => tags.includes(tag));
     store.initialFoods.filterByFn(filterFn);
   }
 
@@ -93,17 +107,18 @@ export const addNewFood = (req: Request, res: Response) => {
       .json(Error.getError("Food with this name already exists"));
   }
 
-  const food = new FoodBuilder()
+  const newFood = new FoodBuilder()
     .setId(id)
     .setWeight(weight)
     .setCaloriesPer100g(caloriesPer100g)
     .setNutriScore(nutriScore)
     .setName(name)
-    .setTags(tags);
+    .setTags(tags)
+    .build();
 
-  store.initialFoods.add(food.build());
+  store.initialFoods.add(newFood);
 
-  res.status(RESPONSE_CODES.CREATED).json(food);
+  res.status(RESPONSE_CODES.CREATED).json(newFood);
 };
 
 export const deleteFoodById = (req: Request, res: Response) => {
@@ -186,3 +201,16 @@ export const editFood = (req: Request, res: Response) => {
 
   return res.status(RESPONSE_CODES.CREATED).send(req.body);
 };
+function filterFoodsByName(req: Request) {
+  let name = req.query?.name as string;
+  name = name?.trim().toLocaleLowerCase();
+
+  if (!name) {
+    store.initialFoods.reset();
+  } else {
+    const filterFn = (item: Food) =>
+      item.name?.toLocaleLowerCase().includes(name);
+
+    store.initialFoods.filterByFn(filterFn);
+  }
+}
