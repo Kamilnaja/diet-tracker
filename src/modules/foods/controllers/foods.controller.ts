@@ -1,22 +1,41 @@
 import { Error } from "@models/error";
 import { HttpResponse } from "@shared/models/http-response.model";
 import { RESPONSE_CODES } from "@shared/models/response-codes.const";
-import { store } from "@shared/store";
 import { NextFunction, Request, Response } from "express";
 import { db } from "../../../db";
-import { FoodBuilder } from "../builders/food.builder";
 import { Food } from "../models/food.model";
 
 export const getFoods = (req: Request, res: Response, next: NextFunction) => {
   /* 
     #swagger.tags = ['Foods']
     #swagger.description = 'Get all Foods'
+    #swagger.parameters['name'] = {
+      in: 'query',
+      description: 'Food name',
+      type: 'string'
+    }
     #swagger.responses[200] = {
       description: 'Foods successfully obtained',
       schema: { $ref: '#/definitions/FoodResponse'}
     }
   */
-  {
+  let name = req.query.name;
+  if (name) {
+    db.all(
+      `SELECT * FROM foods WHERE name LIKE ?`,
+      [`%${name}%`],
+      (err: any, rows: any) => {
+        if (err) {
+          res.status(RESPONSE_CODES.NOT_FOUND).json(err.message);
+        }
+        let response: HttpResponse<Food> = {
+          data: rows,
+          length: rows.length,
+        };
+        res.status(RESPONSE_CODES.OK).json(response);
+      }
+    );
+  } else {
     db.all("SELECT * FROM foods", (err: any, rows: any) => {
       if (err) {
         next(err);
@@ -49,13 +68,14 @@ export const getFoodById = (req: Request, res: Response) => {
     return res.send(Error.getError("No entry found"));
   }
 
-  let foundItem = store.initialFoods.find("id", id);
+  // get from db
+  db.get(`SELECT * FROM foods WHERE id = ?`, [id], (err: any, row: any) => {
+    if (err) {
+      return console.error(err.message);
+    }
 
-  foundItem
-    ? res.status(RESPONSE_CODES.OK).json(foundItem)
-    : res
-        .status(RESPONSE_CODES.NOT_FOUND)
-        .json(Error.getError("Item not found"));
+    res.status(RESPONSE_CODES.OK).json(row);
+  });
 };
 
 export const addNewFood = (req: Request, res: Response) => {
@@ -69,7 +89,6 @@ export const addNewFood = (req: Request, res: Response) => {
                   $ref: '#/definitions/FoodEntry'
                 }
         } 
-
     #swagger.responses[200] = {
       description: 'Success when adding new food',
       schema: { $ref: '#/definitions/FoodEntry' }
@@ -90,23 +109,20 @@ export const addNewFood = (req: Request, res: Response) => {
       .json(Error.getError("Both name and weight are required"));
   }
 
-  if (store.initialFoods.find("name", name)) {
-    return res
-      .status(RESPONSE_CODES.CONFLICT)
-      .json(Error.getError("Food with this name already exists"));
-  }
-
-  const food = new FoodBuilder()
-    .setId(id)
-    .setWeight(weight)
-    .setCaloriesPer100g(caloriesPer100g)
-    .setNutriScore(nutriScore)
-    .setName(name)
-    .setTags(tags);
-
-  store.initialFoods.add(food.build());
-
-  res.status(RESPONSE_CODES.CREATED).json(food);
+  // add to db
+  db.run(
+    `INSERT INTO foods (name, weight, calories_per_100g, nutri_score, tags) VALUES (?, ?, ?, ?, ?)`,
+    [name, weight, caloriesPer100g, nutriScore, tags],
+    function (err: any) {
+      if (err) {
+        res.status(RESPONSE_CODES.UNPROCESSABLE_ENTITY).json(err.message);
+      }
+      console.log(`A row has been inserted with rowid ${id}`);
+    }
+  );
+  res
+    .status(RESPONSE_CODES.CREATED)
+    .json({ id, name, weight, caloriesPer100g, nutriScore, tags });
 };
 
 export const deleteFoodById = (req: Request, res: Response) => {
@@ -131,14 +147,13 @@ export const deleteFoodById = (req: Request, res: Response) => {
     return res.send(Error.getError("No entry found"));
   }
 
-  let foundItem = store.initialFoods.find("id", id);
-
-  if (foundItem) {
-    store.initialFoods.filter("id", id);
-  }
-  res
-    .status(foundItem ? RESPONSE_CODES.OK : RESPONSE_CODES.NOT_FOUND)
-    .send(foundItem);
+  // delete from db
+  db.run(`DELETE FROM foods WHERE id = ?`, [id], function (err: any) {
+    if (err) {
+      res.status(RESPONSE_CODES.UNPROCESSABLE_ENTITY).json(err.message);
+    }
+    res.status(RESPONSE_CODES.OK).json({ id, message: "Item deleted" });
+  });
 };
 
 export const editFood = (req: Request, res: Response) => {
@@ -165,27 +180,18 @@ export const editFood = (req: Request, res: Response) => {
     return res.send(Error.getError("No entry found"));
   }
 
-  let foundItemId = store.initialFoods.find("id", id)?.id;
-
-  if (!foundItemId) {
-    return res
-      .status(RESPONSE_CODES.NOT_FOUND)
-      .send(Error.getError("No such item"));
-  }
-
   const { body } = req;
 
-  const itemToReplace: Food = {
-    id: id,
-    name: body.name,
-    weight: body.weight,
-    caloriesPer100g: body.caloriesPer100g,
-    nutriScore: body.nutriScore,
-    tags: body.tags,
-    mealType: body.mealType,
-  };
-
-  store.initialFoods.replace(foundItemId, itemToReplace);
-
+  // edit food
+  db.run(
+    `UPDATE foods SET name = ?, weight = ?, calories_per_100g = ?, nutri_score = ? WHERE id = ?`,
+    [body.name, body.weight, body.caloriesPer100g, body.nutriScore, id],
+    function (err: any) {
+      if (err) {
+        res.status(RESPONSE_CODES.UNPROCESSABLE_ENTITY).json(err.message);
+      }
+      console.log(`A row has been updated with rowid ${id}`);
+    }
+  );
   return res.status(RESPONSE_CODES.CREATED).send(req.body);
 };

@@ -17,7 +17,14 @@
           "Foods"
         ],
         "description": "Get all Foods",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Food name",
+            "type": "string"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Foods successfully obtained",
@@ -147,6 +154,13 @@
             }
           }
         }
+      }
+    },
+    "/api/foods/SELECT*FROMfoodsWHEREid=?": {
+      "get": {
+        "description": "",
+        "parameters": [],
+        "responses": {}
       }
     },
     "/api/diary/": {
