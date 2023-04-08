@@ -17,7 +17,27 @@
           "Foods"
         ],
         "description": "Get all Foods",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Search by name",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "tags",
+            "in": "query",
+            "description": "Search by tags",
+            "required": false,
+            "type": "array"
+          },
+          {
+            "name": "includes(tag",
+            "in": "query",
+            "type": "string"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Foods successfully obtained",
@@ -673,7 +693,8 @@
         }
       },
       "required": [
-        "name"
+        "name",
+        "weight"
       ]
     },
     "FoodResponse": {
