@@ -34,7 +34,7 @@ const doc = {
       $name: "Orange",
       id: "39393993",
       caloriesPer100g: 100,
-      weight: 100,
+      $weight: 100,
       nutriScore: "E",
       tags: ["1"],
     },
