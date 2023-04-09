@@ -391,13 +391,9 @@
         "tags": [
           "Tags"
         ],
-        "description": "",
+        "description": "Get all Tags",
         "parameters": [],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
+        "responses": {}
       }
     },
     "/api/auth/signup": {

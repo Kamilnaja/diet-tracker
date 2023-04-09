@@ -109,20 +109,20 @@ export const addNewFood = (req: Request, res: Response) => {
       .json(Error.getError("Both name and weight are required"));
   }
 
-  // add to db
   db.run(
-    `INSERT INTO foods (name, weight, calories_per_100g, nutri_score, tags) VALUES (?, ?, ?, ?, ?)`,
-    [name, weight, caloriesPer100g, nutriScore, tags],
+    `INSERT INTO foods (name, weight, calories_per_100g, nutri_score, tags) VALUES (?, ?, ?, ?)`,
+    [name, weight, caloriesPer100g, nutriScore],
     function (err: any) {
       if (err) {
         res.status(RESPONSE_CODES.UNPROCESSABLE_ENTITY).json(err.message);
       }
-      console.log(`A row has been inserted with rowid ${id}`);
     }
   );
+
+  db.run(`INSERT INTO tags (name, food_id) VALUES (?, ?)`);
   res
     .status(RESPONSE_CODES.CREATED)
-    .json({ id, name, weight, caloriesPer100g, nutriScore, tags });
+    .json({ id, name, weight, caloriesPer100g, nutriScore });
 };
 
 export const deleteFoodById = (req: Request, res: Response) => {
