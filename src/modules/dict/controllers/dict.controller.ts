@@ -11,7 +11,7 @@ export const getTagsDict = (req: Request, res: Response) => {
   //   description: 'Tags successfully obtained',
   //   schema: { $ref: '#/definitions/TagsResponse'}
   // }
-  // }
+
   db.all("SELECT * FROM tags", (err: any, rows: any) => {
     if (err) {
       res.status(RESPONSE_CODES.NOT_FOUND).json(err.message);

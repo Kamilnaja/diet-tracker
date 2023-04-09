@@ -22,8 +22,13 @@ export const getFoods = (req: Request, res: Response, next: NextFunction) => {
   let name = req.query.name;
   if (name) {
     db.all(
-      `SELECT * FROM foods WHERE name LIKE ?`,
-      [`%${name}%`],
+      `SELECT f.*, GROUP_CONCAT(t.id) AS tags
+      FROM foods f
+      LEFT JOIN food_tags ft ON f.id = ft.food_id
+      LEFT JOIN tags t ON ft.tag_id = t.id
+      WHERE f.name LIKE ?
+      GROUP BY f.id`,
+      [name],
       (err: any, rows: any) => {
         if (err) {
           res.status(RESPONSE_CODES.NOT_FOUND).json(err.message);
@@ -36,16 +41,23 @@ export const getFoods = (req: Request, res: Response, next: NextFunction) => {
       }
     );
   } else {
-    db.all("SELECT * FROM foods", (err: any, rows: any) => {
-      if (err) {
-        next(err);
+    db.all(
+      `SELECT f.*, GROUP_CONCAT(t.id) AS tags
+      FROM foods f
+      LEFT JOIN food_tags ft ON f.id = ft.food_id
+      LEFT JOIN tags t ON ft.tag_id = t.id
+      GROUP BY f.id`,
+      (err: any, rows: any) => {
+        if (err) {
+          next(err);
+        }
+        let response: HttpResponse<Food> = {
+          data: rows,
+          length: rows.length,
+        };
+        res.status(RESPONSE_CODES.OK).json(response);
       }
-      let response: HttpResponse<Food> = {
-        data: rows,
-        length: rows.length,
-      };
-      res.status(RESPONSE_CODES.OK).json(response);
-    });
+    );
   }
 };
 
@@ -69,13 +81,23 @@ export const getFoodById = (req: Request, res: Response) => {
   }
 
   // get from db
-  db.get(`SELECT * FROM foods WHERE id = ?`, [id], (err: any, row: any) => {
-    if (err) {
-      return console.error(err.message);
-    }
+  db.get(
+    `
+    SELECT f.*, GROUP_CONCAT(t.id) AS tags
+    FROM foods f 
+    LEFT JOIN food_tags ft ON f.id = ft.food_id
+    LEFT JOIN tags t ON ft.tag_id = t.id
+    WHERE f.id = ? 
+    GROUP BY f.id`,
+    [id],
+    (err: any, row: any) => {
+      if (err) {
+        return console.error(err.message);
+      }
 
-    res.status(RESPONSE_CODES.OK).json(row);
-  });
+      res.status(RESPONSE_CODES.OK).json(row);
+    }
+  );
 };
 
 export const addNewFood = (req: Request, res: Response) => {
@@ -94,14 +116,9 @@ export const addNewFood = (req: Request, res: Response) => {
       schema: { $ref: '#/definitions/FoodEntry' }
      }
   */
-  const {
-    name,
-    weight,
-    caloriesPer100g,
-    nutriScore,
-    id = new Date().getTime().toString(),
-    tags = [],
-  } = req.body;
+  let id: string;
+
+  const { name, weight, caloriesPer100g, nutriScore, tags = [] } = req.body;
 
   if (!name || !weight) {
     return res
@@ -110,7 +127,7 @@ export const addNewFood = (req: Request, res: Response) => {
   }
 
   db.run(
-    `INSERT INTO foods (name, weight, calories_per_100g, nutri_score, tags) VALUES (?, ?, ?, ?)`,
+    `INSERT INTO foods (name, weight, calories_per_100g, nutri_score) VALUES (?, ?, ?, ?)`,
     [name, weight, caloriesPer100g, nutriScore],
     function (err: any) {
       if (err) {
@@ -119,10 +136,35 @@ export const addNewFood = (req: Request, res: Response) => {
     }
   );
 
-  db.run(`INSERT INTO tags (name, food_id) VALUES (?, ?)`);
+  if (tags.length) {
+    db.get(
+      `SELECT id FROM foods ORDER BY ID DESC LIMIT 1`,
+      (err: any, row: any) => {
+        if (err) {
+          return console.error(err.message);
+        }
+        id = row.id;
+
+        tags.forEach((tagId: string) => {
+          db.run(
+            `INSERT INTO food_tags (food_id, tag_id) VALUES (?, ?)`,
+            [id, tagId],
+            function (err: any) {
+              if (err) {
+                res
+                  .status(RESPONSE_CODES.UNPROCESSABLE_ENTITY)
+                  .json(err.message);
+              }
+            }
+          );
+        });
+      }
+    );
+  }
+
   res
     .status(RESPONSE_CODES.CREATED)
-    .json({ id, name, weight, caloriesPer100g, nutriScore });
+    .json({ name, weight, caloriesPer100g, nutriScore, tags });
 };
 
 export const deleteFoodById = (req: Request, res: Response) => {
