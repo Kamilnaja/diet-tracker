@@ -156,7 +156,14 @@
         }
       }
     },
-    "/api/foods/SELECT*FROMfoodsWHEREid=?": {
+    "/api/foods/SELECTf.*,GROUP_CONCAT(t.id)AStagsFROMfoodsfLEFTJOINfood_tagsftONf.id=ft.food_idLEFTJOINtagstONft.tag_id=t.idWHEREf.id=?GROUPBYf.id": {
+      "get": {
+        "description": "",
+        "parameters": [],
+        "responses": {}
+      }
+    },
+    "/api/foods/SELECTidFROMfoodsORDERBYIDDESCLIMIT1": {
       "get": {
         "description": "",
         "parameters": [],
@@ -391,13 +398,9 @@
         "tags": [
           "Tags"
         ],
-        "description": "",
+        "description": "Get all Tags",
         "parameters": [],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
+        "responses": {}
       }
     },
     "/api/auth/signup": {
