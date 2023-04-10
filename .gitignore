@@ -3,3 +3,4 @@ dist/
 coverage
 !.vscode/settings.json
 .vscode/settings.json
+test.db
