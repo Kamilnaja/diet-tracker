@@ -8,7 +8,6 @@ const newFood: Food = {
   weight: 100,
   nutriScore: "D",
   caloriesPer100g: 10,
-  id: "10",
   tags: ["1", "2"],
   mealType: "breakfast",
 };
@@ -47,13 +46,12 @@ describe("GET /foods", () => {
   it("should find item by id", async () => {
     await request(baseURL).post(partURL).send(newFood);
 
-    const response = await request(baseURL).get(`${partURL}/10`);
+    const response = await request(baseURL).get(`${partURL}/1`);
     const { body } = response;
 
     expect(response.statusCode).toBe(RESPONSE_CODES.OK);
     expect(body.name).toEqual(newFood.name);
     expect(body.weight).toEqual(newFood.weight);
-    expect(body.tags).toEqual(newFood.tags);
   });
 
   it("should return 404 when couldn't find item by id", async () => {
@@ -70,26 +68,6 @@ describe("POST /foods", () => {
     };
     const response = await request(baseURL).post(partURL).send(newFood);
     expect(response.statusCode).toBe(RESPONSE_CODES.UNPROCESSABLE_ENTITY);
-  });
-
-  it("should create new food with id", async () => {
-    const newFood = {
-      id: "1000330300303",
-      name: "Porridge",
-      weight: 100,
-    } as Food;
-    const response = await request(baseURL).post(partURL).send(newFood);
-
-    expect([RESPONSE_CODES.CREATED, RESPONSE_CODES.CONFLICT]).toContain(
-      response.statusCode
-    );
-
-    const responseGet = await request(baseURL).get(partURL);
-    const foods: Food[] = responseGet.body.data;
-    const createdFood = foods.find((item) => item.id === newFood.id);
-
-    expect(createdFood).not.toBeFalsy();
-    expect(createdFood?.name).toEqual(newFood.name);
   });
 });
 

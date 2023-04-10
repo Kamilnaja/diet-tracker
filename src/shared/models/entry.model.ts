@@ -1,5 +1,5 @@
 export interface Entry {
-  id: string;
+  id?: string;
   name?: string;
   created_at?: Date;
   updated_at?: Date;

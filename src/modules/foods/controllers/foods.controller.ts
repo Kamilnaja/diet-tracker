@@ -61,7 +61,11 @@ export const getFoods = (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export const getFoodById = (req: Request, res: Response) => {
+export const getFoodById = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   /* 
     #swagger.tags = ['Foods'] 
     #swagger.description = 'Get Food by ID'
@@ -92,9 +96,14 @@ export const getFoodById = (req: Request, res: Response) => {
     [id],
     (err: any, row: any) => {
       if (err) {
+        next(err);
         return console.error(err.message);
       }
-
+      if (!row) {
+        return res
+          .status(RESPONSE_CODES.NOT_FOUND)
+          .json(Error.getError("No such item"));
+      }
       res.status(RESPONSE_CODES.OK).json(row);
     }
   );

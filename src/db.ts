@@ -171,37 +171,37 @@ export let db = new sqlite3.Database("test.db", (err: any) => {
           }
         }
       );
+
+      db.run(
+        `INSERT INTO ${food_tags} (food_id, tag_id) VALUES
+      (1, 1),
+      (1, 2),
+      (2, 1),
+      (2, 2),
+      (3, 1),
+      (3, 2),
+      (4, 3),
+      (5, 4),
+      (6, 5),
+      (7, 5),
+      (8, 3),
+      (9, 3)
+      `,
+        (err: any) => {
+          if (err) {
+            console.error(
+              "Error inserting initial data into food_tags table:",
+              err
+            );
+          } else {
+            console.log(
+              "Initial data inserted into food_tags table successfully"
+            );
+          }
+        }
+      );
     } else {
       console.log("Initial data already loaded");
     }
-
-    db.run(
-      `INSERT INTO ${food_tags} (food_id, tag_id) VALUES
-    (1, 1),
-    (1, 2),
-    (2, 1),
-    (2, 2),
-    (3, 1),
-    (3, 2),
-    (4, 3),
-    (5, 4),
-    (6, 5),
-    (7, 5),
-    (8, 3),
-    (9, 3)
-    `,
-      (err: any) => {
-        if (err) {
-          console.error(
-            "Error inserting initial data into food_tags table:",
-            err
-          );
-        } else {
-          console.log(
-            "Initial data inserted into food_tags table successfully"
-          );
-        }
-      }
-    );
   });
 });
