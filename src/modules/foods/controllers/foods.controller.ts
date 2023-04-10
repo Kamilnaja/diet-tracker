@@ -19,14 +19,14 @@ export const getFoods = (req: Request, res: Response, next: NextFunction) => {
       schema: { $ref: '#/definitions/FoodResponse'}
     }
   */
-  let name = req.query.name;
+  let { name } = req.query;
   if (name) {
     db.all(
       `SELECT f.*, GROUP_CONCAT(t.id) AS tags
       FROM foods f
       LEFT JOIN food_tags ft ON f.id = ft.food_id
       LEFT JOIN tags t ON ft.tag_id = t.id
-      WHERE f.name LIKE ?
+      WHERE f.name LIKE '%' || ? || '%'
       GROUP BY f.id`,
       [name],
       (err: any, rows: any) => {
@@ -61,7 +61,11 @@ export const getFoods = (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export const getFoodById = (req: Request, res: Response) => {
+export const getFoodById = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   /* 
     #swagger.tags = ['Foods'] 
     #swagger.description = 'Get Food by ID'
@@ -92,9 +96,14 @@ export const getFoodById = (req: Request, res: Response) => {
     [id],
     (err: any, row: any) => {
       if (err) {
+        next(err);
         return console.error(err.message);
       }
-
+      if (!row) {
+        return res
+          .status(RESPONSE_CODES.NOT_FOUND)
+          .json(Error.getError("No such item"));
+      }
       res.status(RESPONSE_CODES.OK).json(row);
     }
   );
@@ -127,7 +136,7 @@ export const addNewFood = (req: Request, res: Response) => {
   }
 
   db.run(
-    `INSERT INTO foods (name, weight, calories_per_100g, nutri_score) VALUES (?, ?, ?, ?)`,
+    `INSERT INTO foods (name, weight, caloriesPer100g, nutriScore) VALUES (?, ?, ?, ?)`,
     [name, weight, caloriesPer100g, nutriScore],
     function (err: any) {
       if (err) {
@@ -136,7 +145,7 @@ export const addNewFood = (req: Request, res: Response) => {
     }
   );
 
-  if (tags.length) {
+  if (tags?.length) {
     db.get(
       `SELECT id FROM foods ORDER BY ID DESC LIMIT 1`,
       (err: any, row: any) => {
@@ -226,7 +235,7 @@ export const editFood = (req: Request, res: Response) => {
 
   // edit food
   db.run(
-    `UPDATE foods SET name = ?, weight = ?, calories_per_100g = ?, nutri_score = ? WHERE id = ?`,
+    `UPDATE foods SET name = ?, weight = ?, caloriesPer100g = ?, nutriScore = ? WHERE id = ?`,
     [body.name, body.weight, body.caloriesPer100g, body.nutriScore, id],
     function (err: any) {
       if (err) {

@@ -225,7 +225,7 @@ export const addFoodsToDiary = (req: Request, res: Response) => {
 
   foundItem?.foods.push(body);
 
-  store.initialDiary.replace(foundItem!.id, foundItem!);
+  store.initialDiary.replace(foundItem!.id!, foundItem!);
 
   return res.status(RESPONSE_CODES.CREATED).send(req.body);
 };

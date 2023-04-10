@@ -38,4 +38,5 @@ app.use("/", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 app.listen(port, () => {
   console.log(`[server]: 🌩️Server is running at http://localhost:${port}`);
 });
+
 module.exports = db;
