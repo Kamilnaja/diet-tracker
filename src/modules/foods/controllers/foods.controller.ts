@@ -19,14 +19,14 @@ export const getFoods = (req: Request, res: Response, next: NextFunction) => {
       schema: { $ref: '#/definitions/FoodResponse'}
     }
   */
-  let name = req.query.name;
+  let { name } = req.query;
   if (name) {
     db.all(
       `SELECT f.*, GROUP_CONCAT(t.id) AS tags
       FROM foods f
       LEFT JOIN food_tags ft ON f.id = ft.food_id
       LEFT JOIN tags t ON ft.tag_id = t.id
-      WHERE f.name LIKE ?
+      WHERE f.name LIKE '%' || ? || '%'
       GROUP BY f.id`,
       [name],
       (err: any, rows: any) => {
