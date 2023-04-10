@@ -127,7 +127,7 @@ export const addNewFood = (req: Request, res: Response) => {
   }
 
   db.run(
-    `INSERT INTO foods (name, weight, calories_per_100g, nutri_score) VALUES (?, ?, ?, ?)`,
+    `INSERT INTO foods (name, weight, caloriesPer100g, nutriScore) VALUES (?, ?, ?, ?)`,
     [name, weight, caloriesPer100g, nutriScore],
     function (err: any) {
       if (err) {
@@ -136,7 +136,7 @@ export const addNewFood = (req: Request, res: Response) => {
     }
   );
 
-  if (tags.length) {
+  if (tags?.length) {
     db.get(
       `SELECT id FROM foods ORDER BY ID DESC LIMIT 1`,
       (err: any, row: any) => {
@@ -226,7 +226,7 @@ export const editFood = (req: Request, res: Response) => {
 
   // edit food
   db.run(
-    `UPDATE foods SET name = ?, weight = ?, calories_per_100g = ?, nutri_score = ? WHERE id = ?`,
+    `UPDATE foods SET name = ?, weight = ?, caloriesPer100g = ?, nutriScore = ? WHERE id = ?`,
     [body.name, body.weight, body.caloriesPer100g, body.nutriScore, id],
     function (err: any) {
       if (err) {
