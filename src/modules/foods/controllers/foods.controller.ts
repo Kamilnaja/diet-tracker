@@ -6,17 +6,14 @@ import { Food } from "../models/food.model";
 import { FoodsService } from "../services/foods.service";
 
 export const getFoods = async (req: Request, res: Response) => {
-  /* 
+  /*
     #swagger.tags = ['Foods']
     #swagger.description = 'Get all Foods'
     #swagger.parameters['name'] = {
       in: 'query',
       description: 'Food name',
+      required: false,
       type: 'string'
-    }
-    #swagger.responses[200] = {
-      description: 'Foods successfully obtained',
-      schema: { $ref: '#/definitions/FoodResponse'}
     }
   */
 

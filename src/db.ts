@@ -5,6 +5,8 @@ import { open } from "sqlite";
 const FOODS = "foods";
 const TAGS = "tags";
 const FOOD_TAGS = "food_tags";
+const DIARY = "diary";
+const DIARY_FOODS = "diary_foods";
 
 export let db: any;
 
@@ -130,13 +132,47 @@ async function loadInitialFoods(db: any) {
         console.log("Initial data inserted into food_tags table successfully");
       })
       .catch((err: any) => console.error(err));
+
+    // insert data into diary table
+    await db
+      .run(
+        `INSERT INTO ${DIARY} (date, id) VALUES 
+          ('2021-01-01', 1), 
+          ( '2021-01-02', 2), 
+          ('2021-01-03', 3), 
+          ('2021-01-04', 4), 
+          ('2021-01-05', 5), 
+          ('2021-02-05', 6)`
+      )
+      .then(() => {
+        console.log("Initial data inserted into diary table successfully");
+      })
+      .catch((err: any) => console.error(err));
+
+    await db
+      .run(
+        `INSERT INTO ${DIARY_FOODS} (diary_id, food_id) VALUES 
+          (1, 1), 
+          (1, 2), 
+          (2, 3), 
+          (3, 4), 
+          (5, 1)`
+      )
+      .then(() => {
+        console.log(
+          "Initial data inserted into diary_foods table successfully"
+        );
+      })
+      .catch((err: any) => console.error(err));
   } else {
-    console.log("SKIPPING INITIAL DATA INSERTION");
+    console.log("💣💣TESTING - SKIPPING INITIAL DATA INSERTION💣💣");
   }
 }
 
 async function createTables(db: any) {
-  const createFoodsTable = `CREATE TABLE IF NOT EXISTS ${FOODS} (
+  await db
+    .run(
+      `CREATE TABLE IF NOT EXISTS ${FOODS} (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT NOT NULL,
       caloriesPer100g INTEGER,
@@ -144,10 +180,9 @@ async function createTables(db: any) {
       nutriScore TEXT,
       meal_type TEXT,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);`;
-
-  await db
-    .run(createFoodsTable)
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );`
+    )
     .then(() => console.log(`${FOODS} table has been created`))
     .catch((err: any) => console.error(err));
 
@@ -174,16 +209,36 @@ async function createTables(db: any) {
     .then(async () => {
       console.log(`${FOOD_TAGS} table has been created`);
     });
+
+  await db
+    .run(
+      `CREATE TABLE IF NOT EXISTS ${DIARY} (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        date DATE NOT NULL
+      );`
+    )
+    .then(() => console.log(`${DIARY} table has been created`));
+
+  await db
+    .run(
+      `CREATE TABLE ${DIARY_FOODS} (
+      diary_id VARCHAR(255),
+      food_id VARCHAR(255),
+      PRIMARY KEY (diary_id, food_id),
+      FOREIGN KEY (diary_id) REFERENCES Diary(id),
+      FOREIGN KEY (food_id) REFERENCES Food(id))`
+    )
+    .then(() => console.log(`${DIARY_FOODS} table has been created`));
 }
 
 async function dropTables(db: any) {
-  await db
-    .run(`DROP TABLE IF EXISTS ${FOODS};`)
-    .then(() => console.log(`${FOODS} table dropped;`));
-  await db
-    .run(`DROP TABLE IF EXISTS ${TAGS};`)
-    .then(() => console.log(`${TAGS} table dropped;`));
-  await db
-    .run(`DROP TABLE IF EXISTS ${FOOD_TAGS};`)
-    .then(() => console.log(`${FOOD_TAGS} table dropped;`));
+  Promise.all([
+    await db.run(`DROP TABLE IF EXISTS ${FOODS};`),
+    await db.run(`DROP TABLE IF EXISTS ${TAGS};`),
+    await db.run(`DROP TABLE IF EXISTS ${FOOD_TAGS};`),
+    await db.run(`DROP TABLE IF EXISTS ${DIARY};`),
+    await db.run(`DROP TABLE IF EXISTS ${DIARY_FOODS};`),
+  ])
+    .then(() => console.log("All tables dropped successfully"))
+    .catch((err: any) => console.error(err));
 }

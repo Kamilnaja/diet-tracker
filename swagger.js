@@ -46,6 +46,11 @@ const doc = {
       ],
       lenght: 10,
     },
+    Tag: {},
+    TagsResponse: {
+      data: [{ $ref: "#/definitions/Tag" }],
+      length: 10,
+    },
     User: {
       id: "",
       userName: "John",
