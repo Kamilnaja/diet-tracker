@@ -1,11 +1,11 @@
 import { Error } from "@models/error";
 import { HttpResponse } from "@shared/models/http-response.model";
 import { RESPONSE_CODES } from "@shared/models/response-codes.const";
-import { NextFunction, Request, Response } from "express";
-import { db } from "../../../db";
+import { Request, Response } from "express";
 import { Food } from "../models/food.model";
+import { FoodsService } from "../services/foods.service";
 
-export const getFoods = (req: Request, res: Response, next: NextFunction) => {
+export const getFoods = async (req: Request, res: Response) => {
   /* 
     #swagger.tags = ['Foods']
     #swagger.description = 'Get all Foods'
@@ -19,53 +19,26 @@ export const getFoods = (req: Request, res: Response, next: NextFunction) => {
       schema: { $ref: '#/definitions/FoodResponse'}
     }
   */
-  let { name } = req.query;
-  if (name) {
-    db.all(
-      `SELECT f.*, GROUP_CONCAT(t.id) AS tags
-      FROM foods f
-      LEFT JOIN food_tags ft ON f.id = ft.food_id
-      LEFT JOIN tags t ON ft.tag_id = t.id
-      WHERE f.name LIKE '%' || ? || '%'
-      GROUP BY f.id`,
-      [name],
-      (err: any, rows: any) => {
-        if (err) {
-          res.status(RESPONSE_CODES.NOT_FOUND).json(err.message);
-        }
-        let response: HttpResponse<Food> = {
-          data: rows,
-          length: rows.length,
-        };
-        res.status(RESPONSE_CODES.OK).json(response);
-      }
-    );
-  } else {
-    db.all(
-      `SELECT f.*, GROUP_CONCAT(t.id) AS tags
-      FROM foods f
-      LEFT JOIN food_tags ft ON f.id = ft.food_id
-      LEFT JOIN tags t ON ft.tag_id = t.id
-      GROUP BY f.id`,
-      (err: any, rows: any) => {
-        if (err) {
-          next(err);
-        }
-        let response: HttpResponse<Food> = {
-          data: rows,
-          length: rows.length,
-        };
-        res.status(RESPONSE_CODES.OK).json(response);
-      }
-    );
+
+  const { name } = req.query;
+  let rows = name
+    ? await FoodsService.getAllFoodsByName(name as string)
+    : await FoodsService.getAllFoods();
+
+  if (!rows) {
+    return rows
+      .status(RESPONSE_CODES.NOT_FOUND)
+      .send(Error.getError("No entry found"));
   }
+  let response: HttpResponse<Food> = {
+    data: rows,
+    length: rows.length,
+  };
+
+  res.status(RESPONSE_CODES.OK).json(response);
 };
 
-export const getFoodById = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const getFoodById = async (req: Request, res: Response) => {
   /* 
     #swagger.tags = ['Foods'] 
     #swagger.description = 'Get Food by ID'
@@ -78,38 +51,25 @@ export const getFoodById = (
       schema: { $ref: '#/definitions/ErrorSearch' }
      }
   */
+
   const { id } = req.params;
 
   if (!id) {
     return res.send(Error.getError("No entry found"));
   }
 
-  // get from db
-  db.get(
-    `
-    SELECT f.*, GROUP_CONCAT(t.id) AS tags
-    FROM foods f 
-    LEFT JOIN food_tags ft ON f.id = ft.food_id
-    LEFT JOIN tags t ON ft.tag_id = t.id
-    WHERE f.id = ? 
-    GROUP BY f.id`,
-    [id],
-    (err: any, row: any) => {
-      if (err) {
-        next(err);
-        return console.error(err.message);
-      }
-      if (!row) {
-        return res
-          .status(RESPONSE_CODES.NOT_FOUND)
-          .json(Error.getError("No such item"));
-      }
+  await FoodsService.getFoodById(id).then((row: any) => {
+    if (row) {
       res.status(RESPONSE_CODES.OK).json(row);
+    } else {
+      res
+        .status(RESPONSE_CODES.NOT_FOUND)
+        .json(Error.getError("No entry found"));
     }
-  );
+  });
 };
 
-export const addNewFood = (req: Request, res: Response) => {
+export const addNewFood = async (req: Request, res: Response) => {
   /*
     #swagger.tags = ['Foods']
     #swagger.description = 'Add new Food'
@@ -125,8 +85,6 @@ export const addNewFood = (req: Request, res: Response) => {
       schema: { $ref: '#/definitions/FoodEntry' }
      }
   */
-  let id: string;
-
   const { name, weight, caloriesPer100g, nutriScore, tags = [] } = req.body;
 
   if (!name || !weight) {
@@ -135,48 +93,31 @@ export const addNewFood = (req: Request, res: Response) => {
       .json(Error.getError("Both name and weight are required"));
   }
 
-  db.run(
-    `INSERT INTO foods (name, weight, caloriesPer100g, nutriScore) VALUES (?, ?, ?, ?)`,
-    [name, weight, caloriesPer100g, nutriScore],
-    function (err: any) {
-      if (err) {
-        res.status(RESPONSE_CODES.UNPROCESSABLE_ENTITY).json(err.message);
-      }
-    }
-  );
+  await FoodsService.addNewFood({
+    name,
+    weight,
+    caloriesPer100g,
+    nutriScore,
+    tags,
+  }).catch((err: any) => {
+    res.status(RESPONSE_CODES.BAD_REQUEST).json(Error.getError(err));
+  });
 
-  if (tags?.length) {
-    db.get(
-      `SELECT id FROM foods ORDER BY ID DESC LIMIT 1`,
-      (err: any, row: any) => {
-        if (err) {
-          return console.error(err.message);
-        }
-        id = row.id;
+  await FoodsService.addTags(tags);
+  const response = {
+    data: {
+      name,
+      weight,
+      caloriesPer100g,
+      nutriScore,
+      tags,
+    },
+  };
 
-        tags.forEach((tagId: string) => {
-          db.run(
-            `INSERT INTO food_tags (food_id, tag_id) VALUES (?, ?)`,
-            [id, tagId],
-            function (err: any) {
-              if (err) {
-                res
-                  .status(RESPONSE_CODES.UNPROCESSABLE_ENTITY)
-                  .json(err.message);
-              }
-            }
-          );
-        });
-      }
-    );
-  }
-
-  res
-    .status(RESPONSE_CODES.CREATED)
-    .json({ name, weight, caloriesPer100g, nutriScore, tags });
+  res.status(RESPONSE_CODES.OK).json(response);
 };
 
-export const deleteFoodById = (req: Request, res: Response) => {
+export const deleteFoodById = async (req: Request, res: Response) => {
   /* 
   #swagger.tags = ['Foods']
   #swagger.responses[200] = {
@@ -192,22 +133,20 @@ export const deleteFoodById = (req: Request, res: Response) => {
     }
   }  
   */
+
   const { id } = req.params;
 
   if (!id) {
     return res.send(Error.getError("No entry found"));
   }
 
-  // delete from db
-  db.run(`DELETE FROM foods WHERE id = ?`, [id], function (err: any) {
-    if (err) {
-      res.status(RESPONSE_CODES.UNPROCESSABLE_ENTITY).json(err.message);
-    }
-    res.status(RESPONSE_CODES.OK).json({ id, message: "Item deleted" });
+  await FoodsService.deleteFood(id).catch((err: any) => {
+    res.status(RESPONSE_CODES.NOT_FOUND).json(Error.getError("Item not found"));
   });
+  res.status(RESPONSE_CODES.OK).json({ message: "Item deleted successfully" });
 };
 
-export const editFood = (req: Request, res: Response) => {
+export const editFood = async (req: Request, res: Response) => {
   /*  #swagger.tags = ['Foods']
       #swagger.parameters['body'] = {
                 in: 'body',
@@ -233,16 +172,11 @@ export const editFood = (req: Request, res: Response) => {
 
   const { body } = req;
 
-  // edit food
-  db.run(
-    `UPDATE foods SET name = ?, weight = ?, caloriesPer100g = ?, nutriScore = ? WHERE id = ?`,
-    [body.name, body.weight, body.caloriesPer100g, body.nutriScore, id],
-    function (err: any) {
-      if (err) {
-        res.status(RESPONSE_CODES.UNPROCESSABLE_ENTITY).json(err.message);
-      }
-      console.log(`A row has been updated with rowid ${id}`);
-    }
-  );
-  return res.status(RESPONSE_CODES.CREATED).send(req.body);
+  await FoodsService.editFood(id, body)
+    .then((row: any) => {
+      res.status(RESPONSE_CODES.CREATED).json(row);
+    })
+    .catch((err: any) => {
+      res.status(RESPONSE_CODES.NOT_FOUND).json(err);
+    });
 };
