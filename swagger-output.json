@@ -166,20 +166,6 @@
         }
       }
     },
-    "/api/foods/SELECTf.*,GROUP_CONCAT(t.id)AStagsFROMfoodsfLEFTJOINfood_tagsftONf.id=ft.food_idLEFTJOINtagstONft.tag_id=t.idWHEREf.id=?GROUPBYf.id": {
-      "get": {
-        "description": "",
-        "parameters": [],
-        "responses": {}
-      }
-    },
-    "/api/foods/SELECTidFROMfoodsORDERBYIDDESCLIMIT1": {
-      "get": {
-        "description": "",
-        "parameters": [],
-        "responses": {}
-      }
-    },
     "/api/diary/": {
       "get": {
         "tags": [
@@ -410,7 +396,14 @@
         ],
         "description": "Get all Tags",
         "parameters": [],
-        "responses": {}
+        "responses": {
+          "200": {
+            "description": "Tags successfully obtained",
+            "schema": {
+              "$ref": "#/definitions/TagsResponse"
+            }
+          }
+        }
       }
     },
     "/api/auth/signup": {
