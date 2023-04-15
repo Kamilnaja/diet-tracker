@@ -11,9 +11,8 @@ import express from "express";
 import morgan from "morgan";
 import swaggerUi from "swagger-ui-express";
 import * as swaggerFile from "../swagger-output.json";
+import { startDb as db } from "./db";
 dotenv.config();
-
-let db = require("./db.ts");
 
 const app = express();
 const port = shouldLoadInitialData() ? 8080 : 8081;
@@ -27,6 +26,7 @@ app.use(
     httpOnly: true,
   })
 );
+db();
 app.use("/api/foods", foodsRouter);
 app.use("/api/diary", diaryRouter);
 app.use("/api/dicts", dictRouter);
