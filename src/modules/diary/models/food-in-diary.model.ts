@@ -4,4 +4,5 @@ export interface FoodInDiary {
   id: string;
   weight: number;
   mealType: MealType;
+  dateAdded: string;
 }

@@ -1,6 +1,6 @@
 import { Builder } from "@shared/models/builder.model";
 import { Diary } from "../models/diary.model";
-import { FoodInDiary } from "../models/food-in-diary";
+import { FoodInDiary } from "../models/food-in-diary.model";
 
 export class DiaryBuilder implements Builder<Diary> {
   private _id: string;

@@ -117,12 +117,13 @@ export async function loadInitialFoods(db: any) {
     await db
       .run(
         `INSERT INTO ${DIARY} (date, id) VALUES 
-          ('2021-01-01', 1), 
+          (Date('now'), 1),
           ('2021-01-02', 2), 
           ('2021-01-03', 3), 
           ('2021-01-04', 4), 
           ('2021-01-05', 5), 
-          ('2021-02-05', 6)`
+          ('2021-02-05', 6)
+          `
       )
       .then(() => {
         console.log("Initial data inserted into diary table successfully");
@@ -147,6 +148,7 @@ export async function loadInitialFoods(db: any) {
 
     await db.run(
       `INSERT INTO ${FOOD_IN_DIARY} (id, weight, meal_type, date_added) VALUES 
+        (0, 50.0, 'breakfast', Date('now')),
         (1, 100.2, 'breakfast', '2021-01-01 18:47'),
         (2, 1000, 'dinner', '2021-01-01 12:20'),
         (3, 100.2, 'breakfast', '2021-01-02 13:30'),
