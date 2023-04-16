@@ -259,7 +259,7 @@
           "200": {
             "description": "Diary entry successfully deleted",
             "schema": {
-              "$ref": "#/definitions/DiaryEntry"
+              "$ref": "#/definitions/DeleteSuccess"
             }
           },
           "404": {
@@ -770,6 +770,15 @@
         "message": {
           "type": "string",
           "example": "Item already exists"
+        }
+      }
+    },
+    "DeleteSuccess": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "Item deleted"
         }
       }
     }

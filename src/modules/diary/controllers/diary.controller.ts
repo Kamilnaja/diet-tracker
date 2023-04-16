@@ -110,13 +110,13 @@ export const addNewDiaryEntry = (req: Request, res: Response) => {
   res.send(diaryEntry);
 };
 
-export const deleteDiaryItemById = (req: Request, res: Response) => {
+export const deleteDiaryItemById = async (req: Request, res: Response) => {
   /* 
     #swagger.tags = ['Diary']
     #swagger.description = 'Delete Diary entry by ID'
     #swagger.responses[200] = {
       description: 'Diary entry successfully deleted',
-      schema: { $ref: '#/definitions/DiaryEntry' }
+      schema: { $ref: '#/definitions/DeleteSuccess' }
   }
     #swagger.responses[404] = {
       description: 'No such item',
@@ -129,24 +129,9 @@ export const deleteDiaryItemById = (req: Request, res: Response) => {
     return res.send(Error.getError("No entry found"));
   }
 
-  let response: HttpResponse<Diary | undefined> = {
-    data: undefined,
-    length: 0,
-  };
+  await DiaryService.deleteDiaryItemById(id);
 
-  let foundItem = store.initialDiary.find("id", id);
-
-  if (foundItem) {
-    response = {
-      data: foundItem,
-      length: 1,
-    };
-
-    store.initialDiary.filter("id", id);
-  }
-  res
-    .status(foundItem ? RESPONSE_CODES.OK : RESPONSE_CODES.NOT_FOUND)
-    .send(response);
+  res.status(RESPONSE_CODES.OK).send({ message: "Item deleted" });
 };
 
 export const editDiary = (req: Request, res: Response) => {

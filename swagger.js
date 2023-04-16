@@ -64,6 +64,9 @@ const doc = {
     ErrorConflict: {
       message: "Item already exists",
     },
+    DeleteSuccess: {
+      message: "Item deleted",
+    },
   },
 };
 
