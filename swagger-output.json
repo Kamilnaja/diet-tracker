@@ -22,16 +22,7 @@
             "name": "name",
             "in": "query",
             "description": "Food name",
-            "type": "string"
-          },
-          {
-            "name": "description",
-            "in": "query",
-            "type": "string"
-          },
-          {
-            "name": "schema",
-            "in": "query",
+            "required": false,
             "type": "string"
           }
         ],
@@ -165,6 +156,450 @@
           }
         }
       }
+    },
+    "/api/diary/": {
+      "get": {
+        "tags": [
+          "Diary"
+        ],
+        "description": "Get all Diary entries",
+        "parameters": [
+          {
+            "name": "date",
+            "in": "query",
+            "description": "Date of diary entry",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Diary entries successfully obtained",
+            "schema": {
+              "$ref": "#/definitions/DiaryResponse"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Diary"
+        ],
+        "description": "Add new Diary entry",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Diary entry",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DiaryEntry"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Diary entry successfully added",
+            "schema": {
+              "$ref": "#/definitions/DiaryEntry"
+            }
+          },
+          "409": {
+            "description": "Diary entry with this id already exists",
+            "schema": {
+              "$ref": "#/definitions/ErrorConflict"
+            }
+          }
+        }
+      }
+    },
+    "/api/diary/{id}": {
+      "get": {
+        "tags": [
+          "Diary"
+        ],
+        "description": "Get Diary entry by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Diary entry successfully obtained",
+            "schema": {
+              "$ref": "#/definitions/DiaryEntry"
+            }
+          },
+          "404": {
+            "description": "No such item",
+            "schema": {
+              "$ref": "#/definitions/ErrorSearch"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Diary"
+        ],
+        "description": "Delete Diary entry by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Diary entry successfully deleted",
+            "schema": {
+              "$ref": "#/definitions/DiaryEntry"
+            }
+          },
+          "404": {
+            "description": "No such item",
+            "schema": {
+              "$ref": "#/definitions/ErrorSearch"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Diary"
+        ],
+        "description": "Edit Diary entry",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Diary entry",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DiaryEntry"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Diary entry successfully edited",
+            "schema": {
+              "$ref": "#/definitions/DiaryEntry"
+            }
+          },
+          "404": {
+            "description": "No such item",
+            "schema": {
+              "$ref": "#/definitions/ErrorSearch"
+            }
+          }
+        }
+      }
+    },
+    "/api/diary/{id}/foods": {
+      "post": {
+        "tags": [
+          "Diary"
+        ],
+        "description": "Add new Meal to Diary",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Food Body",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/FoodInDiary"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "201": {
+            "description": "Food successfully added",
+            "schema": {
+              "$ref": "#/definitions/DiaryEntry"
+            }
+          },
+          "404": {
+            "description": "No such item",
+            "schema": {
+              "$ref": "#/definitions/ErrorSearch"
+            }
+          }
+        }
+      }
+    },
+    "/api/diary/{id}/foods/{foodId}": {
+      "delete": {
+        "tags": [
+          "Diary"
+        ],
+        "description": "Delete Food Diary entry by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "foodId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Diary entry successfully deleted",
+            "schema": {
+              "$ref": "#/definitions/DiaryEntry"
+            }
+          },
+          "404": {
+            "description": "No such item",
+            "schema": {
+              "$ref": "#/definitions/ErrorSearch"
+            }
+          }
+        }
+      }
+    },
+    "/api/dicts/tags": {
+      "get": {
+        "tags": [
+          "Tags"
+        ],
+        "description": "Get all Tags",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Tags successfully obtained",
+            "schema": {
+              "$ref": "#/definitions/TagsResponse"
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/signup": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "description": "Create new user",
+        "parameters": [
+          {
+            "name": "newUser",
+            "in": "body",
+            "description": "New User object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "User successfully created",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "409": {
+            "description": "User with this email already exists",
+            "schema": {
+              "$ref": "#/definitions/ErrorConflict"
+            }
+          }
+        }
+      }
+    },
+    "/api/fluids/": {
+      "get": {
+        "tags": [
+          "Fluids"
+        ],
+        "description": "Get all Fluids",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Fluids successfully obtained",
+            "schema": {
+              "$ref": "#/definitions/Fluid"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Fluids"
+        ],
+        "description": "Add new Fluid",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Fluid Body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "Orange"
+                },
+                "capacity": {
+                  "type": "number",
+                  "example": 100
+                },
+                "caloriesPer100g": {
+                  "type": "number",
+                  "example": 30
+                },
+                "id": {
+                  "type": "string",
+                  "example": "39393993"
+                },
+                "icon": {
+                  "type": "string",
+                  "example": "☕"
+                }
+              },
+              "required": [
+                "name",
+                "capacity"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Fluid successfully added",
+            "schema": {
+              "$ref": "#/definitions/Fluid"
+            }
+          }
+        }
+      }
+    },
+    "/api/fluids/{id}": {
+      "get": {
+        "tags": [
+          "Fluids"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Fluids"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Fluids"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Fluid Body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "Orange"
+                },
+                "capacity": {
+                  "type": "number",
+                  "example": 100
+                },
+                "caloriesPer100g": {
+                  "type": "number",
+                  "example": 30
+                },
+                "id": {
+                  "type": "string",
+                  "example": "123"
+                },
+                "icons": {
+                  "type": "string",
+                  "example": "☕"
+                }
+              },
+              "required": [
+                "name",
+                "capacity"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Fluid successfully edited",
+            "schema": {
+              "$ref": "#/definitions/Fluid"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -271,6 +706,25 @@
           }
         },
         "lenght": {
+          "type": "number",
+          "example": 10
+        }
+      }
+    },
+    "Tag": {
+      "type": "object",
+      "properties": {}
+    },
+    "TagsResponse": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Tag"
+          }
+        },
+        "length": {
           "type": "number",
           "example": 10
         }

@@ -1,6 +1,6 @@
 import { MealType } from "@modules/foods/models/meal-type.model";
 import { Builder } from "@shared/models/builder.model";
-import { FoodInDiary } from "../models/food-in-diary";
+import { FoodInDiary } from "../models/food-in-diary.model";
 
 export class FoodInDiaryBuilder implements Builder<FoodInDiary> {
   private _id: string;
@@ -27,6 +27,7 @@ export class FoodInDiaryBuilder implements Builder<FoodInDiary> {
       id: this._id,
       weight: this._weight,
       mealType: this._mealType,
+      dateAdded: new Date().toISOString(),
     };
     return foodInDiary;
   }

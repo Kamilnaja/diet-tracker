@@ -5,17 +5,23 @@ export const createDiary = (): Diary[] => {
   const day1 = new DiaryBuilder()
     .setId("0")
     .setDate("2022-01-01")
-    .setFoods([{ id: "1", weight: 100, mealType: "breakfast" }])
+    .setFoods([
+      { id: "1", weight: 100, mealType: "breakfast", dateAdded: "2022-01-01" },
+    ])
     .build();
   const day2 = new DiaryBuilder()
     .setId("1")
     .setDate("2022-01-02")
-    .setFoods([{ id: "2", weight: 200, mealType: "snack" }])
+    .setFoods([
+      { id: "2", weight: 200, mealType: "snack", dateAdded: "2022-01-02" },
+    ])
     .build();
   const day3 = new DiaryBuilder()
     .setId("2")
     .setDate("2022-01-02")
-    .setFoods([{ id: "3", weight: 50, mealType: "training" }])
+    .setFoods([
+      { id: "3", weight: 50, mealType: "training", dateAdded: "2022-01-02" },
+    ])
     .build();
 
   const days = [day1, day2, day3];

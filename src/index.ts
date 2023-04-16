@@ -1,3 +1,4 @@
+import { startDb as db } from "@db/db";
 import { signupRouter } from "@modules/auth/routes/signup.routes";
 import { diaryRouter } from "@modules/diary/routes/diary.routes";
 import { dictRouter } from "@modules/dict/routes/dict.routes";
@@ -11,7 +12,6 @@ import express from "express";
 import morgan from "morgan";
 import swaggerUi from "swagger-ui-express";
 import * as swaggerFile from "../swagger-output.json";
-import { startDb as db } from "./db";
 dotenv.config();
 
 const app = express();

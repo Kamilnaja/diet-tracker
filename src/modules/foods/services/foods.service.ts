@@ -1,4 +1,4 @@
-import { db } from "../../../db";
+import { db } from "@db/db";
 import { Food } from "../models/food.model";
 export class FoodsService {
   static getAllFoods = async () => {
@@ -16,11 +16,11 @@ export class FoodsService {
   static getAllFoodsByName = async (name: string) => {
     return await db.all(
       `SELECT f.*, GROUP_CONCAT(t.id) AS tags
-    FROM foods f
-    LEFT JOIN food_tags ft ON f.id = ft.food_id
-    LEFT JOIN tags t ON ft.tag_id = t.id
-    WHERE f.name LIKE '%' || ? || '%'
-    GROUP BY f.id`,
+      FROM foods f
+      LEFT JOIN food_tags ft ON f.id = ft.food_id
+      LEFT JOIN tags t ON ft.tag_id = t.id
+      WHERE f.name LIKE '%' || ? || '%'
+      GROUP BY f.id`,
       [name]
     );
   };
@@ -57,11 +57,7 @@ export class FoodsService {
     if (tags.length) {
       tags.forEach(async (tagId) => {
         const tagQuery = `INSERT INTO food_tags (food_id, tag_id) VALUES (?, ?)`;
-        await db.run(tagQuery, [rowId, tagId], (err: any) => {
-          if (err) {
-            console.error(err.message);
-          }
-        });
+        await db.run(tagQuery, [rowId, tagId]);
       });
     }
   };

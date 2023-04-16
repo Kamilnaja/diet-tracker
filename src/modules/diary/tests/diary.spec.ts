@@ -2,7 +2,7 @@ import { baseURL } from "@shared/helpers/utils";
 import { RESPONSE_CODES } from "@shared/models/response-codes.const";
 import request from "supertest";
 import { DiaryBuilder } from "../builders/diary.builder";
-import { FoodInDiary } from "../models/food-in-diary";
+import { FoodInDiary } from "../models/food-in-diary.model";
 
 describe("diary", () => {
   const partURL = "/diary";
@@ -12,9 +12,9 @@ describe("diary", () => {
       .setId("10")
       .setDate("2023-01-01")
       .setFoods([
-        { id: "1", weight: 50, mealType: "breakfast" },
-        { id: "2", weight: 100, mealType: "snack" },
-        { id: "3", weight: 82, mealType: "dinner" },
+        { id: "1", weight: 50, mealType: "breakfast", dateAdded: "2020-01-01" },
+        { id: "2", weight: 100, mealType: "snack", dateAdded: "2020-01-01" },
+        { id: "3", weight: 82, mealType: "dinner", dateAdded: "2021-02-01" },
       ])
       .build();
 
@@ -75,7 +75,12 @@ describe("diary", () => {
     afterEach(async () => {
       await request(baseURL).delete(`${partURL}/10/foods/8`);
     });
-    const foodEntry: FoodInDiary = { id: "8", weight: 100, mealType: "dinner" };
+    const foodEntry: FoodInDiary = {
+      id: "8",
+      weight: 100,
+      mealType: "dinner",
+      dateAdded: "2021-02-01",
+    };
 
     it("should add foods to item", async () => {
       await request(baseURL).post(`${partURL}/10/foods`).send(foodEntry);
