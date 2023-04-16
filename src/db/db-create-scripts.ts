@@ -1,3 +1,4 @@
+import { db } from "./db";
 import {
   DIARY,
   DIARY_FOODS,
@@ -7,7 +8,7 @@ import {
   TAGS,
 } from "./db-table-names";
 
-export async function createTables(db: any) {
+export async function createTables() {
   await db
     .run(
       `CREATE TABLE IF NOT EXISTS ${FOODS} (

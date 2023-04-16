@@ -1,5 +1,7 @@
 import { db } from "@db/db";
+import { DIARY_FOODS, FOOD_IN_DIARY } from "@db/db-table-names";
 import { Diary } from "../models/diary.model";
+import { FoodInDiary } from "../models/food-in-diary.model";
 
 export class DiaryService {
   static getAllDiaryEntries = async (): Promise<Diary[]> => {
@@ -34,7 +36,7 @@ export class DiaryService {
     return reduced;
   };
 
-  static getDiaryEntryById = async (id: number): Promise<Diary> => {
+  static getDiaryEntryById = async (id: string): Promise<Diary> => {
     const query = `    
     select df.diary_id, d.date, fid.id as food_id, fid.weight, fid.meal_type, fid.date_added 
     FROM diary_foods df
@@ -45,11 +47,39 @@ export class DiaryService {
     WHERE d.id LIKE '%' || ? || '%'
     `;
 
-    let rows = db.all(query, [id]);
+    let rows = await db.all<Diary>(query, [id]);
     return rows;
   };
 
-  static deleteDiaryItemById = async (id: string): Promise<Diary> => {
+  static addDiaryItem = async (date: string): Promise<Diary> => {
+    const query = `
+    INSERT INTO diary (date) VALUES (?)`;
+
+    let rows = await db.run(query, [date]);
+    return rows as any;
+  };
+
+  static addFoodToDiary = async (foods: FoodInDiary[]) => {
+    if (foods.length) {
+      const lastDiaryItem = await db.get(
+        "SELECT id FROM ${diary} ORDER BY id DESC LIMIT 1"
+      );
+      const rowId = lastDiaryItem.id;
+
+      foods.forEach(async (food) => {
+        await db.run(
+          `INSERT INTO ${FOOD_IN_DIARY} (weight, meal_type, date_added) VALUES (?, ?, ?)`,
+          [food.weight, food.mealType, food.dateAdded]
+        );
+        await db.run(
+          `INSERT INTO ${DIARY_FOODS} (diary_id, food_id) VALUES (?, ?)`,
+          [rowId, food.id]
+        );
+      });
+    }
+  };
+
+  static deleteDiaryItemById = async (id: string): Promise<any> => {
     const query = `
     DELETE FROM diary_foods WHERE diary_id = ?`;
 

@@ -51,10 +51,11 @@ export class FoodsService {
   };
 
   static addTags = async (tags: string[]) => {
-    const res = await db.get("SELECT id FROM foods ORDER BY id DESC LIMIT 1");
-    const rowId = res.id;
-
     if (tags.length) {
+      const lastFoodItem = await db.get(
+        "SELECT id FROM foods ORDER BY id DESC LIMIT 1"
+      );
+      const rowId = lastFoodItem.id;
       tags.forEach(async (tagId) => {
         const tagQuery = `INSERT INTO food_tags (food_id, tag_id) VALUES (?, ?)`;
         await db.run(tagQuery, [rowId, tagId]);
@@ -77,16 +78,18 @@ export class FoodsService {
           return;
         }
 
-        tags.forEach((tagId: string) => {
-          db.run(
-            `INSERT INTO food_tags (food_id, tag_id) VALUES (?, ?)`,
-            [id, tagId],
-            (err: any) => {
-              if (err) {
-                return;
-              }
-            }
-          );
+        tags.forEach(async (tagId: string) => {
+          await db
+            .run(`INSERT INTO food_tags (food_id, tag_id) VALUES (?, ?)`, [
+              id,
+              tagId,
+            ])
+            .then(() => {
+              console.log("tag added");
+            })
+            .catch((err: any) => {
+              console.log(err);
+            });
         });
       }
     );

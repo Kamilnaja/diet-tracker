@@ -1,11 +1,11 @@
 const sqlite3 = require("sqlite3").verbose();
 import { shouldLoadInitialData } from "@shared/helpers/utils";
-import { open } from "sqlite";
+import { Database, open } from "sqlite";
 import { createTables } from "./db-create-scripts";
 import { dropTables } from "./db-drop-scripts";
 import { loadInitialData } from "./db-insert-scripts";
 
-export let db: any;
+export let db: Database;
 
 export const startDb = async () => {
   try {
@@ -16,9 +16,9 @@ export const startDb = async () => {
 
     console.log("Database connection established!");
 
-    await dropTables(db);
-    await createTables(db);
-    await loadInitialData(db);
+    await dropTables();
+    await createTables();
+    await loadInitialData();
   } catch (error) {
     console.error(error);
   }

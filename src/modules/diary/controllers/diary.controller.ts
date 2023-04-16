@@ -37,7 +37,7 @@ export const getDiary = async (req: Request, res: Response) => {
   return res.status(RESPONSE_CODES.OK).send(response);
 };
 
-export const getDiaryById = (req: Request, res: Response) => {
+export const getDiaryById = async (req: Request, res: Response) => {
   /* 
     #swagger.tags = ['Diary'] 
     #swagger.description = 'Get Diary entry by ID'
@@ -53,11 +53,7 @@ export const getDiaryById = (req: Request, res: Response) => {
 
   const { id } = req.params;
 
-  if (!id) {
-    return res.send(Error.getError("Item not found"));
-  }
-
-  const foundItem = store.initialDiary.find("id", id);
+  const foundItem = await DiaryService.getDiaryEntryById(id as string);
 
   foundItem
     ? res.status(RESPONSE_CODES.OK).json(foundItem)
@@ -66,7 +62,7 @@ export const getDiaryById = (req: Request, res: Response) => {
         .json(Error.getError("Item not found"));
 };
 
-export const addNewDiaryEntry = (req: Request, res: Response) => {
+export const addNewDiaryEntry = async (req: Request, res: Response) => {
   /* 
     #swagger.tags = ['Diary'] 
     #swagger.description = 'Add new Diary entry'
@@ -87,25 +83,12 @@ export const addNewDiaryEntry = (req: Request, res: Response) => {
     }
   */
 
-  const {
-    date = new Date().toISOString().split("T")[0],
-    foods,
-    id = new Date().getTime().toString(),
-  } = req.body;
+  const { date = new Date().toISOString().split("T")[0], foods } = req.body;
 
-  if (store.initialDiary.find("id", id)) {
-    return res
-      .status(RESPONSE_CODES.CONFLICT)
-      .json(Error.getError("Diary entry with this id already exists"));
-  }
+  await DiaryService.addDiaryItem(foods);
+  await DiaryService.addFoodToDiary(foods);
 
-  const diaryEntry = new DiaryBuilder()
-    .setId(id)
-    .setDate(date)
-    .setFoods(foods)
-    .build();
-
-  store.initialDiary.add(diaryEntry);
+  const diaryEntry = new DiaryBuilder().setDate(date).setFoods(foods).build();
 
   res.send(diaryEntry);
 };
