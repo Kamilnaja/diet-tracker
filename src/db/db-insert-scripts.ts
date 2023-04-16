@@ -8,7 +8,7 @@ import {
   TAGS,
 } from "./db-table-names";
 
-export async function loadInitialFoods(db: any) {
+export async function loadInitialData(db: any) {
   if (shouldLoadInitialData()) {
     await db
       .run(
