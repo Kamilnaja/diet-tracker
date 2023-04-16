@@ -1,7 +1,8 @@
 import { db } from "@db/db";
+import { Diary } from "../models/diary.model";
 
 export class DiaryService {
-  static getAllDiaryEntries = async () => {
+  static getAllDiaryEntries = async (): Promise<Diary[]> => {
     const query = `    
       select df.diary_id, d.date, fid.id as food_id, fid.weight, fid.meal_type, fid.date_added 
       FROM diary_foods df
@@ -12,7 +13,29 @@ export class DiaryService {
 
     let rows = await db.all(query);
 
-    let reduced = rows.reduce((acc: any, item: any) => {
+    let reduced = DiaryService.groupDiaryById(rows);
+
+    return reduced;
+  };
+
+  static getAllDiaryEntriesByDate = async (date: string): Promise<Diary[]> => {
+    const query = `    
+      select df.diary_id, d.date, fid.id as food_id, fid.weight, fid.meal_type, fid.date_added 
+      FROM diary_foods df
+      INNER JOIN food_in_diary fid
+	    ON df.food_id = fid.id
+      INNER JOIN diary d 
+    	ON df.diary_id = d.id
+      WHERE d.date LIKE '%' || ? || '%'
+      `;
+
+    const rows = await db.all(query, [date]);
+    const reduced = DiaryService.groupDiaryById(rows);
+    return reduced;
+  };
+
+  private static groupDiaryById(rows: any): Diary[] {
+    return rows.reduce((acc: any, item: any) => {
       let { diary_id } = item;
 
       let foundIndex = acc.findIndex((item: any) => item.id === diary_id);
@@ -40,8 +63,5 @@ export class DiaryService {
       }
       return acc;
     }, []);
-    return reduced;
-  };
-
-  static getAllDiaryEntriesByDate() {}
+  }
 }

@@ -26,7 +26,14 @@
             "type": "string"
           }
         ],
-        "responses": {}
+        "responses": {
+          "200": {
+            "description": "Foods successfully obtained",
+            "schema": {
+              "$ref": "#/definitions/FoodResponse"
+            }
+          }
+        }
       },
       "post": {
         "tags": [
@@ -156,7 +163,15 @@
           "Diary"
         ],
         "description": "Get all Diary entries",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "date",
+            "in": "query",
+            "description": "Date of diary entry",
+            "required": false,
+            "type": "string"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Diary entries successfully obtained",

@@ -9,27 +9,32 @@ import { DiaryService } from "../services/diary.service";
 
 export const getDiary = async (req: Request, res: Response) => {
   /* 
+    #swagger.auto = false
     #swagger.tags = ['Diary']
     #swagger.description = 'Get all Diary entries'
+    #swagger.parameters['date'] = {
+      in: 'query',
+      description: 'Date of diary entry',
+      required: false,
+    }
     #swagger.responses[200] = {
       description: 'Diary entries successfully obtained',
       schema: { $ref: '#/definitions/DiaryResponse'}
     }
   */
 
-  let searchBy = req.query?.data as string;
-  searchBy = searchBy?.trim().toLocaleLowerCase();
+  let { date } = req.query;
 
-  if (searchBy) {
-    store.initialDiary.filter("date", searchBy);
-  }
+  const mappedRows = date
+    ? await DiaryService.getAllDiaryEntriesByDate(date as string)
+    : await DiaryService.getAllDiaryEntries();
 
-  let mappedRows = await DiaryService.getAllDiaryEntries();
-  let response: HttpResponse<Diary> = {
-    data: mappedRows as any,
+  let response: HttpResponse<Diary[]> = {
+    data: mappedRows,
     length: mappedRows.length,
   };
-  res.send(response);
+
+  return res.status(RESPONSE_CODES.OK).send(response);
 };
 
 export const getDiaryById = (req: Request, res: Response) => {
