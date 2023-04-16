@@ -1,7 +1,7 @@
+import { db } from "@db/db";
 import { HttpResponse } from "@shared/models/http-response.model";
 import { RESPONSE_CODES } from "@shared/models/response-codes.const";
 import { Request, Response } from "express";
-import { db } from "../../../db";
 import { Tag } from "../models/tag.interface";
 
 export const getTagsDict = (req: Request, res: Response) => {

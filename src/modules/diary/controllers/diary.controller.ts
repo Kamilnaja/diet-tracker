@@ -5,8 +5,9 @@ import { store } from "@shared/store";
 import { Request, Response } from "express";
 import { DiaryBuilder } from "../builders/diary.builder";
 import { Diary } from "../models/diary.model";
+import { DiaryService } from "../services/diary.service";
 
-export const getDiary = (req: Request, res: Response): void => {
+export const getDiary = async (req: Request, res: Response) => {
   /* 
     #swagger.tags = ['Diary']
     #swagger.description = 'Get all Diary entries'
@@ -23,7 +24,12 @@ export const getDiary = (req: Request, res: Response): void => {
     store.initialDiary.filter("date", searchBy);
   }
 
-  res.json(store.initialDiary.getResponse);
+  let mappedRows = await DiaryService.getAllDiaryEntries();
+  let response: HttpResponse<Diary> = {
+    data: mappedRows as any,
+    length: mappedRows.length,
+  };
+  res.send(response);
 };
 
 export const getDiaryById = (req: Request, res: Response) => {
