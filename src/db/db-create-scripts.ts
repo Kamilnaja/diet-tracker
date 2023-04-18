@@ -17,7 +17,6 @@ export async function createTables() {
       caloriesPer100g INTEGER,
       weight INTEGER NOT NULL,
       nutriScore TEXT,
-      meal_type TEXT,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );`

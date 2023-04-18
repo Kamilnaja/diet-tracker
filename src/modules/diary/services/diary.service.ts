@@ -1,5 +1,5 @@
 import { db } from "@db/db";
-import { DIARY_FOODS, FOOD_IN_DIARY } from "@db/db-table-names";
+import { DIARY, DIARY_FOODS, FOOD_IN_DIARY } from "@db/db-table-names";
 import { Diary } from "../models/diary.model";
 import { FoodInDiary } from "../models/food-in-diary.model";
 
@@ -51,32 +51,43 @@ export class DiaryService {
     return rows;
   };
 
-  static addDiaryItem = async (date: string): Promise<Diary> => {
-    const query = `
-    INSERT INTO diary (date) VALUES (?)`;
+  static addDiaryItem = async (): Promise<void> => {
+    const query = `INSERT INTO diary (date) VALUES (Date('now'))`;
 
-    let rows = await db.run(query, [date]);
-    return rows as any;
+    await db.run(query);
   };
 
   static addFoodToDiary = async (foods: FoodInDiary[]) => {
     if (foods.length) {
       const lastDiaryItem = await db.get(
-        "SELECT id FROM ${diary} ORDER BY id DESC LIMIT 1"
+        `SELECT id FROM ${DIARY} ORDER BY id DESC LIMIT 1`
       );
-      const rowId = lastDiaryItem.id;
+      const rowId = await lastDiaryItem.id;
 
-      foods.forEach(async (food) => {
+      foods.forEach(async (food: FoodInDiary) => {
         await db.run(
-          `INSERT INTO ${FOOD_IN_DIARY} (weight, meal_type, date_added) VALUES (?, ?, ?)`,
-          [food.weight, food.mealType, food.dateAdded]
+          `INSERT INTO ${FOOD_IN_DIARY}
+           (id, weight, meal_type, date_added)   
+           VALUES (?, ?, ?, datetime(CURRENT_TIMESTAMP, 'localtime'))`,
+          [food.id, food.weight, food.mealType, food.dateAdded]
         );
         await db.run(
-          `INSERT INTO ${DIARY_FOODS} (diary_id, food_id) VALUES (?, ?)`,
+          `INSERT INTO ${DIARY_FOODS} (diary_id, food_id)
+           VALUES (?, ?)`,
           [rowId, food.id]
         );
       });
     }
+  };
+
+  static deleteFoodFromDiary = async (diaryId: string, foodId: string) => {
+    const query = `
+    DELETE FROM diary_foods 
+    WHERE diary_id = ? AND food_id = ?`;
+
+    await db.run(query, [diaryId, foodId]);
+    const deleteFoodInDiaryQuery = `DELETE FROM food_in_diary WHERE id = ?`;
+    await db.run(deleteFoodInDiaryQuery, [foodId]);
   };
 
   static deleteDiaryItemById = async (id: string): Promise<any> => {

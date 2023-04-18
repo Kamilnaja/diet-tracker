@@ -85,7 +85,7 @@ export const addNewDiaryEntry = async (req: Request, res: Response) => {
 
   const { date = new Date().toISOString().split("T")[0], foods } = req.body;
 
-  await DiaryService.addDiaryItem(foods);
+  await DiaryService.addDiaryItem();
   await DiaryService.addFoodToDiary(foods);
 
   const diaryEntry = new DiaryBuilder().setDate(date).setFoods(foods).build();
@@ -209,7 +209,7 @@ export const addFoodsToDiary = (req: Request, res: Response) => {
   return res.status(RESPONSE_CODES.CREATED).send(req.body);
 };
 
-export const deleteFoodDiaryItemById = (req: Request, res: Response) => {
+export const deleteFoodDiaryItemById = async (req: Request, res: Response) => {
   /* 
     #swagger.tags = ['Diary']
     #swagger.description = 'Delete Food Diary entry by ID'
@@ -225,7 +225,7 @@ export const deleteFoodDiaryItemById = (req: Request, res: Response) => {
   const { id, foodId } = req.params;
 
   if (!id || !foodId) {
-    return res.send(Error.getError("No entry found"));
+    return res.send(Error.getError("Both ids are required"));
   }
 
   let response: HttpResponse<Diary | undefined> = {
@@ -233,21 +233,7 @@ export const deleteFoodDiaryItemById = (req: Request, res: Response) => {
     length: 0,
   };
 
-  let foundItem = store.initialDiary.find("id", id);
+  await DiaryService.deleteFoodFromDiary(id, foodId);
 
-  if (foundItem) {
-    response = {
-      data: {
-        ...foundItem,
-        foods: foundItem.foods.filter((food) => food.id !== foodId),
-      },
-      length: 1,
-    };
-
-    foundItem.foods = foundItem?.foods.filter((food) => food.id !== foodId);
-  }
-
-  res
-    .status(foundItem ? RESPONSE_CODES.OK : RESPONSE_CODES.NOT_FOUND)
-    .send(response);
+  res.status(RESPONSE_CODES.OK).send(response);
 };
