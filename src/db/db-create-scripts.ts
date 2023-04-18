@@ -1,3 +1,4 @@
+import { db } from "./db";
 import {
   DIARY,
   DIARY_FOODS,
@@ -7,7 +8,7 @@ import {
   TAGS,
 } from "./db-table-names";
 
-export async function createTables(db: any) {
+export async function createTables() {
   await db
     .run(
       `CREATE TABLE IF NOT EXISTS ${FOODS} (
@@ -16,7 +17,6 @@ export async function createTables(db: any) {
       caloriesPer100g INTEGER,
       weight INTEGER NOT NULL,
       nutriScore TEXT,
-      meal_type TEXT,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );`

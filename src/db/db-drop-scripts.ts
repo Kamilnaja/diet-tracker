@@ -1,3 +1,4 @@
+import { db } from "./db";
 import {
   DIARY,
   DIARY_FOODS,
@@ -7,7 +8,7 @@ import {
   TAGS,
 } from "./db-table-names";
 
-export async function dropTables(db: any) {
+export async function dropTables() {
   Promise.all([
     await db.run(`DROP TABLE IF EXISTS ${FOODS};`),
     await db.run(`DROP TABLE IF EXISTS ${TAGS};`),

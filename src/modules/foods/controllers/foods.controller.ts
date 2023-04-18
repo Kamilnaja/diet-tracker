@@ -28,11 +28,11 @@ export const getFoods = async (req: Request, res: Response) => {
     : await FoodsService.getAllFoods();
 
   if (!rows) {
-    return rows
+    return res
       .status(RESPONSE_CODES.NOT_FOUND)
       .send(Error.getError("No entry found"));
   }
-  let response: HttpResponse<Food> = {
+  let response: HttpResponse<Food[]> = {
     data: rows,
     length: rows.length,
   };
