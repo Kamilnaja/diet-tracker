@@ -80,6 +80,25 @@ export class DiaryService {
     }
   };
 
+  static addFoodsToExistingDiary = async (
+    diaryId: string,
+    foods: FoodInDiary[]
+  ) => {
+    foods.forEach(async (food: FoodInDiary) => {
+      await db.run(
+        `INSERT INTO ${FOOD_IN_DIARY}
+       (id, weight, meal_type, date_added)   
+       VALUES (?, ?, ?, datetime(CURRENT_TIMESTAMP, 'localtime'))`,
+        [food.id, food.weight, food.mealType]
+      );
+      await db.run(
+        `INSERT INTO ${DIARY_FOODS} (diary_id, food_id)
+       VALUES (?, ?)`,
+        [diaryId, food.id]
+      );
+    });
+  };
+
   static deleteFoodFromDiary = async (diaryId: string, foodId: string) => {
     const query = `
     DELETE FROM diary_foods 

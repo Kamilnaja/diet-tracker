@@ -5,6 +5,7 @@ import { store } from "@shared/store";
 import { Request, Response } from "express";
 import { DiaryBuilder } from "../builders/diary.builder";
 import { Diary } from "../models/diary.model";
+import { FoodInDiary } from "../models/food-in-diary.model";
 import { DiaryService } from "../services/diary.service";
 
 export const getDiary = async (req: Request, res: Response) => {
@@ -167,7 +168,7 @@ export const editDiary = (req: Request, res: Response) => {
   return res.status(RESPONSE_CODES.CREATED).send(req.body);
 };
 
-export const addFoodsToDiary = (req: Request, res: Response) => {
+export const addFoodsToDiary = async (req: Request, res: Response) => {
   /* 
     #swagger.tags = ['Diary']
     #swagger.description = 'Add new Meal to Diary'
@@ -191,20 +192,9 @@ export const addFoodsToDiary = (req: Request, res: Response) => {
     return res.send(Error.getError("No id"));
   }
 
-  let foundItemIdx = store.initialDiary.findIdx("id", id);
-  let foundItem = store.initialDiary.find("id", id);
-
-  if (foundItemIdx < -1) {
-    return res
-      .status(RESPONSE_CODES.NOT_FOUND)
-      .send(Error.getError("No such item"));
-  }
-
   const { body } = req;
 
-  foundItem?.foods.push(body);
-
-  store.initialDiary.replace(foundItem!.id!, foundItem!);
+  await DiaryService.addFoodsToExistingDiary(id, body as FoodInDiary[]);
 
   return res.status(RESPONSE_CODES.CREATED).send(req.body);
 };

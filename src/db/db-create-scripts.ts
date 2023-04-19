@@ -76,7 +76,6 @@ export async function createTables() {
       `CREATE TABLE IF NOT EXISTS ${DIARY_FOODS} (
       diary_id VARCHAR(255),
       food_id VARCHAR(255),
-      PRIMARY KEY (diary_id, food_id),
       FOREIGN KEY (diary_id) REFERENCES ${DIARY} (id),
       FOREIGN KEY (food_id) REFERENCES ${FOOD_IN_DIARY} (id))`
     )
