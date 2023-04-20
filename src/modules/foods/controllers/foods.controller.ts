@@ -71,6 +71,44 @@ export const getFoodById = async (req: Request, res: Response) => {
   });
 };
 
+export const getFoodsByTag = async (req: Request, res: Response) => {
+  /*
+      #swagger.auto = false
+      #swagger.tags = ['Foods']
+      #swagger.description = 'Get Food by Tag'
+      #swagger.responses[200] = {
+        description: 'Food successfully obtained',
+        schema: { $ref: '#/definitions/FoodResponse' }
+      }
+      #swagger.responses[404] = {
+        description: 'No such item',
+        schema: { $ref: '#/definitions/ErrorSearch' }
+      }
+      #swagger.parameters['tag'] = {
+        in: 'path',
+        description: 'Food tags',
+        required: true,
+        type: 'number'
+      }
+    */
+
+  const { tag } = req.params;
+  if (!tag) {
+    return res.send(Error.getError("No entry found"));
+  }
+
+  await FoodsService.getFoodByTag(Number(tag)).then((row: Food[]) => {
+    console.log(row);
+    if (row) {
+      res.status(RESPONSE_CODES.OK).json(row);
+    } else {
+      res
+        .status(RESPONSE_CODES.NOT_FOUND)
+        .json(Error.getError("No entry found"));
+    }
+  });
+};
+
 export const addNewFood = async (req: Request, res: Response) => {
   /*
     #swagger.tags = ['Foods']

@@ -157,6 +157,37 @@
         }
       }
     },
+    "/api/foods/tags/{tag}": {
+      "get": {
+        "tags": [
+          "Foods"
+        ],
+        "description": "Get Food by Tag",
+        "parameters": [
+          {
+            "name": "tag",
+            "in": "path",
+            "description": "Food tags",
+            "required": true,
+            "type": "number"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Food successfully obtained",
+            "schema": {
+              "$ref": "#/definitions/FoodResponse"
+            }
+          },
+          "404": {
+            "description": "No such item",
+            "schema": {
+              "$ref": "#/definitions/ErrorSearch"
+            }
+          }
+        }
+      }
+    },
     "/api/diary/": {
       "get": {
         "tags": [
