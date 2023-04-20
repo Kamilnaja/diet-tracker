@@ -51,7 +51,7 @@ export const getFoodById = async (req: Request, res: Response) => {
      #swagger.responses[404] = {
       description: 'No such item',
       schema: { $ref: '#/definitions/ErrorSearch' }
-     }
+       }
   */
 
   const { id } = req.params;
@@ -61,13 +61,7 @@ export const getFoodById = async (req: Request, res: Response) => {
   }
 
   await FoodsService.getFoodById(id).then((row: any) => {
-    if (row) {
-      res.status(RESPONSE_CODES.OK).json(row);
-    } else {
-      res
-        .status(RESPONSE_CODES.NOT_FOUND)
-        .json(Error.getError("No entry found"));
-    }
+    res.status(RESPONSE_CODES.OK).json(row);
   });
 };
 
@@ -98,13 +92,10 @@ export const getFoodsByTag = async (req: Request, res: Response) => {
   }
 
   await FoodsService.getFoodByTag(Number(tag)).then((row: Food[]) => {
-    if (row) {
-      res.status(RESPONSE_CODES.OK).json(row);
-    } else {
-      res
-        .status(RESPONSE_CODES.NOT_FOUND)
-        .json(Error.getError("No entry found"));
-    }
+    res.status(RESPONSE_CODES.OK).json({
+      data: row,
+      length: row.length,
+    });
   });
 };
 
@@ -143,6 +134,7 @@ export const addNewFood = async (req: Request, res: Response) => {
   });
 
   await FoodsService.addTags(tags);
+
   const response = {
     data: {
       name,

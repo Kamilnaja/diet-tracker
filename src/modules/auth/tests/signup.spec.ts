@@ -22,7 +22,6 @@ describe("signup", () => {
   describe("POST /signup", () => {
     const userEntry = new AuthBuilder()
       .setEmail("kamil@gmail.com")
-      .setId("2")
       .setUserName("Kamil")
       .setPassword("###")
       .build();

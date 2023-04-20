@@ -1,12 +1,14 @@
 import { db } from "@db/db";
 import { Food } from "../models/food.model";
 export class FoodsService {
+  static join = `SELECT f.*, GROUP_CONCAT(t.id) AS tags
+  FROM foods f
+  LEFT JOIN food_tags ft ON f.id = ft.food_id
+  LEFT JOIN tags t ON ft.tag_id = t.id`;
+
   static getAllFoods = async () => {
     const query = `
-      SELECT f.*, GROUP_CONCAT(t.id) AS tags
-      FROM foods f
-      LEFT JOIN food_tags ft ON f.id = ft.food_id
-      LEFT JOIN tags t ON ft.tag_id = t.id
+      ${this.join}
       GROUP BY f.id
     `;
 
@@ -15,10 +17,8 @@ export class FoodsService {
 
   static getAllFoodsByName = async (name: string) => {
     return await db.all(
-      `SELECT f.*, GROUP_CONCAT(t.id) AS tags
-      FROM foods f
-      LEFT JOIN food_tags ft ON f.id = ft.food_id
-      LEFT JOIN tags t ON ft.tag_id = t.id
+      `
+      ${this.join}
       WHERE f.name LIKE '%' || ? || '%'
       GROUP BY f.id`,
       [name]
@@ -27,10 +27,8 @@ export class FoodsService {
 
   static getFoodByTag = async (tag: number) => {
     return await db.all(
-      `SELECT f.*, GROUP_CONCAT(t.id) AS tags
-      FROM foods f
-      LEFT JOIN food_tags ft ON f.id = ft.food_id
-      LEFT JOIN tags t ON ft.tag_id = t.id
+      `
+      ${this.join}
       WHERE t.id = ?
       GROUP BY f.id`,
       [tag]
@@ -39,10 +37,7 @@ export class FoodsService {
 
   static getFoodById = async (id: string) => {
     const query = `
-      SELECT f.*, GROUP_CONCAT(t.id) AS tags
-      FROM foods f 
-      LEFT JOIN food_tags ft ON f.id = ft.food_id
-      LEFT JOIN tags t ON ft.tag_id = t.id
+      ${this.join}
       WHERE f.id = ? 
       GROUP BY f.id
     `;
@@ -58,18 +53,19 @@ export class FoodsService {
       VALUES (?, ?, ?, ?)
     `;
 
-    await db.run(query, [name, weight, caloriesPer100g, nutriScore]);
-    return db.run;
+    return await db.run(query, [name, weight, caloriesPer100g, nutriScore]);
   };
 
-  static addTags = async (tags: string[]) => {
+  static addTags = async (tags: number[]) => {
     if (tags.length) {
       const lastFoodItem = await db.get(
         "SELECT id FROM foods ORDER BY id DESC LIMIT 1"
       );
       const rowId = lastFoodItem.id;
       tags.forEach(async (tagId) => {
-        const tagQuery = `INSERT INTO food_tags (food_id, tag_id) VALUES (?, ?)`;
+        const tagQuery = `
+        INSERT INTO food_tags (food_id, tag_id) 
+        VALUES (?, ?)`;
         await db.run(tagQuery, [rowId, tagId]);
       });
     }
@@ -90,7 +86,7 @@ export class FoodsService {
           return;
         }
 
-        tags.forEach(async (tagId: string) => {
+        tags.forEach(async (tagId: number) => {
           await db
             .run(`INSERT INTO food_tags (food_id, tag_id) VALUES (?, ?)`, [
               id,
