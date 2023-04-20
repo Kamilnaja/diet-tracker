@@ -4,7 +4,6 @@ import {
   addNewDiaryEntry,
   deleteDiaryItemById,
   deleteFoodDiaryItemById,
-  editDiary,
   getDiary,
   getDiaryById,
 } from "../controllers/diary.controller";
@@ -18,8 +17,6 @@ diaryRouter.get("/:id", getDiaryById);
 diaryRouter.post("/", addNewDiaryEntry);
 
 diaryRouter.delete("/:id", deleteDiaryItemById);
-
-diaryRouter.put("/:id", editDiary);
 
 diaryRouter.post("/:id/foods", addFoodsToDiary);
 
