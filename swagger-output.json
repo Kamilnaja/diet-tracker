@@ -300,43 +300,6 @@
             }
           }
         }
-      },
-      "put": {
-        "tags": [
-          "Diary"
-        ],
-        "description": "Edit Diary entry",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "description": "Diary entry",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/DiaryEntry"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Diary entry successfully edited",
-            "schema": {
-              "$ref": "#/definitions/DiaryEntry"
-            }
-          },
-          "404": {
-            "description": "No such item",
-            "schema": {
-              "$ref": "#/definitions/ErrorSearch"
-            }
-          }
-        }
       }
     },
     "/api/diary/{id}/foods": {

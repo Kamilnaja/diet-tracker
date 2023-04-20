@@ -1,7 +1,6 @@
 import { Error } from "@models/error";
 import { HttpResponse } from "@shared/models/http-response.model";
 import { RESPONSE_CODES } from "@shared/models/response-codes.const";
-import { store } from "@shared/store";
 import { Request, Response } from "express";
 import { DiaryBuilder } from "../builders/diary.builder";
 import { Diary } from "../models/diary.model";
@@ -116,56 +115,6 @@ export const deleteDiaryItemById = async (req: Request, res: Response) => {
   await DiaryService.deleteDiaryItemById(id);
 
   res.status(RESPONSE_CODES.OK).send({ message: "Item deleted" });
-};
-
-export const editDiary = (req: Request, res: Response) => {
-  /* 
-    #swagger.tags = ['Diary'] 
-    #swagger.description = 'Edit Diary entry'
-    #swagger.parameters['body'] = {
-      in: 'body',
-      description: 'Diary entry',
-      required: true,
-      type: 'object',
-      schema: { $ref: '#/definitions/DiaryEntry' }
-    }
-    #swagger.responses[200] = {
-      description: 'Diary entry successfully edited',
-      schema: { $ref: '#/definitions/DiaryEntry' }
-    }
-    #swagger.responses[404] = {
-      description: 'No such item',
-      schema: { $ref: '#/definitions/ErrorSearch' }
-    }
-  */
-
-  const { id } = req.params;
-
-  if (!id) {
-    return res
-      .status(RESPONSE_CODES.NOT_FOUND)
-      .send(Error.getError("ID not found"));
-  }
-
-  const foundItemId = store.initialDiary.find("id", id)?.id;
-
-  if (!foundItemId) {
-    return res
-      .status(RESPONSE_CODES.NOT_FOUND)
-      .send(Error.getError("no id found"));
-  }
-
-  const { body } = req;
-
-  const itemToReplace: Diary = {
-    id: id,
-    foods: body.foods,
-    date: body.date,
-  };
-
-  store.initialDiary.replace(foundItemId, itemToReplace);
-
-  return res.status(RESPONSE_CODES.CREATED).send(req.body);
 };
 
 export const addFoodsToDiary = async (req: Request, res: Response) => {

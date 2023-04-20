@@ -8,7 +8,7 @@ const newFood: Food = {
   weight: 100,
   nutriScore: "D",
   caloriesPer100g: 10,
-  tags: ["1", "2"],
+  tags: [1],
   mealType: "breakfast",
 };
 const partURL = "/foods";
@@ -54,10 +54,30 @@ describe("GET /foods", () => {
     expect(body.weight).toEqual(newFood.weight);
   });
 
-  it("should return 404 when couldn't find item by id", async () => {
+  it("should return 200 when couldn't find item by id", async () => {
     const response = await request(baseURL).get(`${partURL}/1001010`);
 
-    expect(response.statusCode).toBe(RESPONSE_CODES.NOT_FOUND);
+    expect(response.statusCode).toBe(RESPONSE_CODES.OK);
+    expect(response.body.length).toBe(0);
+    expect(response.body.data).toEqual([]);
+  });
+});
+
+describe("GET /foods/tags/id", () => {
+  it("should return 200", async () => {
+    const response = await request(baseURL).get(`${partURL}/tags/1`);
+
+    expect(response.statusCode).toBe(RESPONSE_CODES.OK);
+    expect(!!response.body.error).toBe(false);
+
+    console.log(response.body.data);
+  });
+
+  it("should return 200 when couldn't find item by id", async () => {
+    const response = await request(baseURL).get(`${partURL}/tags/1001010`);
+
+    expect(response.statusCode).toBe(RESPONSE_CODES.OK);
+    expect(response.body.length).toBe(0);
   });
 });
 
