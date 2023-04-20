@@ -25,6 +25,18 @@ export class FoodsService {
     );
   };
 
+  static getFoodByTag = async (tag: number) => {
+    return await db.all(
+      `SELECT f.*, GROUP_CONCAT(t.id) AS tags
+      FROM foods f
+      LEFT JOIN food_tags ft ON f.id = ft.food_id
+      LEFT JOIN tags t ON ft.tag_id = t.id
+      WHERE t.id = ?
+      GROUP BY f.id`,
+      [tag]
+    );
+  };
+
   static getFoodById = async (id: string) => {
     const query = `
       SELECT f.*, GROUP_CONCAT(t.id) AS tags

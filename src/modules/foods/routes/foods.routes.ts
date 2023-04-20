@@ -5,6 +5,7 @@ import {
   editFood,
   getFoodById,
   getFoods,
+  getFoodsByTag,
 } from "../controllers/foods.controller";
 
 export const foodsRouter = express.Router();
@@ -12,6 +13,8 @@ export const foodsRouter = express.Router();
 foodsRouter.get("/", getFoods);
 
 foodsRouter.get("/:id", getFoodById);
+
+foodsRouter.get("/tags/:tag", getFoodsByTag);
 
 foodsRouter.post("/", addNewFood);
 
