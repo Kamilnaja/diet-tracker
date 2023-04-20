@@ -98,7 +98,6 @@ export const getFoodsByTag = async (req: Request, res: Response) => {
   }
 
   await FoodsService.getFoodByTag(Number(tag)).then((row: Food[]) => {
-    console.log(row);
     if (row) {
       res.status(RESPONSE_CODES.OK).json(row);
     } else {
