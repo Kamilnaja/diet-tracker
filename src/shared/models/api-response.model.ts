@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Entry } from "./entry.model";
 
 export class ApiResponse<T extends Entry> {

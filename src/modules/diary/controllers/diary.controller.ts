@@ -7,7 +7,7 @@ import { Diary } from "../models/diary.model";
 import { FoodInDiary } from "../models/food-in-diary.model";
 import { DiaryService } from "../services/diary.service";
 
-export const getDiary = async (req: Request, res: Response) => {
+export const getDiary = async (req: Request, res: Response): Promise<void> => {
   /* 
     #swagger.auto = false
     #swagger.tags = ['Diary']
@@ -23,21 +23,24 @@ export const getDiary = async (req: Request, res: Response) => {
     }
   */
 
-  let { date } = req.query;
+  const { date } = req.query;
 
   const mappedRows = date
     ? await DiaryService.getAllDiaryEntriesByDate(date as string)
     : await DiaryService.getAllDiaryEntries();
 
-  let response: HttpResponse<Diary[]> = {
+  const response: HttpResponse<Diary[]> = {
     data: mappedRows,
     length: mappedRows.length,
   };
 
-  return res.status(RESPONSE_CODES.OK).send(response);
+  res.status(RESPONSE_CODES.OK).send(response);
 };
 
-export const getDiaryById = async (req: Request, res: Response) => {
+export const getDiaryById = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   /* 
     #swagger.tags = ['Diary'] 
     #swagger.description = 'Get Diary entry by ID'
@@ -62,7 +65,10 @@ export const getDiaryById = async (req: Request, res: Response) => {
         .json(Error.getError("Item not found"));
 };
 
-export const addNewDiaryEntry = async (req: Request, res: Response) => {
+export const addNewDiaryEntry = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   /* 
     #swagger.tags = ['Diary'] 
     #swagger.description = 'Add new Diary entry'
@@ -93,7 +99,10 @@ export const addNewDiaryEntry = async (req: Request, res: Response) => {
   res.send(diaryEntry);
 };
 
-export const deleteDiaryItemById = async (req: Request, res: Response) => {
+export const deleteDiaryItemById = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   /* 
     #swagger.tags = ['Diary']
     #swagger.description = 'Delete Diary entry by ID'
@@ -109,7 +118,8 @@ export const deleteDiaryItemById = async (req: Request, res: Response) => {
   const { id } = req.params;
 
   if (!id) {
-    return res.send(Error.getError("No entry found"));
+    res.send(Error.getError("No entry found"));
+    return;
   }
 
   await DiaryService.deleteDiaryItemById(id);
@@ -117,7 +127,10 @@ export const deleteDiaryItemById = async (req: Request, res: Response) => {
   res.status(RESPONSE_CODES.OK).send({ message: "Item deleted" });
 };
 
-export const addFoodsToDiary = async (req: Request, res: Response) => {
+export const addFoodsToDiary = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   /* 
     #swagger.tags = ['Diary']
     #swagger.description = 'Add new Meal to Diary'
@@ -138,17 +151,21 @@ export const addFoodsToDiary = async (req: Request, res: Response) => {
   const { id } = req.params;
 
   if (!id) {
-    return res.send(Error.getError("No id"));
+    res.send(Error.getError("No id"));
+    return;
   }
 
   const { body } = req;
 
   await DiaryService.addFoodsToExistingDiary(id, body as FoodInDiary[]);
 
-  return res.status(RESPONSE_CODES.CREATED).send(req.body);
+  res.status(RESPONSE_CODES.CREATED).send(req.body);
 };
 
-export const deleteFoodDiaryItemById = async (req: Request, res: Response) => {
+export const deleteFoodDiaryItemById = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   /* 
     #swagger.tags = ['Diary']
     #swagger.description = 'Delete Food Diary entry by ID'
@@ -164,10 +181,11 @@ export const deleteFoodDiaryItemById = async (req: Request, res: Response) => {
   const { id, foodId } = req.params;
 
   if (!id || !foodId) {
-    return res.send(Error.getError("Both ids are required"));
+    res.send(Error.getError("Both ids are required"));
+    return;
   }
 
-  let response: HttpResponse<Diary | undefined> = {
+  const response: HttpResponse<Diary | undefined> = {
     data: undefined,
     length: 0,
   };

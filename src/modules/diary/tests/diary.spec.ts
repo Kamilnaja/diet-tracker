@@ -103,7 +103,7 @@ xdescribe("diary", () => {
       await request(baseURL)
         .get(`${partURL}/10`)
         .then((resp) => {
-          let { foods } = resp.body;
+          const { foods } = resp.body;
 
           expect(foods.length).toEqual(2);
           expect(

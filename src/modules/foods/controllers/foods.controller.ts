@@ -5,7 +5,7 @@ import { Request, Response } from "express";
 import { Food } from "../models/food.model";
 import { FoodsService } from "../services/foods.service";
 
-export const getFoods = async (req: Request, res: Response) => {
+export const getFoods = async (req: Request, res: Response): Promise<void> => {
   /*
     #swagger.auto = false
     #swagger.tags = ['Foods']
@@ -23,16 +23,11 @@ export const getFoods = async (req: Request, res: Response) => {
   */
 
   const { name } = req.query;
-  let rows = name
+  const rows = name
     ? await FoodsService.getAllFoodsByName(name as string)
     : await FoodsService.getAllFoods();
 
-  if (!rows) {
-    return res
-      .status(RESPONSE_CODES.NOT_FOUND)
-      .send(Error.getError("No entry found"));
-  }
-  let response: HttpResponse<Food[]> = {
+  const response: HttpResponse<Food[]> = {
     data: rows,
     length: rows.length,
   };
@@ -40,7 +35,10 @@ export const getFoods = async (req: Request, res: Response) => {
   res.status(RESPONSE_CODES.OK).json(response);
 };
 
-export const getFoodById = async (req: Request, res: Response) => {
+export const getFoodById = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   /* 
     #swagger.tags = ['Foods'] 
     #swagger.description = 'Get Food by ID'
@@ -57,15 +55,19 @@ export const getFoodById = async (req: Request, res: Response) => {
   const { id } = req.params;
 
   if (!id) {
-    return res.send(Error.getError("No entry found"));
+    res.send(Error.getError("No entry found"));
+    return;
   }
 
-  await FoodsService.getFoodById(id).then((row: any) => {
+  await FoodsService.getFoodById(id).then((row: Food | undefined) => {
     res.status(RESPONSE_CODES.OK).json(row);
   });
 };
 
-export const getFoodsByTag = async (req: Request, res: Response) => {
+export const getFoodsByTag = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   /*
       #swagger.auto = false
       #swagger.tags = ['Foods']
@@ -88,10 +90,11 @@ export const getFoodsByTag = async (req: Request, res: Response) => {
 
   const { tag } = req.params;
   if (!tag) {
-    return res.send(Error.getError("No entry found"));
+    res.send(Error.getError("No entry found"));
+    return;
   }
 
-  await FoodsService.getFoodByTag(Number(tag)).then((row: Food[]) => {
+  await FoodsService.getFoodByTag(Number(tag)).then((row) => {
     res.status(RESPONSE_CODES.OK).json({
       data: row,
       length: row.length,
@@ -99,7 +102,10 @@ export const getFoodsByTag = async (req: Request, res: Response) => {
   });
 };
 
-export const addNewFood = async (req: Request, res: Response) => {
+export const addNewFood = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   /*
     #swagger.tags = ['Foods']
     #swagger.description = 'Add new Food'
@@ -118,9 +124,10 @@ export const addNewFood = async (req: Request, res: Response) => {
   const { name, weight, caloriesPer100g, nutriScore, tags = [] } = req.body;
 
   if (!name || !weight) {
-    return res
+    res
       .status(RESPONSE_CODES.UNPROCESSABLE_ENTITY)
       .json(Error.getError("Both name and weight are required"));
+    return;
   }
 
   await FoodsService.addNewFood({
@@ -129,8 +136,9 @@ export const addNewFood = async (req: Request, res: Response) => {
     caloriesPer100g,
     nutriScore,
     tags,
-  }).catch((err: any) => {
-    res.status(RESPONSE_CODES.BAD_REQUEST).json(Error.getError(err));
+  }).catch((err: Error) => {
+    res.status(RESPONSE_CODES.BAD_REQUEST).json(err);
+    return;
   });
 
   await FoodsService.addTags(tags);
@@ -148,7 +156,10 @@ export const addNewFood = async (req: Request, res: Response) => {
   res.status(RESPONSE_CODES.OK).json(response);
 };
 
-export const deleteFoodById = async (req: Request, res: Response) => {
+export const deleteFoodById = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   /* 
   #swagger.tags = ['Foods']
   #swagger.responses[200] = {
@@ -168,16 +179,17 @@ export const deleteFoodById = async (req: Request, res: Response) => {
   const { id } = req.params;
 
   if (!id) {
-    return res.send(Error.getError("No entry found"));
+    res.send(Error.getError("No entry found"));
+    return;
   }
 
-  await FoodsService.deleteFood(id).catch((err: any) => {
+  await FoodsService.deleteFood(id).catch(() => {
     res.status(RESPONSE_CODES.NOT_FOUND).json(Error.getError("Item not found"));
   });
   res.status(RESPONSE_CODES.OK).json({ message: "Item deleted successfully" });
 };
 
-export const editFood = async (req: Request, res: Response) => {
+export const editFood = async (req: Request, res: Response): Promise<void> => {
   /*  #swagger.tags = ['Foods']
       #swagger.parameters['body'] = {
                 in: 'body',
@@ -198,16 +210,17 @@ export const editFood = async (req: Request, res: Response) => {
   const { id } = req.params;
 
   if (!id) {
-    return res.send(Error.getError("No entry found"));
+    res.send(Error.getError("No entry found"));
+    return;
   }
 
   const { body } = req;
 
   await FoodsService.editFood(id, body)
-    .then((row: any) => {
+    .then((row) => {
       res.status(RESPONSE_CODES.CREATED).json(row);
     })
-    .catch((err: any) => {
+    .catch((err: Error) => {
       res.status(RESPONSE_CODES.NOT_FOUND).json(err);
     });
 };

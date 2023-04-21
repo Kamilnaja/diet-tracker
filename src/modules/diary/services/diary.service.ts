@@ -1,5 +1,6 @@
 import { db } from "@db/db";
 import { DIARY, DIARY_FOODS, FOOD_IN_DIARY } from "@db/db-table-names";
+import { MealType } from "@modules/foods/models/meal-type.model";
 import { Diary } from "../models/diary.model";
 import { FoodInDiary } from "../models/food-in-diary.model";
 
@@ -13,9 +14,9 @@ export class DiaryService {
       INNER JOIN diary d 
     	ON df.diary_id = d.id;`;
 
-    let rows = await db.all(query);
+    const rows = await db.all(query);
 
-    let reduced = DiaryService.groupDiaryById(rows);
+    const reduced = DiaryService.groupDiaryById(rows);
 
     return reduced;
   };
@@ -47,7 +48,7 @@ export class DiaryService {
     WHERE d.id LIKE '%' || ? || '%'
     `;
 
-    let rows = await db.all<Diary>(query, [id]);
+    const rows = await db.all<Diary>(query, [id]);
     return rows;
   };
 
@@ -57,7 +58,7 @@ export class DiaryService {
     await db.run(query);
   };
 
-  static addFoodToDiary = async (foods: FoodInDiary[]) => {
+  static addFoodToDiary = async (foods: FoodInDiary[]): Promise<void> => {
     if (foods.length) {
       const lastDiaryItem = await db.get(
         `SELECT id FROM ${DIARY} ORDER BY id DESC LIMIT 1`
@@ -83,7 +84,7 @@ export class DiaryService {
   static addFoodsToExistingDiary = async (
     diaryId: string,
     foods: FoodInDiary[]
-  ) => {
+  ): Promise<void> => {
     foods.forEach(async (food: FoodInDiary) => {
       await db.run(
         `INSERT INTO ${FOOD_IN_DIARY}
@@ -99,7 +100,10 @@ export class DiaryService {
     });
   };
 
-  static deleteFoodFromDiary = async (diaryId: string, foodId: string) => {
+  static deleteFoodFromDiary = async (
+    diaryId: string,
+    foodId: string
+  ): Promise<void> => {
     const query = `
     DELETE FROM diary_foods 
     WHERE diary_id = ? AND food_id = ?`;
@@ -109,22 +113,21 @@ export class DiaryService {
     await db.run(deleteFoodInDiaryQuery, [foodId]);
   };
 
-  static deleteDiaryItemById = async (id: string): Promise<any> => {
+  static deleteDiaryItemById = async (id: string): Promise<void> => {
     const query = `
     DELETE FROM diary_foods WHERE diary_id = ?`;
 
-    let rows = await db.run(query, [id]);
-    return rows;
+    await db.run(query, [id]);
   };
 
-  private static groupDiaryById(rows: any): Diary[] {
-    return rows.reduce((acc: any, item: any) => {
-      let { diary_id } = item;
+  private static groupDiaryById(rows: Row[]): Diary[] {
+    return rows.reduce((acc: Diary[], item: Row) => {
+      const { diary_id } = item;
 
-      let foundIndex = acc.findIndex((item: any) => item.id === diary_id);
+      const foundIndex = acc.findIndex((item) => item.id === diary_id);
 
       if (foundIndex > -1) {
-        acc[foundIndex].foods.push({
+        acc[foundIndex]?.foods.push({
           id: item.food_id,
           weight: item.weight,
           mealType: item.meal_type,
@@ -148,3 +151,12 @@ export class DiaryService {
     }, []);
   }
 }
+
+type Row = {
+  food_id: string;
+  weight: number;
+  meal_type: MealType;
+  date_added: string;
+  diary_id: string;
+  date: string;
+};

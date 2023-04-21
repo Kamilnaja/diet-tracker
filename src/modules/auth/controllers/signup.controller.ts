@@ -3,7 +3,7 @@ import { store } from "@shared/store";
 import { Request, Response } from "express";
 import { AuthBuilder } from "../builders/auth.builder";
 
-export const signup = (req: Request, res: Response) => {
+export const signup = async (req: Request, res: Response): Promise<void> => {
   /* #swagger.tags = ['Auth']
    #swagger.description = 'Create new user'
    #swagger.parameters['newUser'] = {

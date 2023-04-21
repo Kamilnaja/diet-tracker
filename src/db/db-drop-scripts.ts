@@ -8,7 +8,7 @@ import {
   TAGS,
 } from "./db-table-names";
 
-export async function dropTables() {
+export async function dropTables(): Promise<void> {
   Promise.all([
     await db.run(`DROP TABLE IF EXISTS ${FOODS};`),
     await db.run(`DROP TABLE IF EXISTS ${TAGS};`),
@@ -18,5 +18,5 @@ export async function dropTables() {
     await db.run(`DROP TABLE IF EXISTS ${FOOD_IN_DIARY};`),
   ])
     .then(() => console.log("All tables dropped successfully"))
-    .catch((err: any) => console.error(err));
+    .catch((err: Error) => console.error(err));
 }

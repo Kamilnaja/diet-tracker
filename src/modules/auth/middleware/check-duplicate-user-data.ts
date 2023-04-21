@@ -7,17 +7,18 @@ export const checkDuplicateUserData = async (
   req: Request,
   res: Response,
   next: () => void
-) => {
+): Promise<void> => {
   try {
     const { userName, email } = req.body;
 
     if (!userName || !email) {
-      return res
+      res
         .status(RESPONSE_CODES.CONFLICT)
         .json(Error.getError("Name, email and id are required"));
+      return;
     }
 
-    let userByName = store.initialUsers.find("userName", userName);
+    const userByName = store.initialUsers.find("userName", userName);
     if (userByName) {
       res
         .status(RESPONSE_CODES.CONFLICT)
@@ -25,7 +26,7 @@ export const checkDuplicateUserData = async (
       return;
     }
 
-    let userByEmail = store.initialUsers.find("email", email);
+    const userByEmail = store.initialUsers.find("email", email);
     if (userByEmail) {
       res
         .status(RESPONSE_CODES.CONFLICT)

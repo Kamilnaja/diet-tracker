@@ -1,12 +1,13 @@
 import { db } from "@db/db";
 import { Food } from "../models/food.model";
+
 export class FoodsService {
   static join = `SELECT f.*, GROUP_CONCAT(t.id) AS tags
   FROM foods f
   LEFT JOIN food_tags ft ON f.id = ft.food_id
   LEFT JOIN tags t ON ft.tag_id = t.id`;
 
-  static getAllFoods = async () => {
+  static getAllFoods = async (): Promise<Food[]> => {
     const query = `
       ${this.join}
       GROUP BY f.id
@@ -15,7 +16,7 @@ export class FoodsService {
     return db.all(query);
   };
 
-  static getAllFoodsByName = async (name: string) => {
+  static getAllFoodsByName = async (name: string): Promise<Food[]> => {
     return await db.all(
       `
       ${this.join}
@@ -25,7 +26,7 @@ export class FoodsService {
     );
   };
 
-  static getFoodByTag = async (tag: number) => {
+  static getFoodByTag = async (tag: number): Promise<Food[]> => {
     return await db.all(
       `
       ${this.join}
@@ -35,7 +36,7 @@ export class FoodsService {
     );
   };
 
-  static getFoodById = async (id: string) => {
+  static getFoodById = async (id: string): Promise<Food | undefined> => {
     const query = `
       ${this.join}
       WHERE f.id = ? 
@@ -45,7 +46,7 @@ export class FoodsService {
     return await db.get(query, [id]);
   };
 
-  static addNewFood = async (food: Food) => {
+  static addNewFood = async (food: Food): Promise<void> => {
     const { name, weight, caloriesPer100g, nutriScore } = food;
 
     const query = `
@@ -53,10 +54,10 @@ export class FoodsService {
       VALUES (?, ?, ?, ?)
     `;
 
-    return await db.run(query, [name, weight, caloriesPer100g, nutriScore]);
+    await db.run(query, [name, weight, caloriesPer100g, nutriScore]);
   };
 
-  static addTags = async (tags: number[]) => {
+  static addTags = async (tags: number[]): Promise<void> => {
     if (tags.length) {
       const lastFoodItem = await db.get(
         "SELECT id FROM foods ORDER BY id DESC LIMIT 1"
@@ -71,7 +72,7 @@ export class FoodsService {
     }
   };
 
-  static editFood = async (id: string, foodData: Food) => {
+  static editFood = async (id: string, foodData: Food): Promise<void> => {
     const { name, weight, caloriesPer100g, nutriScore, tags = [] } = foodData;
 
     await db.run(
@@ -81,7 +82,7 @@ export class FoodsService {
     await db.run(
       `DELETE FROM food_tags WHERE food_id = ?`,
       [id],
-      (err: any) => {
+      (err: Error | null) => {
         if (err) {
           return;
         }
@@ -95,7 +96,7 @@ export class FoodsService {
             .then(() => {
               console.log("tag added");
             })
-            .catch((err: any) => {
+            .catch((err: Error) => {
               console.log(err);
             });
         });
@@ -103,7 +104,7 @@ export class FoodsService {
     );
   };
 
-  static deleteFood = async (id: string) => {
+  static deleteFood = async (id: string): Promise<void> => {
     await db.run(`DELETE FROM foods WHERE id = ?`, [id]);
   };
 }

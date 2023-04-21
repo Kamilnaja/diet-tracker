@@ -1,9 +1,9 @@
 import { Entry } from "@shared/models/entry.model";
 import { HttpResponse } from "@shared/models/http-response.model";
-import { Food } from "../../foods/models/food.model";
+import { FoodInDiary } from "./food-in-diary.model";
 
 export interface Diary extends Entry {
-  foods: Food[];
+  foods: FoodInDiary[];
   date: string;
   id: string;
 }

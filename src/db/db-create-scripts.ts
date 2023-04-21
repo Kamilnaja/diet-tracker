@@ -8,7 +8,7 @@ import {
   TAGS,
 } from "./db-table-names";
 
-export async function createTables() {
+export async function createTables(): Promise<void> {
   await db
     .run(
       `CREATE TABLE IF NOT EXISTS ${FOODS} (
@@ -22,7 +22,7 @@ export async function createTables() {
       );`
     )
     .then(() => console.log(`${FOODS} table has been created`))
-    .catch((err: any) => console.error(err));
+    .catch((err: Error) => console.error(err));
 
   await db
     .run(
@@ -32,7 +32,7 @@ export async function createTables() {
       );`
     )
     .then(() => console.log(`${TAGS} table has been created`))
-    .catch((err: any) => console.error(err));
+    .catch((err: Error) => console.error(err));
 
   await db
     .run(
@@ -55,7 +55,7 @@ export async function createTables() {
         date DATE NOT NULL
       );`
     )
-    .catch((err: any) => console.error(err))
+    .catch((err: Error) => console.error(err))
     .then(() => console.log(`${DIARY} table has been created`));
 
   await db
@@ -68,7 +68,7 @@ export async function createTables() {
       FOREIGN KEY (id) REFERENCES ${FOODS} (id)
     );`
     )
-    .catch((err: any) => console.error(err))
+    .catch((err: Error) => console.error(err))
     .then(() => console.log(`${FOOD_IN_DIARY} table has been created`));
 
   await db

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Error } from "@models/error";
 import { RESPONSE_CODES } from "@shared/models/response-codes.const";
 import { store } from "@shared/store";
@@ -36,7 +37,7 @@ export const getFluidById = (req: Request, res: Response) => {
     return res.send(Error.getError("No entry found"));
   }
 
-  let foundItem = store.initialFluids.find("id", id);
+  const foundItem = store.initialFluids.find("id", id);
 
   foundItem
     ? res.status(RESPONSE_CODES.OK).json(foundItem)
@@ -103,7 +104,7 @@ export const deleteFluidById = (req: Request, res: Response) => {
     return res.send(Error.getError("No entry found"));
   }
 
-  let foundItem = store.initialFluids.find("id", id);
+  const foundItem = store.initialFluids.find("id", id);
 
   if (foundItem) {
     store.initialFluids.filter("id", id);
@@ -141,7 +142,7 @@ export const editFluid = (req: Request, res: Response) => {
       .send(Error.getError("No entry found"));
   }
 
-  let foundItemId = store.initialFluids.find("id", id)?.id;
+  const foundItemId = store.initialFluids.find("id", id)?.id;
 
   if (!foundItemId) {
     return res

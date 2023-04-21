@@ -9,7 +9,7 @@ import {
   TAGS,
 } from "./db-table-names";
 
-export async function loadInitialData() {
+export async function loadInitialData(): Promise<void> {
   if (shouldLoadInitialData()) {
     await addInitialFoods();
     await addInitialTags();
@@ -21,7 +21,7 @@ export async function loadInitialData() {
     console.log("💣💣TESTING - SKIPPING INITIAL DATA INSERTION💣💣");
   }
 }
-async function addInitialFoodsInDiary() {
+async function addInitialFoodsInDiary(): Promise<void> {
   await db.run(
     `INSERT INTO ${FOOD_IN_DIARY} (id, weight, meal_type, date_added) VALUES 
         (0, 50.0, 'breakfast', Date('now')),
@@ -38,7 +38,7 @@ async function addInitialFoodsInDiary() {
   );
 }
 
-async function addInitialDiaryFoods() {
+async function addInitialDiaryFoods(): Promise<void> {
   await db
     .run(
       `INSERT INTO ${DIARY_FOODS} (diary_id, food_id) VALUES 
@@ -51,10 +51,10 @@ async function addInitialDiaryFoods() {
     .then(() => {
       console.log("Initial data inserted into diary_foods table successfully");
     })
-    .catch((err: any) => console.error(err));
+    .catch((err: Error) => console.error(err));
 }
 
-async function addInitialDiaryEntries() {
+async function addInitialDiaryEntries(): Promise<void> {
   await db
     .run(
       `INSERT INTO ${DIARY} (date, id) VALUES 
@@ -69,10 +69,10 @@ async function addInitialDiaryEntries() {
     .then(() => {
       console.log("Initial data inserted into diary table successfully");
     })
-    .catch((err: any) => console.error(err));
+    .catch((err: Error) => console.error(err));
 }
 
-async function addInitialFoodTags() {
+async function addInitialFoodTags(): Promise<void> {
   await db
     .run(
       `INSERT INTO ${FOOD_TAGS} (food_id, tag_id) VALUES
@@ -93,10 +93,10 @@ async function addInitialFoodTags() {
     .then(() => {
       console.log("Initial data inserted into food_tags table successfully");
     })
-    .catch((err: any) => console.error(err));
+    .catch((err: Error) => console.error(err));
 }
 
-async function addInitialTags() {
+async function addInitialTags(): Promise<void> {
   await db
     .run(
       `INSERT INTO ${TAGS} (tag_name) VALUES
@@ -121,10 +121,10 @@ async function addInitialTags() {
     .then(() => {
       console.log("Initial data inserted into tags table successfully");
     })
-    .catch((err: any) => console.error(err));
+    .catch((err: Error) => console.error(err));
 }
 
-async function addInitialFoods() {
+async function addInitialFoods(): Promise<void> {
   await db
     .run(
       `INSERT INTO ${FOODS} (name, weight, caloriesPer100g, nutriScore) VALUES
@@ -179,5 +179,5 @@ async function addInitialFoods() {
     .then(() => {
       console.log("Initial data inserted into foods table successfully");
     })
-    .catch((err: any) => console.error(err));
+    .catch((err: Error) => console.error(err));
 }
