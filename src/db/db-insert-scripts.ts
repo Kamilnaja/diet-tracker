@@ -1,15 +1,75 @@
 import { shouldLoadInitialData } from "@shared/helpers/utils";
 import { db } from "./db";
-import { FOODS, FOOD_TAGS, TAGS } from "./db-table-names";
+import {
+  DIARY,
+  DIARY_FOODS,
+  FOODS,
+  FOOD_IN_DIARY,
+  FOOD_TAGS,
+  TAGS,
+} from "./db-table-names";
 
 export async function loadInitialData(): Promise<void> {
   if (shouldLoadInitialData()) {
     await addInitialFoods();
     await addInitialTags();
     await addInitialFoodTags();
+    await addInitialFoodsInDiary();
+    await addInitialDiaryFoods();
+    await addInitialDiaryEntries();
   } else {
     console.log("💣💣TESTING - SKIPPING INITIAL DATA INSERTION💣💣");
   }
+}
+
+async function addInitialFoodsInDiary(): Promise<void> {
+  await db.run(
+    `INSERT INTO ${FOOD_IN_DIARY} (id, food_id, weight, meal_type, date_added) VALUES 
+        (1, 1, 100.2, 'breakfast',  Date('now')),
+        (2, 1, 1000, 'dinner',  Date('now')),
+        (3, 1, 100.2, 'breakfast',  Date('now')),
+        (4, 1, 200.1, 'lunch', '2021-01-03 11:00'),
+        (5, 2, 300, 'dinner', '2021-01-04 18:00'),
+        (6, 3, 40, 'snack', '2021-01-05 20:00'),
+        (7, 4, 14, 'snack', '2022-01-05 20:00'),
+        (8, 3, 10, 'snack', '2021-01-05 20:10'),
+        (9, 1, 4.3, 'snack', '2021-01-06 20:30')
+        `
+  );
+}
+
+async function addInitialDiaryFoods(): Promise<void> {
+  await db
+    .run(
+      `INSERT INTO ${DIARY_FOODS} (diary_id, food_id) VALUES 
+          (1, 1), 
+          (1, 2), 
+          (2, 3), 
+          (3, 4), 
+          (5, 5)`
+    )
+    .then(() => {
+      console.log("Initial data inserted into diary_foods table successfully");
+    })
+    .catch((err: Error) => console.error(err));
+}
+
+async function addInitialDiaryEntries(): Promise<void> {
+  await db
+    .run(
+      `INSERT INTO ${DIARY} (date, id) VALUES 
+          (Date('now'), 1),
+          ('2021-01-02', 2), 
+          ('2021-01-03', 3), 
+          ('2021-01-04', 4), 
+          ('2021-01-05', 5), 
+          ('2021-02-05', 6)
+          `
+    )
+    .then(() => {
+      console.log("Initial data inserted into diary table successfully");
+    })
+    .catch((err: Error) => console.error(err));
 }
 
 async function addInitialFoodTags(): Promise<void> {
