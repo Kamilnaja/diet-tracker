@@ -14,26 +14,26 @@ export async function loadInitialData(): Promise<void> {
     await addInitialFoods();
     await addInitialTags();
     await addInitialFoodTags();
-    await addInitialDiaryEntries();
-    await addInitialDiaryFoods();
     await addInitialFoodsInDiary();
+    await addInitialDiaryFoods();
+    await addInitialDiaryEntries();
   } else {
     console.log("💣💣TESTING - SKIPPING INITIAL DATA INSERTION💣💣");
   }
 }
+
 async function addInitialFoodsInDiary(): Promise<void> {
   await db.run(
-    `INSERT INTO ${FOOD_IN_DIARY} (id, weight, meal_type, date_added) VALUES 
-        (0, 50.0, 'breakfast', Date('now')),
-        (1, 100.2, 'breakfast', '2021-01-01 18:47'),
-        (2, 1000, 'dinner', '2021-01-01 12:20'),
-        (3, 100.2, 'breakfast', '2021-01-02 13:30'),
-        (4, 200.1, 'lunch', '2021-01-03 11:00'),
-        (5, 300, 'dinner', '2021-01-04 18:00'),
-        (6, 40, 'snack', '2021-01-05 20:00'),
-        (7, 14, 'snack', '2022-01-05 20:00'),
-        (8, 10, 'snack', '2021-01-05 20:10'),
-        (9, 4.3, 'snack', '2021-01-06 20:30')
+    `INSERT INTO ${FOOD_IN_DIARY} (id, food_id, weight, meal_type, date_added) VALUES 
+        (1, 1, 100.2, 'breakfast',  Date('now')),
+        (2, 1, 1000, 'dinner',  Date('now')),
+        (3, 1, 100.2, 'breakfast',  Date('now')),
+        (4, 1, 200.1, 'lunch', '2021-01-03 11:00'),
+        (5, 2, 300, 'dinner', '2021-01-04 18:00'),
+        (6, 3, 40, 'snack', '2021-01-05 20:00'),
+        (7, 4, 14, 'snack', '2022-01-05 20:00'),
+        (8, 3, 10, 'snack', '2021-01-05 20:10'),
+        (9, 1, 4.3, 'snack', '2021-01-06 20:30')
         `
   );
 }
@@ -46,7 +46,7 @@ async function addInitialDiaryFoods(): Promise<void> {
           (1, 2), 
           (2, 3), 
           (3, 4), 
-          (5, 1)`
+          (5, 5)`
     )
     .then(() => {
       console.log("Initial data inserted into diary_foods table successfully");
