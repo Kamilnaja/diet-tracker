@@ -1,35 +1,28 @@
 import { db } from "@db/db";
-import { DIARY, DIARY_FOODS, FOOD_IN_DIARY } from "@db/db-table-names";
+import { DIARY_FOODS, FOOD_IN_DIARY } from "@db/db-table-names";
 import { MealType } from "@modules/foods/models/meal-type.model";
 import { Diary } from "../models/diary.model";
 import { FoodInDiary } from "../models/food-in-diary.model";
 
 export class DiaryService {
+  private static joinQuery = `
+  SELECT df.diary_id, d.date, fid.food_id as food_id, fid.weight, fid.meal_type
+  FROM diary_foods df
+  INNER JOIN food_in_diary fid
+    ON df.food_id = fid.id
+  INNER JOIN diary d 
+    ON df.diary_id = d.id`;
+
   static getAllDiaryEntries = async (): Promise<Diary[]> => {
-    const query = `    
-      select df.diary_id, d.date, fid.id as food_id, fid.weight, fid.meal_type, fid.date_added 
-      FROM diary_foods df
-      INNER JOIN food_in_diary fid
-	    ON df.food_id = fid.id
-      INNER JOIN diary d 
-    	ON df.diary_id = d.id;`;
+    const rows = await db.get(this.joinQuery);
 
-    const rows = await db.all(query);
-
-    const reduced = DiaryService.groupDiaryById(rows);
-
-    return reduced;
+    return DiaryService.groupDiaryById(rows);
   };
 
-  static getAllDiaryEntriesByDate = async (date: string): Promise<Diary[]> => {
+  static getDiaryEntriesByDate = async (date: string): Promise<Diary[]> => {
     const query = `    
-      select df.diary_id, d.date, fid.id as food_id, fid.weight, fid.meal_type, fid.date_added 
-      FROM diary_foods df
-      INNER JOIN food_in_diary fid
-	    ON df.food_id = fid.id
-      INNER JOIN diary d 
-    	ON df.diary_id = d.id
-      WHERE d.date LIKE '%' || ? || '%'
+      ${this.joinQuery}
+      WHERE d.date = ?
       `;
 
     const rows = await db.all(query, [date]);
@@ -39,65 +32,73 @@ export class DiaryService {
 
   static getDiaryEntryById = async (id: string): Promise<Diary> => {
     const query = `    
-    select df.diary_id, d.date, fid.id as food_id, fid.weight, fid.meal_type, fid.date_added 
-    FROM diary_foods df
-    INNER JOIN food_in_diary fid
-    ON df.food_id = fid.id
-    INNER JOIN diary d 
-    ON df.diary_id = d.id
-    WHERE d.id LIKE '%' || ? || '%'
+    ${this.joinQuery}
+    WHERE d.id = ?
     `;
 
-    const rows = await db.all<Diary>(query, [id]);
-    return rows;
+    return await db.all<Diary>(query, [id]);
   };
 
-  static addDiaryItem = async (): Promise<void> => {
-    const query = `INSERT INTO diary (date) VALUES (Date('now'))`;
+  static getDiaryEntryIdForDay = async (date: string): Promise<number> => {
+    const query = `
+    SELECT id FROM diary 
+    WHERE date = ?
+    LIMIT 1`;
 
-    await db.run(query);
+    const result = await db.get(query, [date]);
+
+    return result?.id;
   };
 
-  static addFoodToDiary = async (foods: FoodInDiary[]): Promise<void> => {
-    if (foods.length) {
-      const lastDiaryItem = await db.get(
-        `SELECT id FROM ${DIARY} ORDER BY id DESC LIMIT 1`
-      );
-      const rowId = await lastDiaryItem.id;
+  static addDiaryItem = async (date: string): Promise<void> => {
+    const query = `INSERT INTO diary (date) VALUES (?)`;
 
-      foods.forEach(async (food: FoodInDiary) => {
-        await db.run(
-          `INSERT INTO ${FOOD_IN_DIARY}
-           (id, weight, meal_type, date_added)   
+    await db.run(query, [date]);
+  };
+
+  static getLastDiaryItemId = async (): Promise<number> => {
+    const query = `SELECT id FROM diary ORDER BY id DESC LIMIT 1`;
+    const result = await db.get(query);
+    return result?.id;
+  };
+
+  static addFoodToDiary = async (
+    id: number,
+    food: FoodInDiary
+  ): Promise<void> => {
+    await db.run(
+      `INSERT INTO ${FOOD_IN_DIARY}
+           (food_id, weight, meal_type, date_added)   
            VALUES (?, ?, ?, datetime(CURRENT_TIMESTAMP, 'localtime'))`,
-          [food.id, food.weight, food.mealType, food.dateAdded]
-        );
-        await db.run(
-          `INSERT INTO ${DIARY_FOODS} (diary_id, food_id)
+      [food.id, food.weight, food.mealType, food.dateAdded]
+    );
+
+    const newestFoodID = await db.get(
+      `SELECT id FROM food_in_diary ORDER BY id DESC LIMIT 1`
+    );
+
+    await db.run(
+      `INSERT INTO ${DIARY_FOODS} (diary_id, food_id)
            VALUES (?, ?)`,
-          [rowId, food.id]
-        );
-      });
-    }
+      [id, newestFoodID?.id]
+    );
   };
 
   static addFoodsToExistingDiary = async (
     diaryId: string,
-    foods: FoodInDiary[]
+    food: FoodInDiary
   ): Promise<void> => {
-    foods.forEach(async (food: FoodInDiary) => {
-      await db.run(
-        `INSERT INTO ${FOOD_IN_DIARY}
-       (id, weight, meal_type, date_added)   
+    await db.run(
+      `INSERT INTO ${FOOD_IN_DIARY}
+       (food_id, weight, meal_type, date_added)   
        VALUES (?, ?, ?, datetime(CURRENT_TIMESTAMP, 'localtime'))`,
-        [food.id, food.weight, food.mealType]
-      );
-      await db.run(
-        `INSERT INTO ${DIARY_FOODS} (diary_id, food_id)
+      [food.id, food.weight, food.mealType]
+    );
+    await db.run(
+      `INSERT INTO ${DIARY_FOODS} (diary_id, food_id)
        VALUES (?, ?)`,
-        [diaryId, food.id]
-      );
-    });
+      [diaryId, food.id]
+    );
   };
 
   static deleteFoodFromDiary = async (
@@ -129,6 +130,7 @@ export class DiaryService {
       if (foundIndex > -1) {
         acc[foundIndex]?.foods.push({
           id: item.food_id,
+          food_id: item.food_id,
           weight: item.weight,
           mealType: item.meal_type,
           dateAdded: item.date_added,
@@ -140,6 +142,7 @@ export class DiaryService {
           foods: [
             {
               id: item.food_id,
+              food_id: item.food_id,
               weight: item.weight,
               mealType: item.meal_type,
               dateAdded: item.date_added,
@@ -152,11 +155,9 @@ export class DiaryService {
   }
 }
 
-type Row = {
-  food_id: string;
-  weight: number;
+interface Row extends FoodInDiary {
   meal_type: MealType;
   date_added: string;
   diary_id: string;
-  date: string;
-};
+  date: string; // date of diary entry
+}

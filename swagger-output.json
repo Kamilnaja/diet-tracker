@@ -597,7 +597,7 @@
     }
   },
   "definitions": {
-    "DiaryEntry": {
+    "DiaryEntryResponse": {
       "type": "object",
       "properties": {
         "id": {
@@ -620,13 +620,33 @@
         "foods"
       ]
     },
+    "DiaryEntry": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "example": "39393993"
+        },
+        "date": {
+          "type": "string",
+          "example": "2021-01-01"
+        },
+        "foods": {
+          "$ref": "#/definitions/FoodInDiary"
+        }
+      },
+      "required": [
+        "date",
+        "foods"
+      ]
+    },
     "DiaryResponse": {
       "type": "object",
       "properties": {
         "data": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/DiaryEntry"
+            "$ref": "#/definitions/DiaryEntryResponse"
           }
         },
         "length": {

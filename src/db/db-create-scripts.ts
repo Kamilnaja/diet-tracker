@@ -37,8 +37,8 @@ export async function createTables(): Promise<void> {
   await db
     .run(
       `CREATE TABLE IF NOT EXISTS ${FOOD_TAGS} (
-        food_id INT NOT NULL,
-        tag_id INT NOT NULL,
+        food_id INTEGER NOT NULL,
+        tag_id INTEGER NOT NULL,
         PRIMARY KEY (food_id, tag_id),
         FOREIGN KEY (food_id) REFERENCES foods(food_id),
         FOREIGN KEY (tag_id) REFERENCES tags(tag_id)
@@ -61,7 +61,8 @@ export async function createTables(): Promise<void> {
   await db
     .run(
       `CREATE TABLE IF NOT EXISTS ${FOOD_IN_DIARY} (
-      id INTEGER,
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      food_id INTEGER NOT NULL,
       weight REAL NOT NULL,
       meal_type TEXT,
       date_added DATE NOT NULL,
@@ -75,7 +76,7 @@ export async function createTables(): Promise<void> {
     .run(
       `CREATE TABLE IF NOT EXISTS ${DIARY_FOODS} (
       diary_id VARCHAR(255),
-      food_id VARCHAR(255),
+      food_id INTEGER NOT NULL,
       FOREIGN KEY (diary_id) REFERENCES ${DIARY} (id),
       FOREIGN KEY (food_id) REFERENCES ${FOOD_IN_DIARY} (id))`
     )
