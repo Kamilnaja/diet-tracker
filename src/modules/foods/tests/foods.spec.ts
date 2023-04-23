@@ -58,8 +58,7 @@ describe("GET /foods", () => {
     const response = await request(baseURL).get(`${partURL}/1001010`);
 
     expect(response.statusCode).toBe(RESPONSE_CODES.OK);
-    expect(response.body.length).toBe(0);
-    expect(response.body.data).toEqual([]);
+    expect(response.body).toEqual({});
   });
 });
 
@@ -69,8 +68,6 @@ describe("GET /foods/tags/id", () => {
 
     expect(response.statusCode).toBe(RESPONSE_CODES.OK);
     expect(!!response.body.error).toBe(false);
-
-    console.log(response.body.data);
   });
 
   it("should return 200 when couldn't find item by id", async () => {

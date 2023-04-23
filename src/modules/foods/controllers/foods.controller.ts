@@ -60,7 +60,7 @@ export const getFoodById = async (
   }
 
   await FoodsService.getFoodById(id).then((row: Food | undefined) => {
-    res.status(RESPONSE_CODES.OK).json(row);
+    res.status(RESPONSE_CODES.OK).json(row || {});
   });
 };
 

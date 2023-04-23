@@ -17,6 +17,7 @@ export async function loadInitialData(): Promise<void> {
     await addInitialFoodsInDiary();
     await addInitialDiaryFoods();
     await addInitialDiaryEntries();
+    console.log("🐍LETS ROCK🐍");
   } else {
     console.log("💣💣TESTING - SKIPPING INITIAL DATA INSERTION💣💣");
   }

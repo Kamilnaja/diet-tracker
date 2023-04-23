@@ -14,7 +14,7 @@ export class DiaryService {
     ON df.diary_id = d.id`;
 
   static getAllDiaryEntries = async (): Promise<Diary[]> => {
-    const rows = await db.get(this.joinQuery);
+    const rows = await db.all(this.joinQuery);
 
     return DiaryService.groupDiaryById(rows);
   };
@@ -26,8 +26,7 @@ export class DiaryService {
       `;
 
     const rows = await db.all(query, [date]);
-    const reduced = DiaryService.groupDiaryById(rows);
-    return reduced;
+    return DiaryService.groupDiaryById(rows);
   };
 
   static getDiaryEntryById = async (id: string): Promise<Diary> => {

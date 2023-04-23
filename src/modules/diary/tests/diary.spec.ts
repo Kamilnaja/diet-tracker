@@ -1,21 +1,26 @@
 import { baseURL } from "@shared/helpers/utils";
 import { RESPONSE_CODES } from "@shared/models/response-codes.const";
 import request from "supertest";
-import { DiaryBuilder } from "../builders/diary.builder";
 import { FoodInDiary } from "../models/food-in-diary.model";
 
-xdescribe("diary", () => {
+describe("diary", () => {
   const partURL = "/diary";
 
   beforeEach(async () => {
-    const diaryEntry = new DiaryBuilder()
-      .setDate("2023-01-01")
-      .setFoods([
-        { id: "1", weight: 50, mealType: "breakfast", dateAdded: "2020-01-01" },
-        { id: "2", weight: 100, mealType: "snack", dateAdded: "2020-01-01" },
-        { id: "3", weight: 82, mealType: "dinner", dateAdded: "2021-02-01" },
-      ])
-      .build();
+    const diaryEntry = {
+      id: 1,
+      date: "2023-01-01",
+      food: {
+        id: 1,
+        food_id: 1,
+        name: "Apple",
+        weight: 100,
+        nutriScore: "A",
+        caloriesPer100g: 10,
+        tags: [1],
+        mealType: "breakfast",
+      },
+    };
 
     await request(baseURL).post(partURL).send(diaryEntry);
   });
@@ -34,6 +39,8 @@ xdescribe("diary", () => {
           expect(resp.body.length).toBe(1);
         });
     });
+
+    it("should find diary items by date", async () => {});
   });
 
   describe("GET /diary:id", () => {
@@ -52,9 +59,9 @@ xdescribe("diary", () => {
           expect(resp.body.id).toBe("10");
           expect(resp.body.date).toBe("2023-01-01");
           expect(resp.body.foods).toEqual([
-            { id: "1", weight: 50, mealType: "breakfast" },
-            { id: "2", weight: 100, mealType: "snack" },
-            { id: "3", weight: 82, mealType: "dinner" },
+            { id: 1, weight: 50, mealType: "breakfast" },
+            { id: 2, weight: 100, mealType: "snack" },
+            { id: 3, weight: 82, mealType: "dinner" },
           ]);
         });
 
@@ -70,12 +77,13 @@ xdescribe("diary", () => {
     });
   });
 
-  describe("POST /diary/id/food", () => {
+  xdescribe("POST /diary/id/food", () => {
     afterEach(async () => {
       await request(baseURL).delete(`${partURL}/10/foods/8`);
     });
     const foodEntry: FoodInDiary = {
-      id: "8",
+      id: 8,
+      food_id: 1,
       weight: 100,
       mealType: "dinner",
       dateAdded: "2021-02-01",
@@ -85,7 +93,7 @@ xdescribe("diary", () => {
       await request(baseURL).post(`${partURL}/10/foods`).send(foodEntry);
 
       await request(baseURL)
-        .get(`${partURL}/10`)
+        .get(`${partURL}/8`)
         .expect(RESPONSE_CODES.OK)
         .then((resp) => {
           expect(resp.body.foods.length).toEqual(4);
@@ -107,7 +115,7 @@ xdescribe("diary", () => {
 
           expect(foods.length).toEqual(2);
           expect(
-            foods.find((food: FoodInDiary) => food.id === "1")
+            foods.find((food: FoodInDiary) => food.id === 1)
           ).toBeUndefined();
         });
     });
