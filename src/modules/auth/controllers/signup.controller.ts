@@ -1,10 +1,11 @@
 import { RESPONSE_CODES } from "@shared/models/response-codes.const";
-import { store } from "@shared/store";
 import { Request, Response } from "express";
 import { AuthBuilder } from "../builders/auth.builder";
 
 export const signup = async (req: Request, res: Response): Promise<void> => {
-  /* #swagger.tags = ['Auth']
+  /* 
+  #swagger.deprecated = true
+  #swagger.tags = ['Auth']
    #swagger.description = 'Create new user'
    #swagger.parameters['newUser'] = {
      in: 'body',
@@ -31,8 +32,6 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
     .setUserName(userName)
     .setId()
     .build();
-
-  store.initialUsers.add(newUser);
 
   res.status(RESPONSE_CODES.CREATED).json(newUser);
 };

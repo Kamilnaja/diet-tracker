@@ -163,76 +163,18 @@
     },
     "/api/fluids/": {
       "get": {
-        "tags": [
-          "Fluids"
-        ],
-        "description": "Get all Fluids",
+        "description": "",
         "parameters": [],
-        "responses": {
-          "200": {
-            "description": "Fluids successfully obtained",
-            "schema": {
-              "$ref": "#/definitions/Fluid"
-            }
-          }
-        }
+        "responses": {}
       },
       "post": {
-        "tags": [
-          "Fluids"
-        ],
-        "description": "Add new Fluid",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "description": "Fluid Body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "type": "string",
-                  "example": "Orange"
-                },
-                "capacity": {
-                  "type": "number",
-                  "example": 100
-                },
-                "caloriesPer100g": {
-                  "type": "number",
-                  "example": 30
-                },
-                "id": {
-                  "type": "string",
-                  "example": "39393993"
-                },
-                "icon": {
-                  "type": "string",
-                  "example": "☕"
-                }
-              },
-              "required": [
-                "name",
-                "capacity"
-              ]
-            }
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": "Fluid successfully added",
-            "schema": {
-              "$ref": "#/definitions/Fluid"
-            }
-          }
-        }
+        "description": "",
+        "parameters": [],
+        "responses": {}
       }
     },
     "/api/fluids/{id}": {
       "get": {
-        "tags": [
-          "Fluids"
-        ],
         "description": "",
         "parameters": [
           {
@@ -242,16 +184,9 @@
             "type": "string"
           }
         ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
+        "responses": {}
       },
       "delete": {
-        "tags": [
-          "Fluids"
-        ],
         "description": "",
         "parameters": [
           {
@@ -261,16 +196,9 @@
             "type": "string"
           }
         ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
+        "responses": {}
       },
       "put": {
-        "tags": [
-          "Fluids"
-        ],
         "description": "",
         "parameters": [
           {
@@ -278,50 +206,9 @@
             "in": "path",
             "required": true,
             "type": "string"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "description": "Fluid Body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "type": "string",
-                  "example": "Orange"
-                },
-                "capacity": {
-                  "type": "number",
-                  "example": 100
-                },
-                "caloriesPer100g": {
-                  "type": "number",
-                  "example": 30
-                },
-                "id": {
-                  "type": "string",
-                  "example": "123"
-                },
-                "icons": {
-                  "type": "string",
-                  "example": "☕"
-                }
-              },
-              "required": [
-                "name",
-                "capacity"
-              ]
-            }
           }
         ],
-        "responses": {
-          "201": {
-            "description": "Fluid successfully edited",
-            "schema": {
-              "$ref": "#/definitions/Fluid"
-            }
-          }
-        }
+        "responses": {}
       }
     }
   },

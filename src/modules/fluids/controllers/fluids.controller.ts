@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Error } from "@models/error";
 import { RESPONSE_CODES } from "@shared/models/response-codes.const";
-import { store } from "@shared/store";
 import { Request, Response } from "express";
 import { FluidBuilder } from "../builders/fluid.builder";
 import { Fluid } from "../models/fluid.interface";
 
 export const getFluids = (req: Request, res: Response) => {
   /* 
+    #swagger.deprecated = true
     #swagger.tags = ['Fluids'] 
     #swagger.description = 'Get all Fluids'
     #swagger.responses[200] = {
@@ -23,10 +23,8 @@ export const getFluids = (req: Request, res: Response) => {
     const filterFn = (item: Fluid) =>
       item.name?.toLocaleLowerCase().includes(searchBy);
 
-    store.initialFluids.filterByFn(filterFn);
+    res.send({});
   }
-
-  res.json(store.initialFluids.getResponse);
 };
 
 export const getFluidById = (req: Request, res: Response) => {
@@ -36,14 +34,6 @@ export const getFluidById = (req: Request, res: Response) => {
   if (!id) {
     return res.send(Error.getError("No entry found"));
   }
-
-  const foundItem = store.initialFluids.find("id", id);
-
-  foundItem
-    ? res.status(RESPONSE_CODES.OK).json(foundItem)
-    : res
-        .status(RESPONSE_CODES.NOT_FOUND)
-        .json(Error.getError("Item not found"));
 };
 
 export const addNewFluid = (req: Request, res: Response) => {
@@ -79,19 +69,11 @@ export const addNewFluid = (req: Request, res: Response) => {
       .json(Error.getError("Both name and capacity are required"));
   }
 
-  if (store.initialFluids.find("name", name)) {
-    return res
-      .status(RESPONSE_CODES.CONFLICT)
-      .json(Error.getError("Fluid with this name already exists"));
-  }
-
   const fluid = new FluidBuilder()
     .setId(id)
     .setCapacity(capacity)
     .setCaloriesPer100g(caloriesPer100g)
     .setName(name);
-
-  store.initialFluids.add(fluid.build());
 
   res.status(RESPONSE_CODES.CREATED).json(fluid);
 };
@@ -103,16 +85,6 @@ export const deleteFluidById = (req: Request, res: Response) => {
   if (!id) {
     return res.send(Error.getError("No entry found"));
   }
-
-  const foundItem = store.initialFluids.find("id", id);
-
-  if (foundItem) {
-    store.initialFluids.filter("id", id);
-  }
-
-  res
-    .status(foundItem ? RESPONSE_CODES.OK : RESPONSE_CODES.NOT_FOUND)
-    .send(foundItem);
 };
 
 export const editFluid = (req: Request, res: Response) => {
@@ -142,14 +114,6 @@ export const editFluid = (req: Request, res: Response) => {
       .send(Error.getError("No entry found"));
   }
 
-  const foundItemId = store.initialFluids.find("id", id)?.id;
-
-  if (!foundItemId) {
-    return res
-      .status(RESPONSE_CODES.NOT_FOUND)
-      .send(Error.getError("No id found"));
-  }
-
   const { body } = req;
 
   const itemToReplace: Fluid = {
@@ -159,8 +123,6 @@ export const editFluid = (req: Request, res: Response) => {
     caloriesPer100g: body.caloriesPer100g,
     icon: body.icon,
   };
-
-  store.initialFluids.replace(foundItemId, itemToReplace);
 
   return res.status(RESPONSE_CODES.CREATED).send(req.body);
 };
