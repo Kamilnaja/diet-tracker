@@ -8,7 +8,6 @@ describe("diary", () => {
 
   beforeEach(async () => {
     const diaryEntry = {
-      id: 1,
       date: "2023-01-01",
       food: {
         id: 1,
@@ -40,20 +39,29 @@ describe("diary", () => {
         });
     });
 
-    it("should find diary items by date", async () => {});
+    it("should find diary items by date", async () => {
+      await request(baseURL)
+        .get(`${partURL}?date=2023-01-01`)
+        .expect(RESPONSE_CODES.OK)
+        .then((resp) => {
+          expect(resp.body.data.length).toBe(1);
+          expect(resp.body.length).toBe(1);
+        });
+
+      await request(baseURL)
+        .get(`${partURL}?date=2023-01-02`)
+        .expect(RESPONSE_CODES.OK)
+        .then((resp) => {
+          expect(resp.body.data.length).toBe(0);
+          expect(resp.body.length).toBe(0);
+        });
+    });
   });
 
   describe("GET /diary:id", () => {
     it("should return one item", async () => {
       await request(baseURL)
-        .get(partURL)
-        .expect(RESPONSE_CODES.OK)
-        .then((resp) => {
-          expect(resp.body.data.length).toBe(1);
-        });
-
-      await request(baseURL)
-        .get(`${partURL}/10`)
+        .get(`${partURL}/1`)
         .expect(RESPONSE_CODES.OK)
         .then((resp) => {
           expect(resp.body.id).toBe("10");

@@ -26,6 +26,7 @@ export class DiaryService {
       `;
 
     const rows = await db.all(query, [date]);
+
     return DiaryService.groupDiaryById(rows);
   };
 

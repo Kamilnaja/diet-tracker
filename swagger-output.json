@@ -13,59 +13,19 @@
   "paths": {
     "/api/foods/": {
       "get": {
-        "tags": [
-          "Foods"
-        ],
-        "description": "Get all Foods",
-        "parameters": [
-          {
-            "name": "name",
-            "in": "query",
-            "description": "Food name",
-            "required": false,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Foods successfully obtained",
-            "schema": {
-              "$ref": "#/definitions/FoodResponse"
-            }
-          }
-        }
+        "description": "",
+        "parameters": [],
+        "responses": {}
       },
       "post": {
-        "tags": [
-          "Foods"
-        ],
-        "description": "Add new Food",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "description": "Food Body",
-            "schema": {
-              "$ref": "#/definitions/FoodEntry"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success when adding new food",
-            "schema": {
-              "$ref": "#/definitions/FoodEntry"
-            }
-          }
-        }
+        "description": "",
+        "parameters": [],
+        "responses": {}
       }
     },
     "/api/foods/{id}": {
       "get": {
-        "tags": [
-          "Foods"
-        ],
-        "description": "Get Food by ID",
+        "description": "",
         "parameters": [
           {
             "name": "id",
@@ -74,25 +34,9 @@
             "type": "string"
           }
         ],
-        "responses": {
-          "200": {
-            "description": "Food successfully obtained",
-            "schema": {
-              "$ref": "#/definitions/FoodEntry"
-            }
-          },
-          "404": {
-            "description": "No such item",
-            "schema": {
-              "$ref": "#/definitions/ErrorSearch"
-            }
-          }
-        }
+        "responses": {}
       },
       "delete": {
-        "tags": [
-          "Foods"
-        ],
         "description": "",
         "parameters": [
           {
@@ -102,25 +46,9 @@
             "type": "string"
           }
         ],
-        "responses": {
-          "200": {
-            "description": "Item deleted successfully",
-            "schema": {
-              "$ref": "#/definitions/FoodEntry"
-            }
-          },
-          "404": {
-            "description": "Item not found",
-            "schema": {
-              "$ref": "#/definitions/ErrorSearch"
-            }
-          }
-        }
+        "responses": {}
       },
       "put": {
-        "tags": [
-          "Foods"
-        ],
         "description": "",
         "parameters": [
           {
@@ -128,128 +56,40 @@
             "in": "path",
             "required": true,
             "type": "string"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "description": "Food Body",
-            "schema": {
-              "$ref": "#/definitions/FoodEntry"
-            }
           }
         ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "201": {
-            "description": "Success when editing food",
-            "schema": {
-              "$ref": "#/definitions/FoodEntry"
-            }
-          },
-          "404": {
-            "description": "No such item",
-            "schema": {
-              "$ref": "#/definitions/ErrorSearch"
-            }
-          }
-        }
+        "responses": {}
       }
     },
     "/api/foods/tags/{tag}": {
       "get": {
-        "tags": [
-          "Foods"
-        ],
-        "description": "Get Food by Tag",
+        "description": "",
         "parameters": [
           {
             "name": "tag",
             "in": "path",
-            "description": "Food tags",
             "required": true,
-            "type": "number"
+            "type": "string"
           }
         ],
-        "responses": {
-          "200": {
-            "description": "Food successfully obtained",
-            "schema": {
-              "$ref": "#/definitions/FoodResponse"
-            }
-          },
-          "404": {
-            "description": "No such item",
-            "schema": {
-              "$ref": "#/definitions/ErrorSearch"
-            }
-          }
-        }
+        "responses": {}
       }
     },
     "/api/diary/": {
       "get": {
-        "tags": [
-          "Diary"
-        ],
-        "description": "Get all Diary entries",
-        "parameters": [
-          {
-            "name": "date",
-            "in": "query",
-            "description": "Date of diary entry",
-            "required": false,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Diary entries successfully obtained",
-            "schema": {
-              "$ref": "#/definitions/DiaryResponse"
-            }
-          }
-        }
+        "description": "",
+        "parameters": [],
+        "responses": {}
       },
       "post": {
-        "tags": [
-          "Diary"
-        ],
-        "description": "Add new Diary entry",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "description": "Diary entry",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/DiaryEntry"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Diary entry successfully added",
-            "schema": {
-              "$ref": "#/definitions/DiaryEntry"
-            }
-          },
-          "409": {
-            "description": "Diary entry with this id already exists",
-            "schema": {
-              "$ref": "#/definitions/ErrorConflict"
-            }
-          }
-        }
+        "description": "",
+        "parameters": [],
+        "responses": {}
       }
     },
     "/api/diary/{id}": {
       "get": {
-        "tags": [
-          "Diary"
-        ],
-        "description": "Get Diary entry by ID",
+        "description": "",
         "parameters": [
           {
             "name": "id",
@@ -258,26 +98,10 @@
             "type": "string"
           }
         ],
-        "responses": {
-          "200": {
-            "description": "Diary entry successfully obtained",
-            "schema": {
-              "$ref": "#/definitions/DiaryEntry"
-            }
-          },
-          "404": {
-            "description": "No such item",
-            "schema": {
-              "$ref": "#/definitions/ErrorSearch"
-            }
-          }
-        }
+        "responses": {}
       },
       "delete": {
-        "tags": [
-          "Diary"
-        ],
-        "description": "Delete Diary entry by ID",
+        "description": "",
         "parameters": [
           {
             "name": "id",
@@ -286,72 +110,26 @@
             "type": "string"
           }
         ],
-        "responses": {
-          "200": {
-            "description": "Diary entry successfully deleted",
-            "schema": {
-              "$ref": "#/definitions/DeleteSuccess"
-            }
-          },
-          "404": {
-            "description": "No such item",
-            "schema": {
-              "$ref": "#/definitions/ErrorSearch"
-            }
-          }
-        }
+        "responses": {}
       }
     },
     "/api/diary/{id}/foods": {
       "post": {
-        "tags": [
-          "Diary"
-        ],
-        "description": "Add new Meal to Diary",
+        "description": "",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
             "type": "string"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "description": "Food Body",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/FoodInDiary"
-              }
-            }
           }
         ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "201": {
-            "description": "Food successfully added",
-            "schema": {
-              "$ref": "#/definitions/DiaryEntry"
-            }
-          },
-          "404": {
-            "description": "No such item",
-            "schema": {
-              "$ref": "#/definitions/ErrorSearch"
-            }
-          }
-        }
+        "responses": {}
       }
     },
     "/api/diary/{id}/foods/{foodId}": {
       "delete": {
-        "tags": [
-          "Diary"
-        ],
-        "description": "Delete Food Diary entry by ID",
+        "description": "",
         "parameters": [
           {
             "name": "id",
@@ -366,70 +144,21 @@
             "type": "string"
           }
         ],
-        "responses": {
-          "200": {
-            "description": "Diary entry successfully deleted",
-            "schema": {
-              "$ref": "#/definitions/DiaryEntry"
-            }
-          },
-          "404": {
-            "description": "No such item",
-            "schema": {
-              "$ref": "#/definitions/ErrorSearch"
-            }
-          }
-        }
+        "responses": {}
       }
     },
     "/api/dicts/tags": {
       "get": {
-        "tags": [
-          "Tags"
-        ],
-        "description": "Get all Tags",
+        "description": "",
         "parameters": [],
-        "responses": {
-          "200": {
-            "description": "Tags successfully obtained",
-            "schema": {
-              "$ref": "#/definitions/TagsResponse"
-            }
-          }
-        }
+        "responses": {}
       }
     },
     "/api/auth/signup": {
       "post": {
-        "tags": [
-          "Auth"
-        ],
-        "description": "Create new user",
-        "parameters": [
-          {
-            "name": "newUser",
-            "in": "body",
-            "description": "New User object",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/User"
-            }
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": "User successfully created",
-            "schema": {
-              "$ref": "#/definitions/User"
-            }
-          },
-          "409": {
-            "description": "User with this email already exists",
-            "schema": {
-              "$ref": "#/definitions/ErrorConflict"
-            }
-          }
-        }
+        "description": "",
+        "parameters": [],
+        "responses": {}
       }
     },
     "/api/fluids/": {
