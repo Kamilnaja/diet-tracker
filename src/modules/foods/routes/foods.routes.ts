@@ -1,4 +1,3 @@
-import { use } from "@shared/helpers/utils";
 import express from "express";
 import {
   addNewFood,
@@ -11,14 +10,14 @@ import {
 
 export const foodsRouter = express.Router();
 
-foodsRouter.get("/", use(getFoods));
+foodsRouter.get("/", getFoods);
 
-foodsRouter.get("/:id", use(getFoodById));
+foodsRouter.get("/:id", getFoodById);
 
-foodsRouter.get("/tags/:tag", use(getFoodsByTag));
+foodsRouter.get("/tags/:tag", getFoodsByTag);
 
-foodsRouter.post("/", use(addNewFood));
+foodsRouter.post("/", addNewFood);
 
-foodsRouter.delete("/:id", use(deleteFoodById));
+foodsRouter.delete("/:id", deleteFoodById);
 
-foodsRouter.put("/:id", use(editFood));
+foodsRouter.put("/:id", editFood);

@@ -1,4 +1,3 @@
-import { use } from "@shared/helpers/utils";
 import express from "express";
 import {
   addNewFluid,
@@ -10,12 +9,12 @@ import {
 
 export const fluidsRouter = express.Router();
 
-fluidsRouter.get("/", use(getFluids));
+fluidsRouter.get("/", getFluids);
 
-fluidsRouter.get("/:id", use(getFluidById));
+fluidsRouter.get("/:id", getFluidById);
 
-fluidsRouter.post("/", use(addNewFluid));
+fluidsRouter.post("/", addNewFluid);
 
-fluidsRouter.delete("/:id", use(deleteFluidById));
+fluidsRouter.delete("/:id", deleteFluidById);
 
-fluidsRouter.put("/:id", use(editFluid));
+fluidsRouter.put("/:id", editFluid);
