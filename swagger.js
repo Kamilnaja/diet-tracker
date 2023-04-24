@@ -54,7 +54,10 @@ const doc = {
       ],
       lenght: 10,
     },
-    Tag: {},
+    Tag: {
+      id: "1",
+      name: "Fruit",
+    },
     TagsResponse: {
       data: [{ $ref: "#/definitions/Tag" }],
       length: 10,
