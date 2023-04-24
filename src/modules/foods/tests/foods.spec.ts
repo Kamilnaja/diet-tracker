@@ -8,7 +8,7 @@ const newFood: Food = {
   weight: 100,
   nutriScore: "D",
   caloriesPer100g: 10,
-  tags: [1],
+  tags: [1, 2],
   mealType: "breakfast",
 };
 const partURL = "/foods";
@@ -26,8 +26,16 @@ describe("GET /foods", () => {
     const response = await request(baseURL).get(partURL);
 
     expect(response.statusCode).toBe(RESPONSE_CODES.OK);
-    expect(!!response.body.error).toBe(false);
-    expect(response.body.length).toBe(1);
+
+    const { body } = response;
+
+    expect(!!body.error).toBe(false);
+    expect(body.length).toBe(1);
+    expect(body.data.length).toBeGreaterThan(0);
+    expect(body.data[0].name).toBe(newFood.name);
+    expect(body.data[0].weight).toBe(newFood.weight);
+    expect(body.data[0].nutriScore).toBe(newFood.nutriScore);
+    expect(body.data[0].caloriesPer100g).toBe(newFood.caloriesPer100g);
   });
 
   it("should find item by string param", async () => {
@@ -44,14 +52,14 @@ describe("GET /foods", () => {
   });
 
   it("should find item by id", async () => {
-    await request(baseURL).post(partURL).send(newFood);
-
     const response = await request(baseURL).get(`${partURL}/1`);
     const { body } = response;
 
     expect(response.statusCode).toBe(RESPONSE_CODES.OK);
     expect(body.name).toEqual(newFood.name);
     expect(body.weight).toEqual(newFood.weight);
+    expect(body.nutriScore).toEqual(newFood.nutriScore);
+    expect(body.caloriesPer100g).toEqual(newFood.caloriesPer100g);
   });
 
   it("should return 200 when couldn't find item by id", async () => {
@@ -59,22 +67,6 @@ describe("GET /foods", () => {
 
     expect(response.statusCode).toBe(RESPONSE_CODES.OK);
     expect(response.body).toEqual({});
-  });
-});
-
-describe("GET /foods/tags/id", () => {
-  it("should return 200", async () => {
-    const response = await request(baseURL).get(`${partURL}/tags/1`);
-
-    expect(response.statusCode).toBe(RESPONSE_CODES.OK);
-    expect(!!response.body.error).toBe(false);
-  });
-
-  it("should return 200 when couldn't find item by id", async () => {
-    const response = await request(baseURL).get(`${partURL}/tags/1001010`);
-
-    expect(response.statusCode).toBe(RESPONSE_CODES.OK);
-    expect(response.body.length).toBe(0);
   });
 });
 

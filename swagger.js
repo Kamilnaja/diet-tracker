@@ -44,7 +44,7 @@ const doc = {
       caloriesPer100g: 100,
       $weight: 100,
       nutriScore: "E",
-      tags: ["1"],
+      tags: "1, 2",
     },
     FoodResponse: {
       data: [

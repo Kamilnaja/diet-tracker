@@ -698,13 +698,8 @@
           "example": "E"
         },
         "tags": {
-          "type": "array",
-          "example": [
-            "1"
-          ],
-          "items": {
-            "type": "string"
-          }
+          "type": "string",
+          "example": "1, 2"
         }
       },
       "required": [
