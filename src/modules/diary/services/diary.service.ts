@@ -22,21 +22,21 @@ export class DiaryService {
   static getDiaryEntriesByDate = async (date: string): Promise<Diary[]> => {
     const query = `    
       ${this.joinQuery}
-      WHERE d.date = ?
-      `;
+      WHERE d.date = ?`;
 
     const rows = await db.all(query, [date]);
 
     return DiaryService.groupDiaryById(rows);
   };
 
-  static getDiaryEntryById = async (id: string): Promise<Diary> => {
+  static getDiaryEntryById = async (id: string): Promise<Diary | undefined> => {
     const query = `    
     ${this.joinQuery}
     WHERE d.id = ?
+    LIMIT 1
     `;
-
-    return await db.all<Diary>(query, [id]);
+    let rows = await db.all<Diary>(query, [id]);
+    return DiaryService.groupDiaryById(rows as any)[0];
   };
 
   static getDiaryEntryIdForDay = async (date: string): Promise<number> => {
@@ -130,11 +130,10 @@ export class DiaryService {
       if (foundIndex > -1) {
         acc[foundIndex]?.foods.push({
           id: item.food_id,
-          food_id: item.food_id,
           weight: item.weight,
           mealType: item.meal_type,
           dateAdded: item.date_added,
-        });
+        } as FoodInDiary);
       } else {
         acc.push({
           id: item.diary_id,
@@ -142,11 +141,10 @@ export class DiaryService {
           foods: [
             {
               id: item.food_id,
-              food_id: item.food_id,
               weight: item.weight,
               mealType: item.meal_type,
               dateAdded: item.date_added,
-            },
+            } as FoodInDiary,
           ],
         });
       }

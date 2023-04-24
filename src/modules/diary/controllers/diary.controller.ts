@@ -1,13 +1,17 @@
 import { Error } from "@models/error";
 import { HttpResponse } from "@shared/models/http-response.model";
 import { RESPONSE_CODES } from "@shared/models/response-codes.const";
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { DiaryBuilder } from "../builders/diary.builder";
 import { Diary } from "../models/diary.model";
 import { FoodInDiary } from "../models/food-in-diary.model";
 import { DiaryService } from "../services/diary.service";
 
-export const getDiary = async (req: Request, res: Response): Promise<void> => {
+export const getDiary = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
   /* 
     #swagger.auto = false
     #swagger.tags = ['Diary']
@@ -23,10 +27,10 @@ export const getDiary = async (req: Request, res: Response): Promise<void> => {
     }
   */
 
-  const { data } = req.query;
+  const { date } = req.query;
 
-  const mappedRows = data
-    ? await DiaryService.getDiaryEntriesByDate(data as string)
+  const mappedRows = date
+    ? await DiaryService.getDiaryEntriesByDate(date as string)
     : await DiaryService.getAllDiaryEntries();
 
   const response: HttpResponse<Diary[]> = {

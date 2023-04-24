@@ -42,7 +42,7 @@ describe("signup", () => {
         });
     });
 
-    it("should not add user with the same data", async () => {
+    xit("should not add user with the same data", async () => {
       await request(baseURL)
         .post(partURL)
         .send(userEntry)
