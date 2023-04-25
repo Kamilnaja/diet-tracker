@@ -45,17 +45,7 @@ export class FoodsService {
     } else if (tag && !name) {
       return await FoodsService.getFoodByTag(tag);
     } else if (name && tag) {
-      return await db
-        .all(
-          `${this.join}
-          WHERE t.id = ? and f.name LIKE '%' || ? || '%'
-          GROUP BY f.id`,
-          [tag, name]
-        )
-        .catch((err) => {
-          console.log(err);
-          return [];
-        });
+      return await FoodsService.allFoodsByTagAndName(tag, name);
     } else {
       console.log("provide tag and name");
       return [];
@@ -133,4 +123,16 @@ export class FoodsService {
   static deleteFood = async (id: string): Promise<void> => {
     await db.run(`DELETE FROM foods WHERE id = ?`, [id]);
   };
+
+  private static async allFoodsByTagAndName(
+    tag: number,
+    name: string
+  ): Promise<Food[]> {
+    return await db.all(
+      `${this.join}
+          WHERE t.id = ? and f.name LIKE '%' || ? || '%'
+          GROUP BY f.id`,
+      [tag, name]
+    );
+  }
 }
