@@ -8,7 +8,7 @@ const newFood: Food = {
   weight: 100,
   nutriScore: "D",
   caloriesPer100g: 10,
-  tags: [1, 2],
+  tags: "1,2",
   mealType: "breakfast",
 };
 const partURL = "/foods";
@@ -19,23 +19,37 @@ describe("GET /foods", () => {
   });
 
   afterAll(async () => {
-    await request(baseURL).delete(`${partURL}/${newFood.id}`);
+    await request(baseURL).delete(`${partURL}/1`);
   });
 
-  it("should return 200", async () => {
+  it("should return 200 when getting all items", async () => {
     const response = await request(baseURL).get(partURL);
 
     expect(response.statusCode).toBe(RESPONSE_CODES.OK);
 
-    const { body } = response;
+    const { data } = response.body;
 
-    expect(!!body.error).toBe(false);
-    expect(body.length).toBe(1);
-    expect(body.data.length).toBeGreaterThan(0);
-    expect(body.data[0].name).toBe(newFood.name);
-    expect(body.data[0].weight).toBe(newFood.weight);
-    expect(body.data[0].nutriScore).toBe(newFood.nutriScore);
-    expect(body.data[0].caloriesPer100g).toBe(newFood.caloriesPer100g);
+    expect(!!response.body.error).toBe(false);
+    expect(response.body.length).toBe(1);
+    expect(data.length).toBeGreaterThan(0);
+    expect(data[0].name).toBe(newFood.name);
+    expect(data[0].weight).toBe(newFood.weight);
+    expect(data[0].nutriScore).toBe(newFood.nutriScore);
+    expect(data[0].caloriesPer100g).toBe(newFood.caloriesPer100g);
+    expect(data[0].tags).toEqual(newFood.tags);
+  });
+
+  it("should find item by name and tag", async () => {
+    let response = await request(baseURL).get(`${partURL}/search?name=Banana`);
+    const { data } = response.body;
+
+    expect(response.statusCode).toBe(RESPONSE_CODES.OK);
+    expect(data.length).toBeGreaterThan(0);
+    expect(data[0].name).toBe(newFood.name);
+    expect(data[0].weight).toBe(newFood.weight);
+    expect(data[0].nutriScore).toBe(newFood.nutriScore);
+    expect(data[0].caloriesPer100g).toBe(newFood.caloriesPer100g);
+    expect(data[0].tags).toEqual(newFood.tags);
   });
 
   it("should find item by string param", async () => {
@@ -48,7 +62,15 @@ describe("GET /foods", () => {
     expect(
       responseGet.body.data.find((item: Food) => item.name === newFood.name)
     ).not.toBeFalsy();
+
     expect(responseGet.body.length).toBeGreaterThan(0);
+    const { data } = responseGet.body;
+    expect(data.length).toBeGreaterThan(0);
+    expect(data[0].name).toBe(newFood.name);
+    expect(data[0].weight).toBe(newFood.weight);
+    expect(data[0].nutriScore).toBe(newFood.nutriScore);
+    expect(data[0].caloriesPer100g).toBe(newFood.caloriesPer100g);
+    expect(data[0].tags).toEqual(newFood.tags);
   });
 
   it("should find item by id", async () => {

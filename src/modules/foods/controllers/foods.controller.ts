@@ -1,7 +1,7 @@
 import { Error } from "@models/error";
 import { HttpResponse } from "@shared/models/http-response.model";
 import { RESPONSE_CODES } from "@shared/models/response-codes.const";
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { Food } from "../models/food.model";
 import { FoodsService } from "../services/foods.service";
 
@@ -64,6 +64,51 @@ export const getFoodById = async (
   });
 };
 
+export const getFoodsByTagsAndName = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  /*
+      #swagger.auto = false
+      #swagger.tags = ['Foods']
+      #swagger.parameters['tag'] = {
+        in: 'query',
+        description: 'Food tag',
+        required: false,
+        type: 'integer'
+      }
+      #swagger.parameters['name'] = {
+        in: 'query',
+        description: 'Food name',
+        required: false,
+        type: 'string'
+      }
+      #swagger.description = 'Get Food by Tag and Name'
+      #swagger.responses[200] = {
+        description: 'Food successfully obtained',
+        schema: { $ref: '#/definitions/FoodResponse' }
+      }
+      #swagger.responses[404] = {
+        description: 'No such item',
+        schema: { $ref: '#/definitions/ErrorSearch' }
+      }
+  */
+  const { tag, name } = req.query;
+  try {
+    let row = await FoodsService.getFoodsByTagsAndName(
+      Number(tag),
+      String(name)
+    );
+    const response: HttpResponse<Food[]> = {
+      data: row,
+      length: row.length,
+    };
+    res.status(RESPONSE_CODES.OK).json(response);
+  } catch (err) {
+    res.status(RESPONSE_CODES.BAD_REQUEST).json(err);
+  }
+};
+
 export const getFoodsByTag = async (
   req: Request,
   res: Response
@@ -104,7 +149,8 @@ export const getFoodsByTag = async (
 
 export const addNewFood = async (
   req: Request,
-  res: Response
+  res: Response,
+  next: NextFunction
 ): Promise<void> => {
   /*
     #swagger.tags = ['Foods']
@@ -129,19 +175,22 @@ export const addNewFood = async (
       .json(Error.getError("Both name and weight are required"));
     return;
   }
+  try {
+    await FoodsService.addNewFood({
+      name,
+      weight,
+      caloriesPer100g,
+      nutriScore,
+    });
+  } catch (err) {
+    next(err);
+  }
 
-  await FoodsService.addNewFood({
-    name,
-    weight,
-    caloriesPer100g,
-    nutriScore,
-    tags,
-  }).catch((err: Error) => {
-    res.status(RESPONSE_CODES.BAD_REQUEST).json(err);
-    return;
-  });
-
-  await FoodsService.addTags(tags);
+  try {
+    await FoodsService.addTags(tags.split(","));
+  } catch (err) {
+    next(err);
+  }
 
   const response = {
     data: {

@@ -19,6 +19,7 @@ export async function loadInitialData(): Promise<void> {
     await addInitialDiaryEntries();
     console.log("🐍LETS ROCK🐍");
   } else {
+    await addInitialTags();
     console.log("💣💣TESTING - SKIPPING INITIAL DATA INSERTION💣💣");
   }
 }
