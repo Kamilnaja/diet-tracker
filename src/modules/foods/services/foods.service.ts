@@ -36,6 +36,32 @@ export class FoodsService {
     );
   };
 
+  static getFoodsByTagsAndName = async (
+    tag: number,
+    name: string
+  ): Promise<Food[]> => {
+    if (name && !tag) {
+      return await FoodsService.getAllFoodsByName(name);
+    } else if (tag && !name) {
+      return await FoodsService.getFoodByTag(tag);
+    } else if (name && tag) {
+      return await db
+        .all(
+          `${this.join}
+          WHERE t.id = ? and f.name LIKE '%' || ? || '%'
+          GROUP BY f.id`,
+          [tag, name]
+        )
+        .catch((err) => {
+          console.log(err);
+          return [];
+        });
+    } else {
+      console.log("provide tag and name");
+      return [];
+    }
+  };
+
   static getFoodById = async (id: string): Promise<Food | undefined> => {
     const query = `
       ${this.join}
@@ -63,17 +89,17 @@ export class FoodsService {
         "SELECT id FROM foods ORDER BY id DESC LIMIT 1"
       );
       const rowId = lastFoodItem.id;
-      tags.forEach(async (tagId) => {
+      tags.forEach(async (tag) => {
         const tagQuery = `
         INSERT INTO food_tags (food_id, tag_id) 
         VALUES (?, ?)`;
-        await db.run(tagQuery, [rowId, tagId]);
+        await db.run(tagQuery, [rowId, tag]);
       });
     }
   };
 
   static editFood = async (id: string, foodData: Food): Promise<void> => {
-    const { name, weight, caloriesPer100g, nutriScore, tags = [] } = foodData;
+    const { name, weight, caloriesPer100g, nutriScore, tags } = foodData;
 
     await db.run(
       `UPDATE foods SET name = ?, weight = ?, caloriesPer100g = ?, nutriScore = ? WHERE id = ?`,
@@ -87,7 +113,7 @@ export class FoodsService {
           return;
         }
 
-        tags.forEach(async (tagId: number) => {
+        tags?.split(",").forEach(async (tagId) => {
           await db
             .run(`INSERT INTO food_tags (food_id, tag_id) VALUES (?, ?)`, [
               id,

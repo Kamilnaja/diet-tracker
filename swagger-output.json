@@ -60,6 +60,44 @@
         }
       }
     },
+    "/api/foods/search": {
+      "get": {
+        "tags": [
+          "Foods"
+        ],
+        "description": "Get Food by Tag and Name",
+        "parameters": [
+          {
+            "name": "tag",
+            "in": "query",
+            "description": "Food tag",
+            "required": false,
+            "type": "integer"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Food name",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Food successfully obtained",
+            "schema": {
+              "$ref": "#/definitions/FoodResponse"
+            }
+          },
+          "404": {
+            "description": "No such item",
+            "schema": {
+              "$ref": "#/definitions/ErrorSearch"
+            }
+          }
+        }
+      }
+    },
     "/api/foods/{id}": {
       "get": {
         "tags": [
