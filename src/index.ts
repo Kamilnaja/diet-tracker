@@ -1,5 +1,6 @@
 import { startDb as db } from "@db/db";
-import { signupRouter } from "@modules/auth/routes/signup.routes";
+import { authRouter } from "@modules/auth/routes/auth.routes";
+import { testRouter } from "@modules/auth/routes/test.routes";
 import { diaryRouter } from "@modules/diary/routes/diary.routes";
 import { dictRouter } from "@modules/dict/routes/dict.routes";
 import { fluidsRouter } from "@modules/fluids/routes/fluid.routes";
@@ -30,7 +31,8 @@ db();
 app.use("/api/foods", foodsRouter);
 app.use("/api/diary", diaryRouter);
 app.use("/api/dicts", dictRouter);
-app.use("/api/auth", signupRouter);
+app.use("/api/auth", authRouter);
+app.use("/api/test", testRouter);
 app.use("/api/fluids", fluidsRouter);
 
 app.use("/", swaggerUi.serve, swaggerUi.setup(swaggerFile));
