@@ -7,6 +7,7 @@ import {
   FOOD_IN_DIARY,
   FOOD_TAGS,
   TAGS,
+  USERS,
 } from "./db-table-names";
 
 export async function loadInitialData(): Promise<void> {
@@ -17,6 +18,7 @@ export async function loadInitialData(): Promise<void> {
     await addInitialFoodsInDiary();
     await addInitialDiaryFoods();
     await addInitialDiaryEntries();
+    await addInitialUsers();
     console.log("🐍LETS ROCK🐍");
   } else {
     await addInitialTags();
@@ -182,4 +184,18 @@ async function addInitialFoods(): Promise<void> {
       console.log("Initial data inserted into foods table successfully");
     })
     .catch((err: Error) => console.error(err));
+}
+
+async function addInitialUsers(): Promise<void> {
+  await db
+    .run(
+      `INSERT INTO ${USERS} (username, password, email) VALUES
+        ('admin', 'admin', 'admin@gmail.com'),
+        ('user', 'user', 'user@gmail.com')
+      `
+    )
+    .then(() => {
+      console.log(`Initial data inserted into ${USERS} table successfully`);
+    })
+    .catch((err: Error) => console.warn(err));
 }

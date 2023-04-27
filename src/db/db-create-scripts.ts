@@ -6,6 +6,7 @@ import {
   FOOD_IN_DIARY,
   FOOD_TAGS,
   TAGS,
+  USERS,
 } from "./db-table-names";
 
 export async function createTables(): Promise<void> {
@@ -81,4 +82,17 @@ export async function createTables(): Promise<void> {
       FOREIGN KEY (food_id) REFERENCES ${FOOD_IN_DIARY} (id))`
     )
     .then(() => console.log(`${DIARY_FOODS} table has been created`));
+
+  await db
+    .run(
+      `CREATE TABLE IF NOT EXISTS ${USERS} (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      username TEXT UNIQUE NOT NULL,
+      password TEXT NOT NULL,
+      email TEXT UNIQUE NOT NULL
+  )`
+    )
+    .then(() => {
+      console.log(`${USERS} table has been created`);
+    });
 }

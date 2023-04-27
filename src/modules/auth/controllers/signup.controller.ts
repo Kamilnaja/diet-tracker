@@ -4,7 +4,6 @@ import { AuthBuilder } from "../builders/auth.builder";
 
 export const signup = async (req: Request, res: Response): Promise<void> => {
   /* 
-  #swagger.deprecated = true
   #swagger.tags = ['Auth']
    #swagger.description = 'Create new user'
    #swagger.parameters['newUser'] = {
@@ -34,4 +33,18 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
     .build();
 
   res.status(RESPONSE_CODES.CREATED).json(newUser);
+};
+
+export const signin = async (req: Request, res: Response): Promise<void> => {
+  /*
+  #swagger.tags = ['Auth']
+  */
+  res.status(200).send({ message: "User was signed in successfully!" });
+};
+
+export const signout = async (req: Request, res: Response): Promise<void> => {
+  /*
+  #swagger.tags = ['Auth']
+  */
+  res.status(200).send({ message: "User was signed out successfully!" });
 };

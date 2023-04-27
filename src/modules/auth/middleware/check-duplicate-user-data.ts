@@ -1,26 +1,52 @@
+import { db } from "@db/db";
+import { USERS } from "@db/db-table-names";
 import { Error } from "@models/error";
 import { RESPONSE_CODES } from "@shared/models/response-codes.const";
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 
 export const checkDuplicateUserData = async (
   req: Request,
   res: Response,
-  next: () => void
+  next: NextFunction
 ): Promise<void> => {
   try {
-    const { userName, email } = req.body;
+    const { userName: username, email } = req.body;
 
-    if (!userName || !email) {
+    if (!username || !email) {
       res
         .status(RESPONSE_CODES.CONFLICT)
         .json(Error.getError("Name, email and id are required"));
       return;
     }
-    // todo - use db to check if user exists
+    const existingUser = await db.run(
+      `SELECT * FROM ${USERS} WHERE username = ? LIMIT 1`,
+      [username]
+    );
+
+    if (existingUser) {
+      res
+        .status(RESPONSE_CODES.BAD_REQUEST)
+        .json(Error.getError("Username already exists"));
+      return;
+    }
+
+    const existingEmail = await db.run(
+      `SELECT * FROM ${USERS} WHERE email = ? LIMIT 1`,
+      [email]
+    );
+
+    if (existingEmail) {
+      res
+        .status(RESPONSE_CODES.BAD_REQUEST)
+        .json(Error.getError("Email already exists"));
+      return;
+    }
+
     next();
   } catch (error) {
     res
       .status(RESPONSE_CODES.INTERNAL_SERVER_ERROR)
       .send({ message: "Unable to validate user" });
+    return;
   }
 };
