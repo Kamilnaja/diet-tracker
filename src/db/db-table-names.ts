@@ -1,14 +1,23 @@
-export const FOODS = "foods";
-export const TAGS = "tags";
-export const FOOD_TAGS = "food_tags";
-export const DIARY = "diary";
+const FOODS = "foods";
+const TAGS = "tags";
+const FOOD_TAGS = "food_tags";
+const DIARY = "diary";
 /*
   This table is used to store the relationship between diary entries and food items.
 */
-export const DIARY_FOODS = "diary_foods";
+const DIARY_FOODS = "diary_foods";
 /*
   this table is used for store foods in diary
 */
-export const FOOD_IN_DIARY = "food_in_diary";
+const FOOD_IN_DIARY = "food_in_diary";
+const USERS = "users";
 
-export const USERS = "users";
+export const tables = {
+  FOODS,
+  TAGS,
+  FOOD_TAGS,
+  DIARY,
+  DIARY_FOODS,
+  FOOD_IN_DIARY,
+  USERS,
+};
