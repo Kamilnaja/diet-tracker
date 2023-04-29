@@ -11,10 +11,10 @@ export async function loadInitialData(): Promise<void> {
     await addInitialDiaryFoods();
     await addInitialDiaryEntries();
     await addInitialUsers();
-    console.log("💣🐍 LETS ROCK 🐍💣");
+    console.log("🔥🐍 LETS ROCK 🐍🔥");
   } else {
     await addInitialTags();
-    console.log("💣💣TESTING - SKIPPING INITIAL DATA INSERTION💣💣");
+    console.log("💣🧪 TESTING - SKIPPING INITIAL DATA INSERTION 🧪💣");
   }
 }
 
