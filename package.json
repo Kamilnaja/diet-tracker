@@ -7,7 +7,7 @@
     "build": "npx tsc",
     "start": "concurrently \"ts-node -r tsconfig-paths/register src/index.ts -initialData=true\" \"npm run swagger-autogen\"",
     "dev": "concurrently \"npm run sa \" \"ts-node -r tsconfig-paths/register src/index.ts -initialData=true\"",
-    "test": "concurrently \"ts-node -r tsconfig-paths/register src/index.ts -initialData=false\" \"jest\"",
+    "test": "concurrently \"ts-node -r tsconfig-paths/register src/index.ts -initialData=false\" \"jest --runInBand \"",
     "sa": "node swagger.js",
     "pt": "ts-node -r tsconfig-paths/register src/index.ts -initialData=false",
     "lint": "eslint --ext .ts src/"

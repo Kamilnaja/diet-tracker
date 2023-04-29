@@ -2,16 +2,12 @@ import { baseURL } from "@shared/helpers/utils";
 import { RESPONSE_CODES } from "@shared/models/response-codes.const";
 import request from "supertest";
 import { AuthBuilder } from "../builders/auth.builder";
+import { userEntry } from "./signup.mock";
 
 describe("signup", () => {
   const partURL = "/auth/signup";
 
   beforeEach(async () => {
-    const userEntry = new AuthBuilder()
-      .setEmail("janusz@gmail.com")
-      .setUserName("Janusz")
-      .build();
-
     await request(baseURL).post(partURL).send(userEntry);
   });
 
@@ -26,7 +22,7 @@ describe("signup", () => {
       .setPassword("###")
       .build();
 
-    it("should add only one the same user", async () => {
+    it("should add one user", async () => {
       await request(baseURL)
         .post(partURL)
         .send(userEntry)
@@ -42,14 +38,29 @@ describe("signup", () => {
         });
     });
 
-    xit("should not add user with the same data", async () => {
+    it("should not allow for adding two the same usernames", async () => {
       await request(baseURL)
         .post(partURL)
         .send(userEntry)
         .then((res) => {
-          expect(res.status).toBe(RESPONSE_CODES.CONFLICT);
+          expect(res.status).toBe(RESPONSE_CODES.BAD_REQUEST);
           expect(res.body).toEqual({
-            message: "Failed! Username is already in use!",
+            message: "Username already exists",
+          });
+        });
+    });
+
+    it("should not allow for adding two the same emails", async () => {
+      const modifiedUserEntry = { ...userEntry };
+      modifiedUserEntry.userName = "Kamil2";
+
+      await request(baseURL)
+        .post(partURL)
+        .send(modifiedUserEntry)
+        .then((res) => {
+          expect(res.status).toBe(RESPONSE_CODES.BAD_REQUEST);
+          expect(res.body).toEqual({
+            message: "Email already exists",
           });
         });
     });

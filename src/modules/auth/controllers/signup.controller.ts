@@ -1,8 +1,12 @@
-import { RESPONSE_CODES } from "@shared/models/response-codes.const";
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { AuthBuilder } from "../builders/auth.builder";
+import { AuthService } from "../services/auth.service";
 
-export const signup = async (req: Request, res: Response): Promise<void> => {
+export const signup = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
   /* 
   #swagger.tags = ['Auth']
    #swagger.description = 'Create new user'
@@ -29,10 +33,15 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
     .setEmail(email)
     .setPassword(password)
     .setUserName(userName)
-    .setId()
     .build();
 
-  res.status(RESPONSE_CODES.CREATED).json(newUser);
+  try {
+    AuthService.addUserToDb(newUser);
+    res.status(201).send(newUser);
+    return;
+  } catch (err) {
+    next(err);
+  }
 };
 
 export const signin = async (req: Request, res: Response): Promise<void> => {

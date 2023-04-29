@@ -18,7 +18,7 @@ export const checkDuplicateUserData = async (
         .json(Error.getError("Name, email and id are required"));
       return;
     }
-    const existingUser = await db.run(
+    const existingUser = await db.get(
       `SELECT * FROM ${USERS} WHERE username = ? LIMIT 1`,
       [username]
     );
@@ -30,7 +30,7 @@ export const checkDuplicateUserData = async (
       return;
     }
 
-    const existingEmail = await db.run(
+    const existingEmail = await db.get(
       `SELECT * FROM ${USERS} WHERE email = ? LIMIT 1`,
       [email]
     );
