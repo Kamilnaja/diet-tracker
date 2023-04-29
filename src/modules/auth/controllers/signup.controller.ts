@@ -1,10 +1,16 @@
+import { assertNonNullish } from "@shared/helpers/assert-non-nullish";
 import { RESPONSE_CODES } from "@shared/models/response-codes.const";
-import { Request, Response } from "express";
-import { AuthBuilder } from "../builders/auth.builder";
+import { NextFunction, Request, Response } from "express";
+import { UserBuilder } from "../builders/user.builder";
+import { deleteUserById, signupUser } from "../services/signup.service";
 
-export const signup = async (req: Request, res: Response): Promise<void> => {
+export const signup = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
   /* 
-  #swagger.tags = ['Auth']
+   #swagger.tags = ['Auth']
    #swagger.description = 'Create new user'
    #swagger.parameters['newUser'] = {
      in: 'body',
@@ -25,21 +31,38 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
 
   const { userName, email, password } = req.body;
 
-  const newUser = new AuthBuilder()
+  const newUser = new UserBuilder()
     .setEmail(email)
     .setPassword(password)
     .setUserName(userName)
-    .setId()
     .build();
 
-  res.status(RESPONSE_CODES.CREATED).json(newUser);
+  try {
+    signupUser(newUser);
+    res.status(RESPONSE_CODES.CREATED).send(newUser);
+    return;
+  } catch (err) {
+    next(err);
+  }
 };
 
-export const signin = async (req: Request, res: Response): Promise<void> => {
-  /*
-  #swagger.tags = ['Auth']
+export const deleteById = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  /* 
+   #swagger.tags = ['Auth']
+   #swagger.description = 'Delete user by id'
   */
-  res.status(200).send({ message: "User was signed in successfully!" });
+  const { id } = req.params;
+  assertNonNullish(id, "id");
+  try {
+    await deleteUserById(id);
+    res.send(200);
+  } catch (err) {
+    next(err);
+  }
 };
 
 export const signout = async (req: Request, res: Response): Promise<void> => {

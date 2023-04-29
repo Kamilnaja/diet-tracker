@@ -1,14 +1,6 @@
 import { shouldLoadInitialData } from "@shared/helpers/utils";
 import { db } from "./db";
-import {
-  DIARY,
-  DIARY_FOODS,
-  FOODS,
-  FOOD_IN_DIARY,
-  FOOD_TAGS,
-  TAGS,
-  USERS,
-} from "./db-table-names";
+import { tables } from "./db-table-names";
 
 export async function loadInitialData(): Promise<void> {
   if (shouldLoadInitialData()) {
@@ -19,16 +11,16 @@ export async function loadInitialData(): Promise<void> {
     await addInitialDiaryFoods();
     await addInitialDiaryEntries();
     await addInitialUsers();
-    console.log("🐍LETS ROCK🐍");
+    console.log("🔥🐍 LETS ROCK 🐍🔥");
   } else {
     await addInitialTags();
-    console.log("💣💣TESTING - SKIPPING INITIAL DATA INSERTION💣💣");
+    console.log("💣🧪 TESTING - SKIPPING INITIAL DATA INSERTION 🧪💣");
   }
 }
 
 async function addInitialFoodsInDiary(): Promise<void> {
   await db.run(
-    `INSERT INTO ${FOOD_IN_DIARY} (id, food_id, weight, meal_type, date_added) VALUES 
+    `INSERT INTO ${tables.FOOD_IN_DIARY} (id, food_id, weight, meal_type, date_added) VALUES 
         (1, 1, 100.2, 'breakfast',  Date('now')),
         (2, 1, 1000, 'dinner',  Date('now')),
         (3, 1, 100.2, 'breakfast',  Date('now')),
@@ -45,7 +37,7 @@ async function addInitialFoodsInDiary(): Promise<void> {
 async function addInitialDiaryFoods(): Promise<void> {
   await db
     .run(
-      `INSERT INTO ${DIARY_FOODS} (diary_id, food_id) VALUES 
+      `INSERT INTO ${tables.DIARY_FOODS} (diary_id, food_id) VALUES 
           (1, 1), 
           (1, 2), 
           (2, 3), 
@@ -61,7 +53,7 @@ async function addInitialDiaryFoods(): Promise<void> {
 async function addInitialDiaryEntries(): Promise<void> {
   await db
     .run(
-      `INSERT INTO ${DIARY} (date, id) VALUES 
+      `INSERT INTO ${tables.DIARY} (date, id) VALUES 
           (Date('now'), 1),
           ('2021-01-02', 2), 
           ('2021-01-03', 3), 
@@ -79,7 +71,7 @@ async function addInitialDiaryEntries(): Promise<void> {
 async function addInitialFoodTags(): Promise<void> {
   await db
     .run(
-      `INSERT INTO ${FOOD_TAGS} (food_id, tag_id) VALUES
+      `INSERT INTO ${tables.FOOD_TAGS} (food_id, tag_id) VALUES
           (1, 1),
           (1, 2),
           (2, 1),
@@ -103,7 +95,7 @@ async function addInitialFoodTags(): Promise<void> {
 async function addInitialTags(): Promise<void> {
   await db
     .run(
-      `INSERT INTO ${TAGS} (tag_name) VALUES
+      `INSERT INTO ${tables.TAGS} (tag_name) VALUES
           ('Fruit'),
           ('Vegetable'),
           ('Meat'),
@@ -131,7 +123,7 @@ async function addInitialTags(): Promise<void> {
 async function addInitialFoods(): Promise<void> {
   await db
     .run(
-      `INSERT INTO ${FOODS} (name, weight, caloriesPer100g, nutriScore) VALUES
+      `INSERT INTO ${tables.FOODS} (name, weight, caloriesPer100g, nutriScore) VALUES
           ('Apple', 100, 52, 'A'),
           ('Banana', 100, 89, 'B'),
           ('Orange', 100, 47, 'C'),
@@ -189,13 +181,15 @@ async function addInitialFoods(): Promise<void> {
 async function addInitialUsers(): Promise<void> {
   await db
     .run(
-      `INSERT INTO ${USERS} (username, password, email) VALUES
-        ('admin', 'admin', 'admin@gmail.com'),
+      `INSERT INTO ${tables.USERS} (username, password, email) VALUES
+        ('admin', '$2b$08$YyPyXYJPRCf5HBevYuM2fekSVAWxmN2zzqV4OqOcNJZsh7m6gZKU.', 'admin@gmail.com'),
         ('user', 'user', 'user@gmail.com')
       `
     )
     .then(() => {
-      console.log(`Initial data inserted into ${USERS} table successfully`);
+      console.log(
+        `Initial data inserted into ${tables.USERS} table successfully`
+      );
     })
     .catch((err: Error) => console.warn(err));
 }

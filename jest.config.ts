@@ -17,7 +17,7 @@ export default {
   clearMocks: true,
 
   // Indicates whether the coverage information should be collected while executing the test
-  collectCoverage: true,
+  collectCoverage: false,
 
   // An array of glob patterns indicating a set of files for which coverage information should be collected
   // collectCoverageFrom: undefined,
@@ -94,6 +94,7 @@ export default {
     "@helpers/(.*)": ["<rootDir>/src/shared/helpers/$1"],
     "@models/(.*)": ["<rootDir>/src/shared/models/$1"],
     "@modules/(.*)": ["<rootDir>/src/modules/$1"],
+    "@db/(.*)": ["<rootDir>/src/db/$1"],
   },
 
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader

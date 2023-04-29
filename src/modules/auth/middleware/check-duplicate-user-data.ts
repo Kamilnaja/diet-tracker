@@ -1,5 +1,5 @@
 import { db } from "@db/db";
-import { USERS } from "@db/db-table-names";
+import { tables } from "@db/db-table-names";
 import { Error } from "@models/error";
 import { RESPONSE_CODES } from "@shared/models/response-codes.const";
 import { NextFunction, Request, Response } from "express";
@@ -18,8 +18,8 @@ export const checkDuplicateUserData = async (
         .json(Error.getError("Name, email and id are required"));
       return;
     }
-    const existingUser = await db.run(
-      `SELECT * FROM ${USERS} WHERE username = ? LIMIT 1`,
+    const existingUser = await db.get(
+      `SELECT * FROM ${tables.USERS} WHERE username = ? LIMIT 1`,
       [username]
     );
 
@@ -30,8 +30,8 @@ export const checkDuplicateUserData = async (
       return;
     }
 
-    const existingEmail = await db.run(
-      `SELECT * FROM ${USERS} WHERE email = ? LIMIT 1`,
+    const existingEmail = await db.get(
+      `SELECT * FROM ${tables.USERS} WHERE email = ? LIMIT 1`,
       [email]
     );
 

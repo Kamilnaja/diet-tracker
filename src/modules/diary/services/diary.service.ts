@@ -1,5 +1,5 @@
 import { db } from "@db/db";
-import { DIARY_FOODS, FOOD_IN_DIARY } from "@db/db-table-names";
+import { tables } from "@db/db-table-names";
 import { MealType } from "@modules/foods/models/meal-type.model";
 import { Diary } from "../models/diary.model";
 import { FoodInDiary } from "../models/food-in-diary.model";
@@ -35,7 +35,7 @@ export class DiaryService {
     WHERE d.id = ?
     LIMIT 1
     `;
-    let rows = await db.all<Diary>(query, [id]);
+    const rows = await db.all<Diary>(query, [id]);
     return DiaryService.groupDiaryById(rows as any)[0];
   };
 
@@ -67,7 +67,7 @@ export class DiaryService {
     food: FoodInDiary
   ): Promise<void> => {
     await db.run(
-      `INSERT INTO ${FOOD_IN_DIARY}
+      `INSERT INTO ${tables.FOOD_IN_DIARY}
            (food_id, weight, meal_type, date_added)   
            VALUES (?, ?, ?, datetime(CURRENT_TIMESTAMP, 'localtime'))`,
       [food.id, food.weight, food.mealType, food.dateAdded]
@@ -78,7 +78,7 @@ export class DiaryService {
     );
 
     await db.run(
-      `INSERT INTO ${DIARY_FOODS} (diary_id, food_id)
+      `INSERT INTO ${tables.DIARY_FOODS} (diary_id, food_id)
            VALUES (?, ?)`,
       [id, newestFoodID?.id]
     );
@@ -89,13 +89,13 @@ export class DiaryService {
     food: FoodInDiary
   ): Promise<void> => {
     await db.run(
-      `INSERT INTO ${FOOD_IN_DIARY}
+      `INSERT INTO ${tables.FOOD_IN_DIARY}
        (food_id, weight, meal_type, date_added)   
        VALUES (?, ?, ?, datetime(CURRENT_TIMESTAMP, 'localtime'))`,
       [food.id, food.weight, food.mealType]
     );
     await db.run(
-      `INSERT INTO ${DIARY_FOODS} (diary_id, food_id)
+      `INSERT INTO ${tables.DIARY_FOODS} (diary_id, food_id)
        VALUES (?, ?)`,
       [diaryId, food.id]
     );

@@ -1,34 +1,30 @@
 import { baseURL } from "@shared/helpers/utils";
 import { RESPONSE_CODES } from "@shared/models/response-codes.const";
 import request from "supertest";
-import { AuthBuilder } from "../builders/auth.builder";
+import { UserBuilder } from "../builders/user.builder";
+import { userEntry } from "./signup.mock";
 
 describe("signup", () => {
-  const partURL = "/auth/signup";
+  const signupURL = "/auth/signup";
 
   beforeEach(async () => {
-    const userEntry = new AuthBuilder()
-      .setEmail("janusz@gmail.com")
-      .setUserName("Janusz")
-      .build();
-
-    await request(baseURL).post(partURL).send(userEntry);
+    await request(baseURL).post(signupURL).send(userEntry);
   });
 
   afterEach(async () => {
-    await request(baseURL).delete(`${partURL}/1`);
+    await request(baseURL).delete(`${signupURL}/1`);
   });
 
   describe("POST /signup", () => {
-    const userEntry = new AuthBuilder()
+    const userEntry = new UserBuilder()
       .setEmail("kamil@gmail.com")
-      .setUserName("Kamil")
-      .setPassword("###")
+      .setUserName("Kamil2")
+      .setPassword("123")
       .build();
 
-    it("should add only one the same user", async () => {
+    it("should add one user", async () => {
       await request(baseURL)
-        .post(partURL)
+        .post(signupURL)
         .send(userEntry)
         .then((res) => {
           expect(res.status).toBe(RESPONSE_CODES.CREATED);
@@ -42,14 +38,32 @@ describe("signup", () => {
         });
     });
 
-    xit("should not add user with the same data", async () => {
+    it("should not allow for adding two the same usernames", async () => {
+      const modifiedUserEntry = { ...userEntry };
+      modifiedUserEntry.email = "unique123@gmail.com";
+
       await request(baseURL)
-        .post(partURL)
-        .send(userEntry)
+        .post(signupURL)
+        .send(modifiedUserEntry)
         .then((res) => {
-          expect(res.status).toBe(RESPONSE_CODES.CONFLICT);
+          expect(res.status).toBe(RESPONSE_CODES.BAD_REQUEST);
           expect(res.body).toEqual({
-            message: "Failed! Username is already in use!",
+            message: "Username already exists",
+          });
+        });
+    });
+
+    it("should not allow for adding two the same emails", async () => {
+      const modifiedUserEntry = { ...userEntry };
+      modifiedUserEntry.userName = "unique123";
+
+      await request(baseURL)
+        .post(signupURL)
+        .send(modifiedUserEntry)
+        .then((res) => {
+          expect(res.status).toBe(RESPONSE_CODES.BAD_REQUEST);
+          expect(res.body).toEqual({
+            message: "Email already exists",
           });
         });
     });
