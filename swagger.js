@@ -63,9 +63,12 @@ const doc = {
       length: 10,
     },
     User: {
-      id: "",
       userName: "John",
       email: "John@gmail.com",
+      password: "123456",
+    },
+    SignInUser: {
+      userName: "John",
       password: "123456",
     },
     Fluid: {},

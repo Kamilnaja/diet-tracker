@@ -470,13 +470,20 @@
         }
       }
     },
-    "/api/auth/signin": {
-      "post": {
+    "/api/auth/signup/{id}": {
+      "delete": {
         "tags": [
           "Auth"
         ],
-        "description": "",
-        "parameters": [],
+        "description": "Delete user by id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -484,18 +491,24 @@
         }
       }
     },
-    "/api/auth/signout": {
+    "/api/auth/signin": {
       "post": {
         "tags": [
           "Auth"
         ],
-        "description": "",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "OK"
+        "description": "Sign in user",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "description": "User object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SignInUser"
+            }
           }
-        }
+        ],
+        "responses": {}
       }
     },
     "/api/test/user": {
@@ -832,10 +845,6 @@
     "User": {
       "type": "object",
       "properties": {
-        "id": {
-          "type": "string",
-          "example": ""
-        },
         "userName": {
           "type": "string",
           "example": "John"
@@ -843,6 +852,19 @@
         "email": {
           "type": "string",
           "example": "John@gmail.com"
+        },
+        "password": {
+          "type": "string",
+          "example": "123456"
+        }
+      }
+    },
+    "SignInUser": {
+      "type": "object",
+      "properties": {
+        "userName": {
+          "type": "string",
+          "example": "John"
         },
         "password": {
           "type": "string",

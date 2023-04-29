@@ -182,7 +182,7 @@ async function addInitialUsers(): Promise<void> {
   await db
     .run(
       `INSERT INTO ${tables.USERS} (username, password, email) VALUES
-        ('admin', 'admin', 'admin@gmail.com'),
+        ('admin', '$2b$08$YyPyXYJPRCf5HBevYuM2fekSVAWxmN2zzqV4OqOcNJZsh7m6gZKU.', 'admin@gmail.com'),
         ('user', 'user', 'user@gmail.com')
       `
     )
