@@ -5,3 +5,4 @@ coverage
 .vscode/settings.json
 test.db
 db.db
+package-lock.json
