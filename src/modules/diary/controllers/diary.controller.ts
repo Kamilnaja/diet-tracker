@@ -81,11 +81,11 @@ export const addNewDiaryEntry = async (
       description: 'Diary entry',
       required: true,
       type: 'object',
-      schema: { $ref: '#/definitions/DiaryEntry' }
+      schema: { $ref: '#/definitions/DiaryPayload' }
     }
     #swagger.responses[200] = {
       description: 'Diary entry successfully added',
-      schema: { $ref: '#/definitions/DiaryEntry' }
+      schema: { $ref: '#/definitions/DiaryPayload' }
     }
     #swagger.responses[409] = {
       description: 'Diary entry with this id already exists',

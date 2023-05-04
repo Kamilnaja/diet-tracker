@@ -262,7 +262,7 @@
             "description": "Diary entry",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/DiaryEntry"
+              "$ref": "#/definitions/DiaryPayload"
             }
           }
         ],
@@ -270,7 +270,7 @@
           "200": {
             "description": "Diary entry successfully added",
             "schema": {
-              "$ref": "#/definitions/DiaryEntry"
+              "$ref": "#/definitions/DiaryPayload"
             }
           },
           "409": {
@@ -732,6 +732,26 @@
       "required": [
         "date",
         "foods"
+      ]
+    },
+    "DiaryPayload": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "example": "39393993"
+        },
+        "date": {
+          "type": "string",
+          "example": "2021-01-01"
+        },
+        "food": {
+          "$ref": "#/definitions/FoodInDiary"
+        }
+      },
+      "required": [
+        "date",
+        "food"
       ]
     },
     "DiaryResponse": {

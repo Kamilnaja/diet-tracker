@@ -25,6 +25,13 @@ const doc = {
         $ref: "#/definitions/FoodInDiary",
       },
     },
+    DiaryPayload: {
+      id: "39393993",
+      $date: "2021-01-01",
+      $food: {
+        $ref: "#/definitions/FoodInDiary",
+      },
+    },
     DiaryResponse: {
       data: [
         {
