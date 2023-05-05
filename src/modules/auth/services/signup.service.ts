@@ -18,12 +18,9 @@ export const signupUser = async (user: User): Promise<void> => {
   }
 };
 export const deleteUserById = async (id: string): Promise<void> => {
-  /*
-  #swagger.tags = ['Auth']
-  */
   try {
-    const query = `DELETE FROM users WHERE id = ?`;
-    await db.run(query, [id]);
+    const query = `DELETE FROM users WHERE id = ${id}`;
+    await db.all(query);
   } catch (err) {
     console.log("Error when deleting user");
     console.log(err);

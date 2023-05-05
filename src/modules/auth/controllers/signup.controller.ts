@@ -51,9 +51,16 @@ export const deleteById = async (
   res: Response,
   next: NextFunction
 ): Promise<void> => {
-  /* 
-   #swagger.tags = ['Auth']
-   #swagger.description = 'Delete user by id'
+  /*
+  #swagger.tags = ['Auth']
+  #swagger.deprecated = true
+  #swagger.description = 'Delete user by id - only for testing purposes'
+  #swagger.parameters['id'] = {
+    in: 'path',
+    description: 'User id',
+    required: true,
+    type: 'string'
+  }
   */
   const { id } = req.params;
   assertNonNullish(id, "id");

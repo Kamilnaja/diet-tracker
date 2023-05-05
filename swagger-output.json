@@ -475,20 +475,22 @@
         "tags": [
           "Auth"
         ],
-        "description": "Delete user by id",
+        "description": "Delete user by id - only for testing purposes",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "description": "User id"
           }
         ],
         "responses": {
           "200": {
             "description": "OK"
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/api/auth/signin": {
