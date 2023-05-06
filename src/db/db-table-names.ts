@@ -9,6 +9,7 @@ const DIARY_FOODS = "diary_foods";
 // this table is used for store foods in diary
 const FOOD_IN_DIARY = "food_in_diary";
 const USERS = "users";
+const ROLES = "roles";
 
 export const tables = {
   FOODS,
@@ -18,4 +19,5 @@ export const tables = {
   DIARY_FOODS,
   FOOD_IN_DIARY,
   USERS,
+  ROLES,
 };
