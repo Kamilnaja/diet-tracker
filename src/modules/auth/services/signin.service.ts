@@ -15,6 +15,7 @@ export const signinUser = async (user: User): Promise<User> => {
   }
 
   assertNonNullish(password, "Password is required");
+
   const passwordIsValid = await bcrypt.compare(password, row.password);
 
   if (!passwordIsValid) {
