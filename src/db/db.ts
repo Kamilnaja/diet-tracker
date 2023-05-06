@@ -14,7 +14,7 @@ export const startDb = async (): Promise<void> => {
       driver: sqlite3.Database,
     });
 
-    console.log("Database connection established!");
+    console.log("⚡Database connection established!");
 
     await dropTables();
     await createTables();

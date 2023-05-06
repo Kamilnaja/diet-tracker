@@ -45,7 +45,9 @@ async function addInitialDiaryFoods(): Promise<void> {
           (5, 5)`
     )
     .then(() => {
-      console.log("Initial data inserted into diary_foods table successfully");
+      console.log(
+        "🚚 Initial data inserted into diary_foods table successfully 🚚"
+      );
     })
     .catch((err: Error) => console.error(err));
 }
@@ -63,7 +65,7 @@ async function addInitialDiaryEntries(): Promise<void> {
           `
     )
     .then(() => {
-      console.log("Initial data inserted into diary table successfully");
+      console.log("🚚 Initial data inserted into diary table successfully 🚚");
     })
     .catch((err: Error) => console.error(err));
 }
@@ -87,7 +89,9 @@ async function addInitialFoodTags(): Promise<void> {
           `
     )
     .then(() => {
-      console.log("Initial data inserted into food_tags table successfully");
+      console.log(
+        "🚚 Initial data inserted into food_tags table successfully 🚚"
+      );
     })
     .catch((err: Error) => console.error(err));
 }
@@ -115,7 +119,7 @@ async function addInitialTags(): Promise<void> {
           `
     )
     .then(() => {
-      console.log("Initial data inserted into tags table successfully");
+      console.log("🚚 Initial data inserted into tags table successfully 🚚");
     })
     .catch((err: Error) => console.error(err));
 }
@@ -173,7 +177,7 @@ async function addInitialFoods(): Promise<void> {
           `
     )
     .then(() => {
-      console.log("Initial data inserted into foods table successfully");
+      console.log("🚚 Initial data inserted into foods table successfully 🚚");
     })
     .catch((err: Error) => console.error(err));
 }
@@ -188,7 +192,7 @@ async function addInitialUsers(): Promise<void> {
     )
     .then(() => {
       console.log(
-        `Initial data inserted into ${tables.USERS} table successfully`
+        `🚚 Initial data inserted into ${tables.USERS} table successfully 🚚`
       );
     })
     .catch((err: Error) => console.warn(err));

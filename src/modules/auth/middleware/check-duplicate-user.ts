@@ -4,7 +4,7 @@ import { Error } from "@models/error";
 import { RESPONSE_CODES } from "@shared/models/response-codes.const";
 import { NextFunction, Request, Response } from "express";
 
-export const checkDuplicateUserData = async (
+export const checkDuplicateUser = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -18,6 +18,7 @@ export const checkDuplicateUserData = async (
         .json(Error.getError("Name, email and id are required"));
       return;
     }
+
     const existingUser = await db.get(
       `SELECT * FROM ${tables.USERS} WHERE username = ? LIMIT 1`,
       [username]

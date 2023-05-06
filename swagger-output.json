@@ -468,6 +468,15 @@
             }
           }
         }
+      },
+      "delete": {
+        "tags": [
+          "Auth"
+        ],
+        "description": "Delete all users - only for testing purposes",
+        "parameters": [],
+        "responses": {},
+        "deprecated": true
       }
     },
     "/api/auth/signup/{id}": {
@@ -485,11 +494,7 @@
             "description": "User id"
           }
         ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        },
+        "responses": {},
         "deprecated": true
       }
     },
@@ -510,6 +515,16 @@
             }
           }
         ],
+        "responses": {}
+      }
+    },
+    "/api/auth/signout": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "description": "",
+        "parameters": [],
         "responses": {}
       }
     },

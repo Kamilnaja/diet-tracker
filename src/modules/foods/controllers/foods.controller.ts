@@ -95,7 +95,7 @@ export const getFoodsByTagsAndName = async (
   */
   const { tag, name } = req.query;
   try {
-    let row = await FoodsService.getFoodsByTagsAndName(
+    const row = await FoodsService.getFoodsByTagsAndName(
       Number(tag),
       String(name)
     );

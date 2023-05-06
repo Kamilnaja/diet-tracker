@@ -35,10 +35,18 @@ app.use("/api/auth", authRouter);
 app.use("/api/test", testRouter);
 app.use("/api/fluids", fluidsRouter);
 
+app.use(
+  cookieSession({
+    name: "bezkoder-session",
+    secret: "COOKIE_SECRET", // This is not production app, so it's ok to have secret here
+    httpOnly: true,
+  })
+);
+
 app.use("/", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 app.listen(port, () => {
-  console.log(`[server]: 🌩️Server is running at http://localhost:${port}`);
+  console.log(`[server]: 🌩️Server is running at http://localhost:${port}🐍`);
 });
 
 module.exports = db;

@@ -2,7 +2,11 @@ import { assertNonNullish } from "@shared/helpers/assert-non-nullish";
 import { RESPONSE_CODES } from "@shared/models/response-codes.const";
 import { NextFunction, Request, Response } from "express";
 import { UserBuilder } from "../builders/user.builder";
-import { deleteUserById, signupUser } from "../services/signup.service";
+import {
+  deleteAllUsers,
+  deleteUserById,
+  signupUser,
+} from "../services/signup.service";
 
 export const signup = async (
   req: Request,
@@ -38,7 +42,7 @@ export const signup = async (
     .build();
 
   try {
-    signupUser(newUser);
+    await signupUser(newUser);
     res.status(RESPONSE_CODES.CREATED).send(newUser);
     return;
   } catch (err) {
@@ -54,6 +58,7 @@ export const deleteById = async (
   /*
   #swagger.tags = ['Auth']
   #swagger.deprecated = true
+  #swagger.hidden = true
   #swagger.description = 'Delete user by id - only for testing purposes'
   #swagger.parameters['id'] = {
     in: 'path',
@@ -66,15 +71,46 @@ export const deleteById = async (
   assertNonNullish(id, "id");
   try {
     await deleteUserById(id);
-    res.send(200);
+    res.sendStatus(RESPONSE_CODES.OK);
   } catch (err) {
     next(err);
   }
 };
 
-export const signout = async (req: Request, res: Response): Promise<void> => {
+export const deleteAll = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  /*
+  #swagger.tags = ['Auth']
+  #swagger.deprecated = true
+  #swagger.hidden = true
+  #swagger.description = 'Delete all users - only for testing purposes'
+  */
+  try {
+    await deleteAllUsers();
+    res.sendStatus(RESPONSE_CODES.OK);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const signout = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
   /*
   #swagger.tags = ['Auth']
   */
-  res.status(200).send({ message: "User was signed out successfully!" });
+  try {
+    req.session = null;
+    res
+      .status(RESPONSE_CODES.OK)
+      .send({ message: "User was signed out successfully!" });
+    return;
+  } catch (error) {
+    next(error);
+  }
 };

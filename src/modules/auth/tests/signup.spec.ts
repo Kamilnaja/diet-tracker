@@ -2,17 +2,12 @@ import { baseURL } from "@shared/helpers/utils";
 import { RESPONSE_CODES } from "@shared/models/response-codes.const";
 import request from "supertest";
 import { UserBuilder } from "../builders/user.builder";
-import { userEntry } from "./signup.mock";
 
 describe("signup", () => {
   const signupURL = "/auth/signup";
 
-  beforeEach(async () => {
-    await request(baseURL).post(signupURL).send(userEntry);
-  });
-
   afterEach(async () => {
-    await request(baseURL).delete(`${signupURL}/1`);
+    await request(baseURL).delete(`${signupURL}`);
   });
 
   describe("POST /signup", () => {
@@ -42,6 +37,8 @@ describe("signup", () => {
       const modifiedUserEntry = { ...userEntry };
       modifiedUserEntry.email = "unique123@gmail.com";
 
+      await request(baseURL).post(signupURL).send(userEntry);
+
       await request(baseURL)
         .post(signupURL)
         .send(modifiedUserEntry)
@@ -57,6 +54,8 @@ describe("signup", () => {
       const modifiedUserEntry = { ...userEntry };
       modifiedUserEntry.userName = "unique123";
 
+      await request(baseURL).post(signupURL).send(userEntry);
+
       await request(baseURL)
         .post(signupURL)
         .send(modifiedUserEntry)
@@ -65,6 +64,16 @@ describe("signup", () => {
           expect(res.body).toEqual({
             message: "Email already exists",
           });
+        });
+    });
+  });
+
+  describe("POST /signout", () => {
+    it("should return 200", async () => {
+      await request(baseURL)
+        .post("/auth/signout")
+        .then((res) => {
+          expect(res.status).toBe(RESPONSE_CODES.OK);
         });
     });
   });
