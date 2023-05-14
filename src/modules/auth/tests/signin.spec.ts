@@ -23,7 +23,7 @@ describe("POST /signin", () => {
         .send(userEntry)
         .then((res) => {
           expect(res.status).toBe(RESPONSE_CODES.OK);
-          expect(res.body.message).toBe("User was signed in successfully!");
+          expect(res.body.message).toBe("User has signed in successfully!");
         });
     });
   });

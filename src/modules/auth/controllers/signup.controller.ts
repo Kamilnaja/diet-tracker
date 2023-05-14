@@ -108,7 +108,7 @@ export const signout = async (
     req.session = null;
     res
       .status(RESPONSE_CODES.OK)
-      .send({ message: "User was signed out successfully!" });
+      .send({ message: "User has signed out successfully!" });
     return;
   } catch (error) {
     next(error);

@@ -528,11 +528,33 @@
         "responses": {}
       }
     },
-    "/api/test/user": {
-      "post": {
+    "/api/test/test/user": {
+      "get": {
         "tags": [
-          "Auth"
+          "Test"
         ],
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/test/test/mod": {
+      "get": {
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/test/test/admin": {
+      "get": {
         "description": "",
         "parameters": [],
         "responses": {
