@@ -52,6 +52,7 @@ const doc = {
       $weight: 100,
       nutriScore: "E",
       tags: "1, 2",
+      photo: "https://www.google.com/image",
     },
     FoodResponse: {
       data: [

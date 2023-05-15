@@ -10,6 +10,7 @@ const newFood: Food = {
   caloriesPer100g: 10,
   tags: "1,2",
   mealType: "breakfast",
+  photo: "https://pl.wikipedia.org/wiki/Plik:Banana-Single.jpg",
 };
 const partURL = "/foods";
 
