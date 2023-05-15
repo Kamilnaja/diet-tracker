@@ -207,6 +207,7 @@ export const addNewFood = async (
       caloriesPer100g,
       nutriScore,
       tags,
+      photo,
     },
   };
 

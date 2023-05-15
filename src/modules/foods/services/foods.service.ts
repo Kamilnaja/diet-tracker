@@ -63,14 +63,14 @@ export class FoodsService {
   };
 
   static addNewFood = async (food: Food): Promise<void> => {
-    const { name, weight, caloriesPer100g, nutriScore } = food;
+    const { name, weight, caloriesPer100g, nutriScore, photo } = food;
 
     const query = `
-      INSERT INTO foods (name, weight, caloriesPer100g, nutriScore) 
-      VALUES (?, ?, ?, ?)
+      INSERT INTO foods (name, weight, caloriesPer100g, nutriScore, photo) 
+      VALUES (?, ?, ?, ?, ?)
     `;
 
-    await db.run(query, [name, weight, caloriesPer100g, nutriScore]);
+    await db.run(query, [name, weight, caloriesPer100g, nutriScore, photo]);
   };
 
   static addTags = async (tags: number[]): Promise<void> => {
