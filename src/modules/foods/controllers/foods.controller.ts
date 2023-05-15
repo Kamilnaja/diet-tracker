@@ -167,7 +167,14 @@ export const addNewFood = async (
       schema: { $ref: '#/definitions/FoodEntry' }
      }
   */
-  const { name, weight, caloriesPer100g, nutriScore, tags = [] } = req.body;
+  const {
+    name,
+    weight,
+    caloriesPer100g,
+    nutriScore,
+    tags = [],
+    photo,
+  } = req.body;
 
   if (!name || !weight) {
     res
@@ -181,6 +188,7 @@ export const addNewFood = async (
       weight,
       caloriesPer100g,
       nutriScore,
+      photo,
     });
   } catch (err) {
     next(err);
