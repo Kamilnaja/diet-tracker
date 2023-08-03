@@ -90,34 +90,28 @@ export class FoodsService {
 
   static editFood = async (id: string, foodData: Food): Promise<void> => {
     const { name, weight, caloriesPer100g, nutriScore, tags } = foodData;
-
     await db.run(
       `UPDATE foods SET name = ?, weight = ?, caloriesPer100g = ?, nutriScore = ? WHERE id = ?`,
       [name, weight, caloriesPer100g, nutriScore, id]
     );
-    await db.run(
-      `DELETE FROM food_tags WHERE food_id = ?`,
-      [id],
-      (err: Error | null) => {
-        if (err) {
-          return;
-        }
 
-        tags?.split(",").forEach(async (tagId) => {
-          await db
-            .run(`INSERT INTO food_tags (food_id, tag_id) VALUES (?, ?)`, [
-              id,
-              tagId,
-            ])
-            .then(() => {
-              console.log("tag added");
-            })
-            .catch((err: Error) => {
-              console.log(err);
-            });
+    // Delete existing tags for the given food_id
+    await db.run(`DELETE FROM food_tags WHERE food_id = ?`, [id]);
+
+    // Split tags string and insert new tags one by one
+    tags?.split(",").forEach(async (tagId) => {
+      await db
+        .run(`INSERT INTO food_tags (food_id, tag_id) VALUES (?, ?)`, [
+          id,
+          tagId.trim(),
+        ])
+        .then(() => {
+          console.log("tag added");
+        })
+        .catch((err: Error) => {
+          console.log(err);
         });
-      }
-    );
+    });
   };
 
   static deleteFood = async (id: string): Promise<void> => {
