@@ -75,7 +75,7 @@ export const addNewDiaryEntry = async (
 ): Promise<void> => {
   /* 
     #swagger.tags = ['Diary'] 
-    #swagger.description = 'Add new Diary entry, should be used when adding new food to diary'
+    #swagger.description = 'Add new Diary entry, that contains date & food, should be used when adding new food to diary'
     #swagger.parameters['body'] = {
       in: 'body',
       description: 'Diary entry',
@@ -139,6 +139,7 @@ export const addFoodsToDiary = async (
   res: Response
 ): Promise<void> => {
   /* 
+    #swagger.ignore = true
     #swagger.tags = ['Diary']
     #swagger.description = 'Add new Meal to Diary'
     #swagger.parameters['body'] = {
