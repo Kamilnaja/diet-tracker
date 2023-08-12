@@ -109,7 +109,8 @@ const createFoods = async (): DbRunResult => {
       weight INTEGER NOT NULL,
       nutriScore TEXT,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      photo TEXT
       );`
     )
     .then(() => console.log(`${tables.FOODS} table has been created`))

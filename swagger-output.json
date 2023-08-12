@@ -851,6 +851,10 @@
         "tags": {
           "type": "string",
           "example": "1, 2"
+        },
+        "photo": {
+          "type": "string",
+          "example": "https://www.google.com/image"
         }
       },
       "required": [

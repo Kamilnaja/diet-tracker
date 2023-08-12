@@ -5,7 +5,6 @@
   "main": "index.js",
   "scripts": {
     "build": "npx tsc",
-    "start": "concurrently \"ts-node -r tsconfig-paths/register src/index.ts -initialData=true\" \"npm run swagger-autogen\"",
     "dev": "concurrently \"npm run sa \" \"ts-node -r tsconfig-paths/register src/index.ts --inspect -initialData=true  \"",
     "test": "concurrently \"ts-node -r tsconfig-paths/register src/index.ts -initialData=false\" \"jest --runInBand \"",
     "test:i": "concurrently \"ts-node -r tsconfig-paths/register src/index.ts --inspect -initialData=false\" \"jest --runInBand \"",

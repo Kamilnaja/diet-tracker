@@ -8,4 +8,5 @@ export interface Food extends Entry {
   nutriScore?: NutriScore;
   tags?: string;
   mealType?: MealType;
+  photo: string;
 }
