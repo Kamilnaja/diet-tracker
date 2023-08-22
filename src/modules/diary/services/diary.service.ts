@@ -1,12 +1,19 @@
 import { db } from "@db/db";
 import { tables } from "@db/db-table-names";
+import { Food } from "@modules/foods/models/food.model";
 import { MealType } from "@modules/foods/models/meal-type.model";
 import { Diary } from "../models/diary.model";
 import { FoodInDiary } from "../models/food-in-diary.model";
 
 export class DiaryService {
-  private static joinQuery = `
-  SELECT df.diary_id, d.date, fid.food_id as food_id, fid.weight, fid.meal_type
+  private static readonly joinQuery = `
+  SELECT 
+    df.diary_id, 
+    df.food_id as unique_food_id, 
+    d.date, 
+    fid.food_id as food_id, 
+    fid.weight, 
+    fid.meal_type
   FROM ${tables.DIARY_FOODS} df
   INNER JOIN ${tables.FOOD_IN_DIARY} fid
     ON df.food_id = fid.id
@@ -105,6 +112,22 @@ export class DiaryService {
     );
   };
 
+  static editDiaryEntry = async (
+    uniqueFoodId: string, // unique food id
+    food: Food
+  ): Promise<void> => {
+    if (!uniqueFoodId) {
+      throw new Error("No such food in diary");
+    }
+
+    const query = `
+      UPDATE ${tables.FOOD_IN_DIARY}
+      SET weight = ?, meal_type = ?
+      WHERE id = ?`;
+
+    await db.run(query, [food.weight, food.mealType, uniqueFoodId]);
+  };
+
   static deleteFoodFromDiary = async (
     diaryId: string,
     foodId: string
@@ -138,7 +161,9 @@ export class DiaryService {
           weight: item.weight,
           mealType: item.meal_type,
           dateAdded: item.date_added,
-        } as FoodInDiary);
+          uniqueFoodId: item.unique_food_id,
+          food_id: item.food_id,
+        });
       } else {
         acc.push({
           id: item.diary_id,
@@ -149,7 +174,9 @@ export class DiaryService {
               weight: item.weight,
               mealType: item.meal_type,
               dateAdded: item.date_added,
-            } as FoodInDiary,
+              uniqueFoodId: item.unique_food_id,
+              food_id: item.food_id,
+            },
           ],
         });
       }
@@ -161,6 +188,7 @@ export class DiaryService {
 interface Row extends FoodInDiary {
   meal_type: MealType;
   date_added: string;
-  diary_id: string;
+  diary_id: string; // id of diary entry
   date: string; // date of diary entry
+  unique_food_id: string;
 }

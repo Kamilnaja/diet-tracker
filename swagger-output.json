@@ -7,11 +7,15 @@
   },
   "host": "localhost:8080",
   "basePath": "/",
-  "schemes": ["http"],
+  "schemes": [
+    "http"
+  ],
   "paths": {
     "/api/foods/": {
       "get": {
-        "tags": ["Foods"],
+        "tags": [
+          "Foods"
+        ],
         "description": "Get all Foods",
         "parameters": [
           {
@@ -32,7 +36,9 @@
         }
       },
       "post": {
-        "tags": ["Foods"],
+        "tags": [
+          "Foods"
+        ],
         "description": "Add new Food",
         "parameters": [
           {
@@ -56,7 +62,9 @@
     },
     "/api/foods/search": {
       "get": {
-        "tags": ["Foods"],
+        "tags": [
+          "Foods"
+        ],
         "description": "Get Food by Tag and Name",
         "parameters": [
           {
@@ -92,7 +100,9 @@
     },
     "/api/foods/{id}": {
       "get": {
-        "tags": ["Foods"],
+        "tags": [
+          "Foods"
+        ],
         "description": "Get Food by ID",
         "parameters": [
           {
@@ -118,7 +128,9 @@
         }
       },
       "delete": {
-        "tags": ["Foods"],
+        "tags": [
+          "Foods"
+        ],
         "description": "",
         "parameters": [
           {
@@ -144,7 +156,9 @@
         }
       },
       "put": {
-        "tags": ["Foods"],
+        "tags": [
+          "Foods"
+        ],
         "description": "",
         "parameters": [
           {
@@ -183,7 +197,9 @@
     },
     "/api/foods/tags/{tag}": {
       "get": {
-        "tags": ["Foods"],
+        "tags": [
+          "Foods"
+        ],
         "description": "Get Food by Tag",
         "parameters": [
           {
@@ -212,7 +228,9 @@
     },
     "/api/diary/": {
       "get": {
-        "tags": ["Diary"],
+        "tags": [
+          "Diary"
+        ],
         "description": "Get all Diary entries",
         "parameters": [
           {
@@ -233,8 +251,10 @@
         }
       },
       "post": {
-        "tags": ["Diary"],
-        "description": "Add new Diary entry, that contains date & food, should be used when adding new food to diary. Id is not required",
+        "tags": [
+          "Diary"
+        ],
+        "description": "Add new Diary entry, that contains date & food, should be used when adding new food to diary",
         "parameters": [
           {
             "name": "body",
@@ -264,7 +284,9 @@
     },
     "/api/diary/{id}": {
       "get": {
-        "tags": ["Diary"],
+        "tags": [
+          "Diary"
+        ],
         "description": "Get Diary entry by ID",
         "parameters": [
           {
@@ -290,7 +312,9 @@
         }
       },
       "delete": {
-        "tags": ["Diary"],
+        "tags": [
+          "Diary"
+        ],
         "description": "Delete Diary entry by ID",
         "parameters": [
           {
@@ -316,9 +340,44 @@
         }
       }
     },
+    "/api/diary/foods/{uniqueFoodId}": {
+      "put": {
+        "tags": [
+          "Diary"
+        ],
+        "description": "Edit Diary entry, that contains date & food, should be used when editing item in diary",
+        "parameters": [
+          {
+            "name": "uniqueFoodId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Diary entry",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/FoodInDiary"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Diary entry successfully edited",
+            "schema": {
+              "$ref": "#/definitions/DiaryPayload"
+            }
+          }
+        }
+      }
+    },
     "/api/diary/{id}/foods/{foodId}": {
       "delete": {
-        "tags": ["Diary"],
+        "tags": [
+          "Diary"
+        ],
         "description": "Delete Food Diary entry by ID",
         "parameters": [
           {
@@ -352,7 +411,9 @@
     },
     "/api/dicts/tags": {
       "get": {
-        "tags": ["Tags"],
+        "tags": [
+          "Tags"
+        ],
         "description": "Get all Tags",
         "parameters": [],
         "responses": {
@@ -367,7 +428,9 @@
     },
     "/api/auth/signup": {
       "post": {
-        "tags": ["Auth"],
+        "tags": [
+          "Auth"
+        ],
         "description": "Create new user",
         "parameters": [
           {
@@ -396,7 +459,9 @@
         }
       },
       "delete": {
-        "tags": ["Auth"],
+        "tags": [
+          "Auth"
+        ],
         "description": "Delete all users - only for testing purposes",
         "parameters": [],
         "responses": {},
@@ -405,7 +470,9 @@
     },
     "/api/auth/signup/{id}": {
       "delete": {
-        "tags": ["Auth"],
+        "tags": [
+          "Auth"
+        ],
         "description": "Delete user by id - only for testing purposes",
         "parameters": [
           {
@@ -422,7 +489,9 @@
     },
     "/api/auth/signin": {
       "post": {
-        "tags": ["Auth"],
+        "tags": [
+          "Auth"
+        ],
         "description": "Sign in user",
         "parameters": [
           {
@@ -440,7 +509,9 @@
     },
     "/api/auth/signout": {
       "post": {
-        "tags": ["Auth"],
+        "tags": [
+          "Auth"
+        ],
         "description": "",
         "parameters": [],
         "responses": {}
@@ -448,7 +519,9 @@
     },
     "/api/test/test/user": {
       "get": {
-        "tags": ["Test"],
+        "tags": [
+          "Test"
+        ],
         "description": "",
         "parameters": [],
         "responses": {
@@ -482,7 +555,9 @@
     },
     "/api/fluids/": {
       "get": {
-        "tags": ["Fluids"],
+        "tags": [
+          "Fluids"
+        ],
         "description": "Get all Fluids",
         "parameters": [],
         "responses": {
@@ -496,7 +571,9 @@
         "deprecated": true
       },
       "post": {
-        "tags": ["Fluids"],
+        "tags": [
+          "Fluids"
+        ],
         "description": "Add new Fluid",
         "parameters": [
           {
@@ -527,7 +604,10 @@
                   "example": "☕"
                 }
               },
-              "required": ["name", "capacity"]
+              "required": [
+                "name",
+                "capacity"
+              ]
             }
           }
         ],
@@ -543,7 +623,9 @@
     },
     "/api/fluids/{id}": {
       "get": {
-        "tags": ["Fluids"],
+        "tags": [
+          "Fluids"
+        ],
         "description": "",
         "parameters": [
           {
@@ -560,7 +642,9 @@
         }
       },
       "delete": {
-        "tags": ["Fluids"],
+        "tags": [
+          "Fluids"
+        ],
         "description": "",
         "parameters": [
           {
@@ -577,7 +661,9 @@
         }
       },
       "put": {
-        "tags": ["Fluids"],
+        "tags": [
+          "Fluids"
+        ],
         "description": "",
         "parameters": [
           {
@@ -614,7 +700,10 @@
                   "example": "☕"
                 }
               },
-              "required": ["name", "capacity"]
+              "required": [
+                "name",
+                "capacity"
+              ]
             }
           }
         ],
@@ -648,7 +737,10 @@
           }
         }
       },
-      "required": ["date", "foods"]
+      "required": [
+        "date",
+        "foods"
+      ]
     },
     "DiaryEntry": {
       "type": "object",
@@ -665,7 +757,10 @@
           "$ref": "#/definitions/FoodInDiary"
         }
       },
-      "required": ["date", "foods"]
+      "required": [
+        "date",
+        "foods"
+      ]
     },
     "DiaryPayload": {
       "type": "object",
@@ -682,7 +777,10 @@
           "$ref": "#/definitions/FoodInDiary"
         }
       },
-      "required": ["date", "food"]
+      "required": [
+        "date",
+        "food"
+      ]
     },
     "DiaryResponse": {
       "type": "object",
@@ -748,7 +846,10 @@
           "example": "https://www.google.com/image"
         }
       },
-      "required": ["name", "weight"]
+      "required": [
+        "name",
+        "weight"
+      ]
     },
     "FoodResponse": {
       "type": "object",
