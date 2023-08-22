@@ -64,11 +64,17 @@ describe("diary", () => {
         .get(`${partURL}/1`)
         .expect(RESPONSE_CODES.OK)
         .then((resp) => {
-          let { body } = resp;
+          const { body } = resp;
           expect(body.id).toBe("1");
           expect(body.date).toBe("2023-01-01");
           expect(body.foods).toEqual([
-            { id: 1, mealType: "breakfast", weight: 100 },
+            {
+              id: 1,
+              mealType: "breakfast",
+              weight: 100,
+              food_id: 1,
+              uniqueFoodId: 3,
+            },
           ]);
         });
 

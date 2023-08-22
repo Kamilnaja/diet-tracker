@@ -1,17 +1,13 @@
 import { Error } from "@models/error";
 import { HttpResponse } from "@shared/models/http-response.model";
 import { RESPONSE_CODES } from "@shared/models/response-codes.const";
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import { DiaryBuilder } from "../builders/diary.builder";
 import { Diary } from "../models/diary.model";
 import { FoodInDiary } from "../models/food-in-diary.model";
 import { DiaryService } from "../services/diary.service";
 
-export const getDiary = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): Promise<void> => {
+export const getDiary = async (req: Request, res: Response): Promise<void> => {
   /* 
     #swagger.auto = false
     #swagger.tags = ['Diary']
@@ -67,6 +63,42 @@ export const getDiaryById = async (
     : res
         .status(RESPONSE_CODES.NOT_FOUND)
         .json(Error.getError("Item not found"));
+};
+
+export const editDiaryEntry = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  /* 
+      #swagger.tags = ['Diary'] 
+      #swagger.description = 'Edit Diary entry, that contains date & food, should be used when editing item in diary'
+      #swagger.responses[200] = {
+      description: 'Diary entry successfully edited',
+      schema: { $ref: '#/definitions/DiaryPayload' }
+    }
+      #swagger.parameters['body'] = {
+        in: 'body',
+        description: 'Diary entry',
+        required: true,
+        type: 'object',
+        schema: { $ref: '#/definitions/FoodInDiary' }
+    }
+    */
+  const { uniqueFoodId } = req.params;
+
+  if (!uniqueFoodId) {
+    res.send(Error.getError("Both ids are required"));
+    return;
+  }
+
+  if (!req.body) {
+    res.send(Error.getError("No body"));
+    return;
+  }
+
+  const { body } = req;
+  await DiaryService.editDiaryEntry(uniqueFoodId, body);
+  res.status(RESPONSE_CODES.OK).send({ message: "Item updated" });
 };
 
 export const addNewDiaryEntry = async (
@@ -202,6 +234,7 @@ export const deleteFoodDiaryItemById = async (
 
   res.status(RESPONSE_CODES.OK).send(response);
 };
+
 async function createNewDiaryItemAndAddFoods(
   date: string,
   foods: FoodInDiary
