@@ -2,7 +2,7 @@ import { db } from "@db/db";
 import { Food } from "../models/food.model";
 
 export class FoodsService {
-  static join = `SELECT f.*, GROUP_CONCAT(t.id) AS tags
+  static readonly join = `SELECT f.*, GROUP_CONCAT(t.id) AS tags
   FROM foods f
   LEFT JOIN food_tags ft ON f.id = ft.food_id
   LEFT JOIN tags t ON ft.tag_id = t.id`;
@@ -38,7 +38,7 @@ export class FoodsService {
 
   static getFoodsByTagsAndName = async (
     tag: number,
-    name: string
+    name: string | undefined
   ): Promise<Food[]> => {
     if (name && !tag) {
       return await FoodsService.getAllFoodsByName(name);
@@ -47,8 +47,7 @@ export class FoodsService {
     } else if (name && tag) {
       return await FoodsService.allFoodsByTagAndName(tag, name);
     } else {
-      console.log("provide tag and name");
-      return [];
+      return await FoodsService.getAllFoods();
     }
   };
 

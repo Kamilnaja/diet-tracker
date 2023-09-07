@@ -8,7 +8,7 @@ const newFood: Food = {
   weight: 100,
   nutriScore: "D",
   caloriesPer100g: 10,
-  tags: "1,2",
+  tags: "1",
   mealType: "breakfast",
   photo: "https://pl.wikipedia.org/wiki/Plik:Banana-Single.jpg",
 };
@@ -40,7 +40,7 @@ describe("GET /foods", () => {
     expect(data[0].tags).toEqual(newFood.tags);
   });
 
-  it("should find item by name and tag", async () => {
+  it("should find item by name", async () => {
     let response = await request(baseURL).get(`${partURL}/search?name=Banana`);
     const { data } = response.body;
 
@@ -51,6 +51,45 @@ describe("GET /foods", () => {
     expect(data[0].nutriScore).toBe(newFood.nutriScore);
     expect(data[0].caloriesPer100g).toBe(newFood.caloriesPer100g);
     expect(data[0].tags).toEqual(newFood.tags);
+  });
+
+  it("should find item by tag", async () => {
+    let response = await request(baseURL).get(`${partURL}/search?tag=1`);
+    const { data } = response.body;
+
+    expect(response.statusCode).toBe(RESPONSE_CODES.OK);
+    expect(data.length).toBeGreaterThan(0);
+    expect(data[0].name).toBe(newFood.name);
+    expect(data[0].weight).toBe(newFood.weight);
+    expect(data[0].nutriScore).toBe(newFood.nutriScore);
+    expect(data[0].caloriesPer100g).toBe(newFood.caloriesPer100g);
+    expect(data[0].tags).toEqual(newFood.tags);
+  });
+
+  it("should find item by tag & name", async () => {
+    let response = await request(baseURL).get(
+      `${partURL}/search?tag=1&name=Banana`
+    );
+    const { data } = response.body;
+
+    expect(response.statusCode).toBe(RESPONSE_CODES.OK);
+    expect(data.length).toBeGreaterThan(0);
+    expect(data[0].name).toBe(newFood.name);
+    expect(data[0].weight).toBe(newFood.weight);
+    expect(data[0].nutriScore).toBe(newFood.nutriScore);
+    expect(data[0].caloriesPer100g).toBe(newFood.caloriesPer100g);
+    expect(data[0].tags).toEqual(newFood.tags);
+  });
+
+  it("should return empty response when searching for non-existing items", async () => {
+    let response = await request(baseURL).get(
+      `${partURL}/search?tag=1333&name=Bananadadfd`
+    );
+    const { data } = response.body;
+
+    expect(response.statusCode).toBe(RESPONSE_CODES.OK);
+    expect(data).toEqual([]);
+    expect(data.length).toBe(0);
   });
 
   it("should find item by string param", async () => {
