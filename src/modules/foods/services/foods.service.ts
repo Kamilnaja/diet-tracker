@@ -7,6 +7,21 @@ export class FoodsService {
   LEFT JOIN food_tags ft ON f.id = ft.food_id
   LEFT JOIN tags t ON ft.tag_id = t.id`;
 
+  static getFoodsByTagsAndName = async (
+    tag: number,
+    name: string | undefined
+  ): Promise<Food[]> => {
+    if (name && !tag) {
+      return await FoodsService.getAllFoodsByName(name);
+    } else if (tag && !name) {
+      return await FoodsService.getFoodByTag(tag);
+    } else if (name && tag) {
+      return await FoodsService.getAllFoodsByTagAndName(tag, name);
+    } else {
+      return await FoodsService.getAllFoods();
+    }
+  };
+
   static getAllFoods = async (): Promise<Food[]> => {
     const query = `
       ${this.join}
@@ -27,28 +42,15 @@ export class FoodsService {
   };
 
   static getFoodByTag = async (tag: number): Promise<Food[]> => {
-    return await db.all(
+    const request = await db.all(
       `
-      ${this.join}
-      WHERE t.id = ?
-      GROUP BY f.id`,
-      [tag]
+      SELECT * FROM (
+        ${this.join}
+        GROUP BY f.id)
+        WHERE tags LIKE '%${tag}%'
+        `
     );
-  };
-
-  static getFoodsByTagsAndName = async (
-    tag: number,
-    name: string | undefined
-  ): Promise<Food[]> => {
-    if (name && !tag) {
-      return await FoodsService.getAllFoodsByName(name);
-    } else if (tag && !name) {
-      return await FoodsService.getFoodByTag(tag);
-    } else if (name && tag) {
-      return await FoodsService.allFoodsByTagAndName(tag, name);
-    } else {
-      return await FoodsService.getAllFoods();
-    }
+    return request;
   };
 
   static getFoodById = async (id: string): Promise<Food | undefined> => {
@@ -57,9 +59,29 @@ export class FoodsService {
       WHERE f.id = ? 
       GROUP BY f.id
     `;
-
     return await db.get(query, [id]);
   };
+
+  private static async getAllFoodsByTagAndName(
+    tag: number,
+    name: string
+  ): Promise<Food[]> {
+    try {
+      const request = await db.all(
+        `
+        SELECT * FROM (
+          ${this.join}
+          GROUP BY f.id)
+          WHERE tags LIKE '%${tag}%'
+          AND name LIKE '%${name}%'  
+          `
+      );
+      return request;
+    } catch (err) {
+      console.log(err);
+      return [];
+    }
+  }
 
   static addNewFood = async (food: Food): Promise<void> => {
     const { name, weight, caloriesPer100g, nutriScore, photo } = food;
@@ -116,16 +138,4 @@ export class FoodsService {
   static deleteFood = async (id: string): Promise<void> => {
     await db.run(`DELETE FROM foods WHERE id = ?`, [id]);
   };
-
-  private static async allFoodsByTagAndName(
-    tag: number,
-    name: string
-  ): Promise<Food[]> {
-    return await db.all(
-      `${this.join}
-          WHERE t.id = ? and f.name LIKE '%' || ? || '%'
-          GROUP BY f.id`,
-      [tag, name]
-    );
-  }
 }

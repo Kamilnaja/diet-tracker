@@ -55,7 +55,7 @@ export const getFoodById = async (
   const { id } = req.params;
 
   if (!id) {
-    res.send(Error.getError("No entry found"));
+    res.send(Error.getError("Please provide an id"));
     return;
   }
 
