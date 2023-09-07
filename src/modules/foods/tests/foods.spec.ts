@@ -8,7 +8,7 @@ const newFood: Food = {
   weight: 100,
   nutriScore: "D",
   caloriesPer100g: 10,
-  tags: "1",
+  tags: "1,2",
   mealType: "breakfast",
   photo: "https://pl.wikipedia.org/wiki/Plik:Banana-Single.jpg",
 };
@@ -122,6 +122,7 @@ describe("GET /foods", () => {
     expect(body.weight).toEqual(newFood.weight);
     expect(body.nutriScore).toEqual(newFood.nutriScore);
     expect(body.caloriesPer100g).toEqual(newFood.caloriesPer100g);
+    expect(body.tags).toEqual(newFood.tags);
   });
 
   it("should return 200 when couldn't find item by id", async () => {
