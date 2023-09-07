@@ -83,7 +83,7 @@ export const getFoodsByTagsAndName = async (
         required: false,
         type: 'string'
       }
-      #swagger.description = 'Get Food by Tag and Name'
+      #swagger.description = 'Get Food by single Tag and Name'
       #swagger.responses[200] = {
         description: 'Food successfully obtained',
         schema: { $ref: '#/definitions/FoodResponse' }
@@ -97,7 +97,7 @@ export const getFoodsByTagsAndName = async (
   try {
     const row = await FoodsService.getFoodsByTagsAndName(
       Number(tag),
-      String(name)
+      name as string | undefined
     );
     const response: HttpResponse<Food[]> = {
       data: row,

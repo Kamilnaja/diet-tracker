@@ -65,7 +65,7 @@
         "tags": [
           "Foods"
         ],
-        "description": "Get Food by Tag and Name",
+        "description": "Get Food by single Tag and Name",
         "parameters": [
           {
             "name": "tag",
