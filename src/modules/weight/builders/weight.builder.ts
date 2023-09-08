@@ -4,6 +4,16 @@ import { Weight } from "../models/weight.model";
 export class WeightBuilder implements Builder<Weight> {
   private _weight: number;
   private _date: string;
+  private _id: string;
+
+  get id(): string {
+    return this._id;
+  }
+
+  setId(id: string): WeightBuilder {
+    this._id = id;
+    return this;
+  }
 
   get weight(): number {
     return this._weight;
@@ -27,6 +37,7 @@ export class WeightBuilder implements Builder<Weight> {
     const weight: Weight = {
       weight: this._weight,
       date: this._date,
+      id: this._id,
     };
     return weight;
   }

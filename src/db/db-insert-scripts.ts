@@ -11,6 +11,7 @@ export async function loadInitialData(): Promise<void> {
     await addInitialDiaryFoods();
     await addInitialDiaryEntries();
     await addInitialUsers();
+    await addWeights();
     console.log("🌵🔥🐍 LETS ROCK 🐍🔥🐘");
   } else {
     await addInitialTags();
@@ -192,8 +193,33 @@ async function addInitialUsers(): Promise<void> {
     )
     .then(() => {
       console.log(
-        `🚚 Initial data inserted into ${tables.USERS} table successfully 🚚`
+        `🐘 Initial data inserted into ${tables.USERS} table successfully 🐘`
       );
     })
     .catch((err: Error) => console.warn(err));
+}
+
+async function addWeights(): Promise<void> {
+  await db
+    .run(
+      `INSERT INTO ${tables.WEIGHTS} (weight, date) VALUES
+        (70, '2021-01-01'),
+        (90, '2021-01-02'),
+        (82, '2021-01-03'),
+        (74, '2021-01-04'),
+        (66, '2021-01-05'),
+        (53, '2024-01-06'),
+        (49, '2021-01-07'),
+        (45, '2021-01-08'),
+        (73, '2022-01-06'),
+        (89, '2023-01-07'),
+        (55, '2022-01-08')
+    `
+    )
+    .then(() => {
+      console.log(
+        `♻️ Initial data inserted into ${tables.WEIGHTS} table successfully ♻️`
+      );
+    })
+    .catch((err: Error) => console.warn(`${tables.WEIGHTS} - ${err}`));
 }
