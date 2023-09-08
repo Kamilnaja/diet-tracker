@@ -41,7 +41,9 @@ describe("GET /foods", () => {
   });
 
   it("should find item by name", async () => {
-    let response = await request(baseURL).get(`${partURL}/search?name=Banana`);
+    const response = await request(baseURL).get(
+      `${partURL}/search?name=Banana`
+    );
     const { data } = response.body;
 
     expect(response.statusCode).toBe(RESPONSE_CODES.OK);
@@ -54,7 +56,7 @@ describe("GET /foods", () => {
   });
 
   it("should find item by tag", async () => {
-    let response = await request(baseURL).get(`${partURL}/search?tag=1`);
+    const response = await request(baseURL).get(`${partURL}/search?tag=1`);
     const { data } = response.body;
 
     expect(response.statusCode).toBe(RESPONSE_CODES.OK);
@@ -67,7 +69,7 @@ describe("GET /foods", () => {
   });
 
   it("should find item by tag & name", async () => {
-    let response = await request(baseURL).get(
+    const response = await request(baseURL).get(
       `${partURL}/search?tag=1&name=Banana`
     );
     const { data } = response.body;
@@ -82,7 +84,7 @@ describe("GET /foods", () => {
   });
 
   it("should return empty response when searching for non-existing items", async () => {
-    let response = await request(baseURL).get(
+    const response = await request(baseURL).get(
       `${partURL}/search?tag=1333&name=Bananadadfd`
     );
     const { data } = response.body;

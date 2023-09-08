@@ -5,6 +5,7 @@ import { diaryRouter } from "@modules/diary/routes/diary.routes";
 import { dictRouter } from "@modules/dict/routes/dict.routes";
 import { fluidsRouter } from "@modules/fluids/routes/fluid.routes";
 import { foodsRouter } from "@modules/foods/routes/foods.routes";
+import { weightRouter } from "@modules/weight/routes/weight.routes";
 import { shouldLoadInitialData } from "@shared/helpers/utils";
 import cookieSession from "cookie-session";
 import cors from "cors";
@@ -34,6 +35,7 @@ app.use("/api/dicts", dictRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/test", testRouter);
 app.use("/api/fluids", fluidsRouter);
+app.use("/api/weights", weightRouter);
 
 app.use(
   cookieSession({

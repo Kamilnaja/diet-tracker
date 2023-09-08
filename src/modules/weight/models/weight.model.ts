@@ -1,7 +1,7 @@
 import { HttpResponse } from "@shared/models/http-response.model";
 
 export interface Weight {
-  id: string;
+  id?: string;
   date: string;
   weight: number;
 }

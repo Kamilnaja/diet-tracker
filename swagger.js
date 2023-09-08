@@ -70,6 +70,19 @@ const doc = {
       data: [{ $ref: "#/definitions/Tag" }],
       length: 10,
     },
+    WeightEntry: {
+      weight: "100",
+      date: "2021-01-01",
+    },
+    Weight: {
+      id: "1",
+      weight: "100",
+      date: "2021-01-01",
+    },
+    WeightsResponse: {
+      data: [{ $ref: "#/definitions/Weight" }],
+      length: 10,
+    },
     User: {
       userName: "John",
       email: "John@gmail.com",
