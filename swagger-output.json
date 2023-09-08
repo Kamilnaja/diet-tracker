@@ -716,6 +716,117 @@
           }
         }
       }
+    },
+    "/api/weights/": {
+      "get": {
+        "tags": [
+          "Weight"
+        ],
+        "description": "Get all weights",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Weights successfully retrieved",
+            "schema": {
+              "$ref": "#/definitions/WeightsResponse"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Weight"
+        ],
+        "description": "Add new weight",
+        "parameters": [
+          {
+            "name": "newWeight",
+            "in": "body",
+            "description": "New weight object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/WeightEntry"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Weight successfully added",
+            "schema": {
+              "$ref": "#/definitions/WeightEntry"
+            }
+          }
+        }
+      }
+    },
+    "/api/weights/{id}": {
+      "put": {
+        "tags": [
+          "Weight"
+        ],
+        "description": "Update weight by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "number",
+            "description": "Weight id"
+          },
+          {
+            "name": "newWeight",
+            "in": "body",
+            "description": "New weight object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/WeightEntry"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Weight successfully updated",
+            "schema": {
+              "$ref": "#/definitions/WeightEntry"
+            }
+          },
+          "404": {
+            "description": "No such item",
+            "schema": {
+              "$ref": "#/definitions/ErrorSearch"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Weight"
+        ],
+        "description": "Delete weight by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "number",
+            "description": "Weight id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Weight successfully deleted",
+            "schema": {
+              "$ref": "#/definitions/WeightEntry"
+            }
+          },
+          "404": {
+            "description": "No such item",
+            "schema": {
+              "$ref": "#/definitions/ErrorSearch"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -886,6 +997,51 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/Tag"
+          }
+        },
+        "length": {
+          "type": "number",
+          "example": 10
+        }
+      }
+    },
+    "WeightEntry": {
+      "type": "object",
+      "properties": {
+        "weight": {
+          "type": "string",
+          "example": "100"
+        },
+        "date": {
+          "type": "string",
+          "example": "2021-01-01"
+        }
+      }
+    },
+    "Weight": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "example": "1"
+        },
+        "weight": {
+          "type": "string",
+          "example": "100"
+        },
+        "date": {
+          "type": "string",
+          "example": "2021-01-01"
+        }
+      }
+    },
+    "WeightsResponse": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Weight"
           }
         },
         "length": {
