@@ -14,6 +14,7 @@ export async function createTables(): Promise<void> {
   await createDiaryFoods();
   await createUsers();
   await createRoles();
+  await createWeights();
 }
 
 const createUsers = async (): DbRunResult => {
@@ -126,5 +127,18 @@ const createRoles = async (): DbRunResult => {
     )`
     )
     .then(() => console.log(`${tables.ROLES} table has been created`))
+    .catch((err: Error) => console.error(err));
+};
+
+const createWeights = async (): DbRunResult => {
+  return db
+    .run(
+      `CREATE TABLE IF NOT EXISTS ${tables.WEIGHTS} (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      weight REAL NOT NULL,
+      date DATE NOT NULL)
+      `
+    )
+    .then(() => console.log(`🤔${tables.WEIGHTS} table has been created`))
     .catch((err: Error) => console.error(err));
 };
