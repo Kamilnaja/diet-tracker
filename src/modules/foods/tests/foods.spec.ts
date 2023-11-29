@@ -38,6 +38,7 @@ describe("GET /foods", () => {
     expect(data[0].nutriScore).toBe(newFood.nutriScore);
     expect(data[0].caloriesPer100g).toBe(newFood.caloriesPer100g);
     expect(data[0].tags).toEqual(newFood.tags);
+    expect(data[0].photo).toEqual(newFood.photo);
   });
 
   it("should find item by name", async () => {
@@ -53,6 +54,7 @@ describe("GET /foods", () => {
     expect(data[0].nutriScore).toBe(newFood.nutriScore);
     expect(data[0].caloriesPer100g).toBe(newFood.caloriesPer100g);
     expect(data[0].tags).toEqual(newFood.tags);
+    expect(data[0].photo).toEqual(newFood.photo);
   });
 
   it("should find item by tag", async () => {

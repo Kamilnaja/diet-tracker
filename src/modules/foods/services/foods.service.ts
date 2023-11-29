@@ -110,10 +110,10 @@ export class FoodsService {
   };
 
   static editFood = async (id: string, foodData: Food): Promise<void> => {
-    const { name, weight, caloriesPer100g, nutriScore, tags } = foodData;
+    const { name, weight, caloriesPer100g, nutriScore, tags, photo } = foodData;
     await db.run(
-      `UPDATE foods SET name = ?, weight = ?, caloriesPer100g = ?, nutriScore = ? WHERE id = ?`,
-      [name, weight, caloriesPer100g, nutriScore, id]
+      `UPDATE foods SET name = ?, weight = ?, caloriesPer100g = ?, nutriScore = ?, photo = ? WHERE id = ?`,
+      [name, weight, caloriesPer100g, nutriScore, photo, id]
     );
 
     // Delete existing tags for the given food_id
