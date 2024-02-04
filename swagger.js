@@ -12,7 +12,7 @@ const doc = {
     DiaryEntryResponse: {
       id: "39393993",
       $date: "2021-01-01",
-      $foods: [
+      $food: [
         {
           $ref: "#/definitions/FoodInDiary",
         },
@@ -21,7 +21,7 @@ const doc = {
     DiaryEntry: {
       id: "39393993",
       $date: "2021-01-01",
-      $foods: {
+      $food: {
         $ref: "#/definitions/FoodInDiary",
       },
     },

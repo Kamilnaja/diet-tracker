@@ -12,9 +12,9 @@ const newFood: Food = {
   mealType: "breakfast",
   photo: "https://pl.wikipedia.org/wiki/Plik:Banana-Single.jpg",
 };
-const partURL = "/foods";
+const partURL = "/food";
 
-describe("GET /foods", () => {
+describe("GET /food", () => {
   beforeAll(async () => {
     await request(baseURL).post(partURL).send(newFood);
   });
@@ -137,7 +137,7 @@ describe("GET /foods", () => {
   });
 });
 
-describe("POST /foods", () => {
+describe("POST /food", () => {
   it("should not create new food without name", async () => {
     const newFood = {
       id: 1000330300303,
@@ -147,7 +147,7 @@ describe("POST /foods", () => {
   });
 });
 
-describe("DELETE /foods", () => {
+describe("DELETE /food", () => {
   beforeAll(async () => {
     await request(baseURL).post(partURL).send(newFood);
   });
@@ -155,9 +155,9 @@ describe("DELETE /foods", () => {
   it("Should delete one item", async () => {
     await request(baseURL).delete(`${partURL}/${newFood.id}`);
     const response = await request(baseURL).get(partURL);
-    const foods = response.body.data;
+    const food = response.body.data;
 
-    const exists = foods.find((food: Food) => {
+    const exists = food.find((food: Food) => {
       newFood.id === food.id;
     });
 

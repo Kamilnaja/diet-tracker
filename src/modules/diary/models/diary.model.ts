@@ -3,7 +3,7 @@ import { HttpResponse } from "@shared/models/http-response.model";
 import { FoodInDiary } from "./food-in-diary.model";
 
 export interface Diary extends Entry {
-  foods: FoodInDiary[];
+  food: FoodInDiary[];
   date: string;
   id: string;
 }

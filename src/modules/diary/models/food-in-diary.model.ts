@@ -1,4 +1,4 @@
-import { MealType } from "@modules/foods/models/meal-type.model";
+import { MealType } from "@modules/food/models/meal-type.model";
 
 export interface FoodInDiary {
   id: number;
