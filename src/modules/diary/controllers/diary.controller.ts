@@ -131,9 +131,9 @@ export const addNewDiaryEntry = async (
 
   currentDayDiaryId != null
     ? await DiaryService.addFoodToDiary(currentDayDiaryId, food)
-    : await createNewDiaryItemAndAddFoods(date, food);
+    : await createNewDiaryItemAndAddFood(date, food);
 
-  const diaryEntry = new DiaryBuilder().setDate(date).setFoods(food).build();
+  const diaryEntry = new DiaryBuilder().setDate(date).setFood(food).build();
 
   res.send(diaryEntry);
 };
@@ -166,7 +166,7 @@ export const deleteDiaryItemById = async (
   res.status(RESPONSE_CODES.OK).send({ message: "Item deleted" });
 };
 
-export const addFoodsToDiary = async (
+export const addFoodToDiary = async (
   req: Request,
   res: Response
 ): Promise<void> => {
@@ -197,7 +197,7 @@ export const addFoodsToDiary = async (
 
   const { body } = req;
 
-  await DiaryService.addFoodsToExistingDiary(id, body as FoodInDiary);
+  await DiaryService.addFoodToExistingDiary(id, body as FoodInDiary);
 
   res.status(RESPONSE_CODES.CREATED).send(req.body);
 };
@@ -235,11 +235,11 @@ export const deleteFoodDiaryItemById = async (
   res.status(RESPONSE_CODES.OK).send(response);
 };
 
-async function createNewDiaryItemAndAddFoods(
+async function createNewDiaryItemAndAddFood(
   date: string,
-  foods: FoodInDiary
+  food: FoodInDiary
 ): Promise<void> {
   await DiaryService.addDiaryItem(date);
   const currentId = await DiaryService.getLastDiaryItemId();
-  await DiaryService.addFoodToDiary(currentId, foods);
+  await DiaryService.addFoodToDiary(currentId, food);
 }

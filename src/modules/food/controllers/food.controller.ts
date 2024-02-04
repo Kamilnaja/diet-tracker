@@ -3,13 +3,13 @@ import { HttpResponse } from "@shared/models/http-response.model";
 import { RESPONSE_CODES } from "@shared/models/response-codes.const";
 import { NextFunction, Request, Response } from "express";
 import { Food } from "../models/food.model";
-import { FoodsService } from "../services/foods.service";
+import { FoodService } from "../services/food.service";
 
-export const getFoods = async (req: Request, res: Response): Promise<void> => {
+export const getFood = async (req: Request, res: Response): Promise<void> => {
   /*
     #swagger.auto = false
-    #swagger.tags = ['Foods']
-    #swagger.description = 'Get all Foods'
+    #swagger.tags = ['Food']
+    #swagger.description = 'Get all Food'
     #swagger.parameters['name'] = {
       in: 'query',
       description: 'Food name',
@@ -17,15 +17,15 @@ export const getFoods = async (req: Request, res: Response): Promise<void> => {
       type: 'string'
     }
     #swagger.responses[200] = {
-      description: 'Foods successfully obtained',
+      description: 'Food successfully obtained',
       schema: { $ref: '#/definitions/FoodResponse'}
     }
   */
 
   const { name } = req.query;
   const rows = name
-    ? await FoodsService.getAllFoodsByName(name as string)
-    : await FoodsService.getAllFoods();
+    ? await FoodService.getAllFoodByName(name as string)
+    : await FoodService.getAllFood();
 
   const response: HttpResponse<Food[]> = {
     data: rows,
@@ -40,7 +40,7 @@ export const getFoodById = async (
   res: Response
 ): Promise<void> => {
   /* 
-    #swagger.tags = ['Foods'] 
+    #swagger.tags = ['Food'] 
     #swagger.description = 'Get Food by ID'
     #swagger.responses[200] = {
       description: 'Food successfully obtained',
@@ -59,18 +59,18 @@ export const getFoodById = async (
     return;
   }
 
-  await FoodsService.getFoodById(id).then((row: Food | undefined) => {
+  await FoodService.getFoodById(id).then((row: Food | undefined) => {
     res.status(RESPONSE_CODES.OK).json(row || {});
   });
 };
 
-export const getFoodsByTagsAndName = async (
+export const getFoodByTagsAndName = async (
   req: Request,
   res: Response
 ): Promise<void> => {
   /*
       #swagger.auto = false
-      #swagger.tags = ['Foods']
+      #swagger.tags = ['Food']
       #swagger.parameters['tag'] = {
         in: 'query',
         description: 'Food tag',
@@ -95,7 +95,7 @@ export const getFoodsByTagsAndName = async (
   */
   const { tag, name } = req.query;
   try {
-    const row = await FoodsService.getFoodsByTagsAndName(
+    const row = await FoodService.getFoodByTagsAndName(
       Number(tag),
       name as string | undefined
     );
@@ -109,13 +109,13 @@ export const getFoodsByTagsAndName = async (
   }
 };
 
-export const getFoodsByTag = async (
+export const getFoodByTag = async (
   req: Request,
   res: Response
 ): Promise<void> => {
   /*
       #swagger.auto = false
-      #swagger.tags = ['Foods']
+      #swagger.tags = ['Food']
       #swagger.description = 'Get Food by Tag'
       #swagger.responses[200] = {
         description: 'Food successfully obtained',
@@ -139,7 +139,7 @@ export const getFoodsByTag = async (
     return;
   }
 
-  await FoodsService.getFoodByTag(Number(tag)).then((row) => {
+  await FoodService.getFoodByTag(Number(tag)).then((row) => {
     res.status(RESPONSE_CODES.OK).json({
       data: row,
       length: row.length,
@@ -153,7 +153,7 @@ export const addNewFood = async (
   next: NextFunction
 ): Promise<void> => {
   /*
-    #swagger.tags = ['Foods']
+    #swagger.tags = ['Food']
     #swagger.description = 'Add new Food'
     #swagger.parameters['body'] = {
                 in: 'body',
@@ -183,7 +183,7 @@ export const addNewFood = async (
     return;
   }
   try {
-    await FoodsService.addNewFood({
+    await FoodService.addNewFood({
       name,
       weight,
       caloriesPer100g,
@@ -195,7 +195,7 @@ export const addNewFood = async (
   }
 
   try {
-    await FoodsService.addTags(tags.split(","));
+    await FoodService.addTags(tags.split(","));
   } catch (err) {
     next(err);
   }
@@ -219,7 +219,7 @@ export const deleteFoodById = async (
   res: Response
 ): Promise<void> => {
   /* 
-  #swagger.tags = ['Foods']
+  #swagger.tags = ['Food']
   #swagger.responses[200] = {
     description: 'Item deleted successfully',
     schema: { 
@@ -241,14 +241,14 @@ export const deleteFoodById = async (
     return;
   }
 
-  await FoodsService.deleteFood(id).catch(() => {
+  await FoodService.deleteFood(id).catch(() => {
     res.status(RESPONSE_CODES.NOT_FOUND).json(Error.getError("Item not found"));
   });
   res.status(RESPONSE_CODES.OK).json({ message: "Item deleted successfully" });
 };
 
 export const editFood = async (req: Request, res: Response): Promise<void> => {
-  /*  #swagger.tags = ['Foods']
+  /*  #swagger.tags = ['Food']
       #swagger.parameters['body'] = {
                 in: 'body',
                 description: 'Food Body',
@@ -274,7 +274,7 @@ export const editFood = async (req: Request, res: Response): Promise<void> => {
 
   const { body } = req;
 
-  await FoodsService.editFood(id, body)
+  await FoodService.editFood(id, body)
     .then((row) => {
       res.status(RESPONSE_CODES.CREATED).json(row);
     })

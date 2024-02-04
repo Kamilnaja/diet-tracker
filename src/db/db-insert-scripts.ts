@@ -4,11 +4,11 @@ import { tables } from "./db-table-names";
 
 export async function loadInitialData(): Promise<void> {
   if (shouldLoadInitialData()) {
-    await addInitialFoods();
+    await addInitialFood();
     await addInitialTags();
     await addInitialFoodTags();
-    await addInitialFoodsInDiary();
-    await addInitialDiaryFoods();
+    await addInitialFoodInDiary();
+    await addInitialDiaryFood();
     await addInitialDiaryEntries();
     await addInitialUsers();
     await addWeights();
@@ -19,7 +19,7 @@ export async function loadInitialData(): Promise<void> {
   }
 }
 
-async function addInitialFoodsInDiary(): Promise<void> {
+async function addInitialFoodInDiary(): Promise<void> {
   await db.run(
     `INSERT INTO ${tables.FOOD_IN_DIARY} (id, food_id, weight, meal_type, date_added) VALUES 
         (1, 1, 100.2, 'breakfast',  Date('now')),
@@ -35,10 +35,10 @@ async function addInitialFoodsInDiary(): Promise<void> {
   );
 }
 
-async function addInitialDiaryFoods(): Promise<void> {
+async function addInitialDiaryFood(): Promise<void> {
   await db
     .run(
-      `INSERT INTO ${tables.DIARY_FOODS} (diary_id, food_id) VALUES 
+      `INSERT INTO ${tables.DIARY_FOOD} (diary_id, food_id) VALUES 
           (1, 1), 
           (1, 2), 
           (2, 3), 
@@ -47,7 +47,7 @@ async function addInitialDiaryFoods(): Promise<void> {
     )
     .then(() => {
       console.log(
-        "🚚 Initial data inserted into diary_foods table successfully 🐘"
+        `🚚 Initial data inserted into ${tables.DIARY_FOOD} table successfully 🐘`
       );
     })
     .catch((err: Error) => console.error(err));
@@ -125,10 +125,10 @@ async function addInitialTags(): Promise<void> {
     .catch((err: Error) => console.error(err));
 }
 
-async function addInitialFoods(): Promise<void> {
+async function addInitialFood(): Promise<void> {
   await db
     .run(
-      `INSERT INTO ${tables.FOODS} (name, weight, caloriesPer100g, nutriScore, photo) VALUES
+      `INSERT INTO ${tables.FOOD} (name, weight, caloriesPer100g, nutriScore, photo) VALUES
           ('Apple', 100, 52, 'A', 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Red_Apple.jpg/440px-Red_Apple.jpg'),
           ('Banana', 100, 89, 'B', 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Bananas.jpg/1024px-Bananas.jpg'),
           ('Orange', 100, 47, 'C', 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Orange-Whole-%26-Split.jpg/440px-Orange-Whole-%26-Split.jpg'),
@@ -178,7 +178,7 @@ async function addInitialFoods(): Promise<void> {
           `
     )
     .then(() => {
-      console.log("🚚 Initial data inserted into foods table successfully 🚚");
+      console.log("🚚 Initial data inserted into food table successfully 🚚");
     })
     .catch((err: Error) => console.error(err));
 }

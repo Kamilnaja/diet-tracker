@@ -1,7 +1,7 @@
 import { db } from "@db/db";
 import { tables } from "@db/db-table-names";
-import { Food } from "@modules/foods/models/food.model";
-import { MealType } from "@modules/foods/models/meal-type.model";
+import { Food } from "@modules/food/models/food.model";
+import { MealType } from "@modules/food/models/meal-type.model";
 import { Diary } from "../models/diary.model";
 import { FoodInDiary } from "../models/food-in-diary.model";
 
@@ -14,7 +14,7 @@ export class DiaryService {
     fid.food_id as food_id, 
     fid.weight, 
     fid.meal_type
-  FROM ${tables.DIARY_FOODS} df
+  FROM ${tables.DIARY_FOOD} df
   INNER JOIN ${tables.FOOD_IN_DIARY} fid
     ON df.food_id = fid.id
   INNER JOIN diary d 
@@ -89,13 +89,13 @@ export class DiaryService {
     );
 
     await db.run(
-      `INSERT INTO ${tables.DIARY_FOODS} (diary_id, food_id)
+      `INSERT INTO ${tables.DIARY_FOOD} (diary_id, food_id)
            VALUES (?, ?)`,
       [id, newestFoodID?.id]
     );
   };
 
-  static addFoodsToExistingDiary = async (
+  static addFoodToExistingDiary = async (
     diaryId: string,
     food: FoodInDiary
   ): Promise<void> => {
@@ -106,7 +106,7 @@ export class DiaryService {
       [food.id, food.weight, food.mealType]
     );
     await db.run(
-      `INSERT INTO ${tables.DIARY_FOODS} (diary_id, food_id)
+      `INSERT INTO ${tables.DIARY_FOOD} (diary_id, food_id)
        VALUES (?, ?)`,
       [diaryId, food.id]
     );
@@ -133,7 +133,7 @@ export class DiaryService {
     foodId: string
   ): Promise<void> => {
     const query = `
-    DELETE FROM ${tables.DIARY_FOODS} 
+    DELETE FROM ${tables.DIARY_FOOD} 
     WHERE diary_id = ? AND food_id = ?`;
 
     await db.run(query, [diaryId, foodId]);
@@ -143,7 +143,7 @@ export class DiaryService {
 
   static deleteDiaryItemById = async (id: string): Promise<void> => {
     const query = `
-    DELETE FROM ${tables.DIARY_FOODS}
+    DELETE FROM ${tables.DIARY_FOOD}
     WHERE diary_id = ?`;
 
     await db.run(query, [id]);
@@ -156,7 +156,7 @@ export class DiaryService {
       const foundIndex = acc.findIndex((item) => item.id === diary_id);
 
       if (foundIndex > -1) {
-        acc[foundIndex]?.foods.push({
+        acc[foundIndex]?.food.push({
           id: item.food_id,
           weight: item.weight,
           mealType: item.meal_type,
@@ -168,7 +168,7 @@ export class DiaryService {
         acc.push({
           id: item.diary_id,
           date: item.date,
-          foods: [
+          food: [
             {
               id: item.food_id,
               weight: item.weight,

@@ -5,7 +5,7 @@ import { FoodInDiary } from "../models/food-in-diary.model";
 export class DiaryBuilder implements Builder<Diary> {
   private _id: string;
   private _date: string;
-  private _foods: FoodInDiary[];
+  private _food: FoodInDiary[];
 
   get id(): string {
     return this._id;
@@ -25,19 +25,19 @@ export class DiaryBuilder implements Builder<Diary> {
     return this;
   }
 
-  get foods(): FoodInDiary[] {
-    return this._foods;
+  get food(): FoodInDiary[] {
+    return this._food;
   }
 
-  setFoods(value: FoodInDiary[]): DiaryBuilder {
-    this._foods = value;
+  setFood(value: FoodInDiary[]): DiaryBuilder {
+    this._food = value;
     return this;
   }
 
   build(): Diary {
     const diary: Diary = {
       id: this._id,
-      foods: this._foods,
+      food: this._food,
       date: this._date,
     };
     return diary;

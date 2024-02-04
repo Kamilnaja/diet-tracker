@@ -6,12 +6,12 @@ import { tables } from "./db-table-names";
 type DbRunResult = Promise<void | ISqlite.RunResult<Statement>>;
 
 export async function createTables(): Promise<void> {
-  await createFoods();
+  await createFood();
   await createTags();
   await createFoodTags();
   await createDiary();
   await createFoodInDiary();
-  await createDiaryFoods();
+  await createDiaryFood();
   await createUsers();
   await createRoles();
   await createWeights();
@@ -32,16 +32,16 @@ const createUsers = async (): DbRunResult => {
     });
 };
 
-const createDiaryFoods = async (): DbRunResult => {
+const createDiaryFood = async (): DbRunResult => {
   await db
     .run(
-      `CREATE TABLE IF NOT EXISTS ${tables.DIARY_FOODS} (
+      `CREATE TABLE IF NOT EXISTS ${tables.DIARY_FOOD} (
       diary_id VARCHAR(255),
       food_id INTEGER NOT NULL,
       FOREIGN KEY (diary_id) REFERENCES ${tables.DIARY} (id),
       FOREIGN KEY (food_id) REFERENCES ${tables.FOOD_IN_DIARY} (id))`
     )
-    .then(() => console.log(`${tables.DIARY_FOODS} table has been created`));
+    .then(() => console.log(`${tables.DIARY_FOOD} table has been created`));
 };
 
 const createFoodInDiary = async (): DbRunResult => {
@@ -53,7 +53,7 @@ const createFoodInDiary = async (): DbRunResult => {
       weight REAL NOT NULL,
       meal_type TEXT,
       date_added DATE NOT NULL,
-      FOREIGN KEY (id) REFERENCES ${tables.FOODS} (id)
+      FOREIGN KEY (id) REFERENCES ${tables.FOOD} (id)
     );`
     )
     .catch((err: Error) => console.error(err))
@@ -79,7 +79,7 @@ const createFoodTags = async (): DbRunResult => {
         food_id INTEGER NOT NULL,
         tag_id INTEGER NOT NULL,
         PRIMARY KEY (food_id, tag_id),
-        FOREIGN KEY (food_id) REFERENCES foods(food_id),
+        FOREIGN KEY (food_id) REFERENCES food(food_id),
         FOREIGN KEY (tag_id) REFERENCES tags(tag_id)
       );`
     )
@@ -100,10 +100,10 @@ const createTags = async (): DbRunResult => {
     .catch((err: Error) => console.error(err));
 };
 
-const createFoods = async (): DbRunResult => {
+const createFood = async (): DbRunResult => {
   return db
     .run(
-      `CREATE TABLE IF NOT EXISTS ${tables.FOODS} (
+      `CREATE TABLE IF NOT EXISTS ${tables.FOOD} (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT NOT NULL,
       caloriesPer100g INTEGER,
@@ -114,7 +114,7 @@ const createFoods = async (): DbRunResult => {
       photo TEXT
       );`
     )
-    .then(() => console.log(`${tables.FOODS} table has been created`))
+    .then(() => console.log(`${tables.FOOD} table has been created`))
     .catch((err: Error) => console.error(err));
 };
 

@@ -4,7 +4,7 @@ import { testRouter } from "@modules/auth/routes/test.routes";
 import { diaryRouter } from "@modules/diary/routes/diary.routes";
 import { dictRouter } from "@modules/dict/routes/dict.routes";
 import { fluidsRouter } from "@modules/fluids/routes/fluid.routes";
-import { foodsRouter } from "@modules/foods/routes/foods.routes";
+import { foodRouter } from "@modules/food/routes/food.routes";
 import { weightRouter } from "@modules/weight/routes/weight.routes";
 import { shouldLoadInitialData } from "@shared/helpers/utils";
 import cookieSession from "cookie-session";
@@ -29,7 +29,7 @@ app.use(
   })
 );
 db();
-app.use("/api/foods", foodsRouter);
+app.use("/api/food", foodRouter);
 app.use("/api/diary", diaryRouter);
 app.use("/api/dicts", dictRouter);
 app.use("/api/auth", authRouter);

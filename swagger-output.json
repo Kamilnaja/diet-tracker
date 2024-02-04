@@ -11,12 +11,12 @@
     "http"
   ],
   "paths": {
-    "/api/foods/": {
+    "/api/food/": {
       "get": {
         "tags": [
-          "Foods"
+          "Food"
         ],
-        "description": "Get all Foods",
+        "description": "Get all Food",
         "parameters": [
           {
             "name": "name",
@@ -28,7 +28,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Foods successfully obtained",
+            "description": "Food successfully obtained",
             "schema": {
               "$ref": "#/definitions/FoodResponse"
             }
@@ -37,7 +37,7 @@
       },
       "post": {
         "tags": [
-          "Foods"
+          "Food"
         ],
         "description": "Add new Food",
         "parameters": [
@@ -60,10 +60,10 @@
         }
       }
     },
-    "/api/foods/search": {
+    "/api/food/search": {
       "get": {
         "tags": [
-          "Foods"
+          "Food"
         ],
         "description": "Get Food by single Tag and Name",
         "parameters": [
@@ -98,10 +98,10 @@
         }
       }
     },
-    "/api/foods/{id}": {
+    "/api/food/{id}": {
       "get": {
         "tags": [
-          "Foods"
+          "Food"
         ],
         "description": "Get Food by ID",
         "parameters": [
@@ -129,7 +129,7 @@
       },
       "delete": {
         "tags": [
-          "Foods"
+          "Food"
         ],
         "description": "",
         "parameters": [
@@ -157,7 +157,7 @@
       },
       "put": {
         "tags": [
-          "Foods"
+          "Food"
         ],
         "description": "",
         "parameters": [
@@ -195,10 +195,10 @@
         }
       }
     },
-    "/api/foods/tags/{tag}": {
+    "/api/food/tags/{tag}": {
       "get": {
         "tags": [
-          "Foods"
+          "Food"
         ],
         "description": "Get Food by Tag",
         "parameters": [
@@ -340,7 +340,7 @@
         }
       }
     },
-    "/api/diary/foods/{uniqueFoodId}": {
+    "/api/diary/food/{uniqueFoodId}": {
       "put": {
         "tags": [
           "Diary"
@@ -373,7 +373,7 @@
         }
       }
     },
-    "/api/diary/{id}/foods/{foodId}": {
+    "/api/diary/{id}/food/{foodId}": {
       "delete": {
         "tags": [
           "Diary"
@@ -841,7 +841,7 @@
           "type": "string",
           "example": "2021-01-01"
         },
-        "foods": {
+        "food": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/FoodInDiary"
@@ -850,7 +850,7 @@
       },
       "required": [
         "date",
-        "foods"
+        "food"
       ]
     },
     "DiaryEntry": {
@@ -864,13 +864,13 @@
           "type": "string",
           "example": "2021-01-01"
         },
-        "foods": {
+        "food": {
           "$ref": "#/definitions/FoodInDiary"
         }
       },
       "required": [
         "date",
-        "foods"
+        "food"
       ]
     },
     "DiaryPayload": {
