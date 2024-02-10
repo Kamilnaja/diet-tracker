@@ -17,7 +17,7 @@ export const getSettings = async (
   */
   try {
     const settings = await getSettingsFromDb();
-    res.status(RESPONSE_CODES.OK).json(settings);
+    res.status(RESPONSE_CODES.OK).json(settings[0]);
   } catch (err) {
     next(err);
   }

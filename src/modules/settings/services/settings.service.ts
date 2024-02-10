@@ -1,8 +1,9 @@
 import { db } from "@db/db";
 import { UserSettings } from "../models/settings.interface";
 
-export const getSettingsFromDb = async (): Promise<UserSettings> => {
-  return await db.all(`SELECT * FROM settings`);
+export const getSettingsFromDb = async (): Promise<UserSettings[]> => {
+  // returns just one row, for testing purposes
+  return await db.all(`SELECT * FROM settings LIMIT 1`);
 };
 
 export const updateSettingsInDb = async (
