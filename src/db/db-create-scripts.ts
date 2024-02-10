@@ -147,15 +147,16 @@ const createWeights = async (): DbRunResult => {
 const createSettings = async (): DbRunResult => {
   return db
     .run(
-      `CREATE TABLE IF NOT EXISTS ${tables.SETTINGS} (
-      FOREIGN KEY (user_id) REFERENCES ${tables.USERS} (id),
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      height REAL,
-      age INTEGER,
-      cookie_accepted BOOLEAN,
-      theme TEXT,
+      `
+      CREATE TABLE IF NOT EXISTS ${tables.SETTINGS} (
+        user_id INTEGER REFERENCES ${tables.USERS} (id), 
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        height REAL,
+        age INTEGER,
+        cookie_accepted BOOLEAN,
+        theme TEXT
     )`
     )
     .then(() => console.log(`⚙️ ${tables.SETTINGS} table has been created`))
-    .catch((err: Error) => console.error(err));
+    .catch((err: Error) => console.error(tables.SETTINGS, err));
 };

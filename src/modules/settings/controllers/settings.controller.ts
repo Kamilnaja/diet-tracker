@@ -1,6 +1,6 @@
 import { RESPONSE_CODES } from "@shared/models/response-codes.const";
 import { NextFunction, Request, Response } from "express";
-import { SettingsService } from "../services/settings.service";
+import { getSettingsFromDb } from "../services/settings.service";
 
 export const getSettings = async (
   req: Request,
@@ -16,7 +16,7 @@ export const getSettings = async (
   }
   */
   try {
-    const settings = await SettingsService.getSettings();
+    const settings = await getSettingsFromDb();
     res.status(RESPONSE_CODES.OK).json(settings);
   } catch (err) {
     next(err);
