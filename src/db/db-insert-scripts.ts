@@ -1,9 +1,11 @@
+import { getRandomEmoji } from "@shared/helpers/random-emoji";
 import { shouldLoadInitialData } from "@shared/helpers/utils";
 import { db } from "./db";
 import { tables } from "./db-table-names";
 
 export async function loadInitialData(): Promise<void> {
   if (shouldLoadInitialData()) {
+    console.log("Inserting initial data");
     await addInitialFood();
     await addInitialTags();
     await addInitialFoodTags();
@@ -12,6 +14,7 @@ export async function loadInitialData(): Promise<void> {
     await addInitialDiaryEntries();
     await addInitialUsers();
     await addWeights();
+    await addInitialSettings();
     console.log("🌵🔥🐍 LETS ROCK 🐍🔥🐘");
   } else {
     await addInitialTags();
@@ -46,9 +49,7 @@ async function addInitialDiaryFood(): Promise<void> {
           (5, 5)`
     )
     .then(() => {
-      console.log(
-        `🚚 Initial data inserted into ${tables.DIARY_FOOD} table successfully 🐘`
-      );
+      logSuccessMessage(tables.DIARY_FOOD);
     })
     .catch((err: Error) => console.error(err));
 }
@@ -66,7 +67,7 @@ async function addInitialDiaryEntries(): Promise<void> {
           `
     )
     .then(() => {
-      console.log("🚚 Initial data inserted into diary table successfully 💰");
+      logSuccessMessage(tables.DIARY);
     })
     .catch((err: Error) => console.error(err));
 }
@@ -90,9 +91,7 @@ async function addInitialFoodTags(): Promise<void> {
           `
     )
     .then(() => {
-      console.log(
-        "🚚 Initial data inserted into food_tags table successfully 🚚"
-      );
+      logSuccessMessage(tables.FOOD_TAGS);
     })
     .catch((err: Error) => console.error(err));
 }
@@ -120,7 +119,7 @@ async function addInitialTags(): Promise<void> {
           `
     )
     .then(() => {
-      console.log("🚚 Initial data inserted into tags table successfully 🚚");
+      logSuccessMessage(tables.TAGS);
     })
     .catch((err: Error) => console.error(err));
 }
@@ -178,7 +177,7 @@ async function addInitialFood(): Promise<void> {
           `
     )
     .then(() => {
-      console.log("🚚 Initial data inserted into food table successfully 🚚");
+      logSuccessMessage(tables.FOOD);
     })
     .catch((err: Error) => console.error(err));
 }
@@ -192,9 +191,7 @@ async function addInitialUsers(): Promise<void> {
       `
     )
     .then(() => {
-      console.log(
-        `🐘 Initial data inserted into ${tables.USERS} table successfully 🐘`
-      );
+      logSuccessMessage(tables.USERS);
     })
     .catch((err: Error) => console.warn(err));
 }
@@ -217,9 +214,25 @@ async function addWeights(): Promise<void> {
     `
     )
     .then(() => {
-      console.log(
-        `♻️ Initial data inserted into ${tables.WEIGHTS} table successfully ♻️`
-      );
+      logSuccessMessage(tables.WEIGHTS);
     })
     .catch((err: Error) => console.warn(`${tables.WEIGHTS} - ${err}`));
 }
+
+export const addInitialSettings = async (): Promise<void> => {
+  await db
+    .run(
+      `INSERT INTO ${tables.SETTINGS} (user_id, height, age, cookie_accepted, theme, email) VALUES
+        (1, 165, 23, true, 'light', 'lightthermer@gmail.com'),
+        (2, 180, 25, false, 'dark', 'darkthemer@gmail.com')
+      `
+    )
+    .then(() => {
+      logSuccessMessage(tables.SETTINGS);
+    })
+    .catch((err: Error) => console.warn(err));
+};
+
+const logSuccessMessage = (table: string): void => {
+  console.log(`${getRandomEmoji()} into ${table} table successfully`);
+};

@@ -5,6 +5,7 @@ export interface UserSettings {
   gender: Gender;
   cookieAccepted: boolean;
   theme: Theme;
+  email: string;
 }
 
 type Theme = "light" | "dark";

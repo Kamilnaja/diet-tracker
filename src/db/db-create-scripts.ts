@@ -42,6 +42,7 @@ const createDiaryFood = async (): DbRunResult => {
       FOREIGN KEY (diary_id) REFERENCES ${tables.DIARY} (id),
       FOREIGN KEY (food_id) REFERENCES ${tables.FOOD_IN_DIARY} (id))`
     )
+    .catch((err: Error) => console.error(err))
     .then(() => console.log(`${tables.DIARY_FOOD} table has been created`));
 };
 
@@ -154,9 +155,10 @@ const createSettings = async (): DbRunResult => {
         height REAL,
         age INTEGER,
         cookie_accepted BOOLEAN,
-        theme TEXT
+        theme TEXT,
+        email TEXT UNIQUE
     )`
     )
     .then(() => console.log(`⚙️ ${tables.SETTINGS} table has been created`))
-    .catch((err: Error) => console.error(tables.SETTINGS, err));
+    .catch((err: Error) => console.error("create", tables.SETTINGS, err));
 };
