@@ -827,6 +827,23 @@
           }
         }
       }
+    },
+    "/api/settings/": {
+      "get": {
+        "tags": [
+          "Settings"
+        ],
+        "description": "Get settings",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success when getting settings",
+            "schema": {
+              "$ref": "#/definitions/Settings"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -1064,6 +1081,31 @@
         "password": {
           "type": "string",
           "example": "123456"
+        }
+      }
+    },
+    "UserSettings": {
+      "type": "object",
+      "properties": {
+        "user_id": {
+          "type": "string",
+          "example": "1"
+        },
+        "height": {
+          "type": "string",
+          "example": "180"
+        },
+        "age": {
+          "type": "string",
+          "example": "30"
+        },
+        "cookieAccepted": {
+          "type": "string",
+          "example": "true"
+        },
+        "theme": {
+          "type": "string",
+          "example": "dark"
         }
       }
     },

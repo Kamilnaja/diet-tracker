@@ -11,6 +11,7 @@ const FOOD_IN_DIARY = "food_in_diary";
 const USERS = "users";
 const ROLES = "roles";
 const WEIGHTS = "weights";
+const SETTINGS = "settings";
 
 export const tables = {
   FOOD,
@@ -22,4 +23,5 @@ export const tables = {
   USERS,
   ROLES,
   WEIGHTS,
+  SETTINGS,
 };

@@ -1,3 +1,4 @@
+import { logSuccessMessage } from "@shared/helpers/log-success-message";
 import { ISqlite } from "sqlite";
 import { Statement } from "sqlite3";
 import { db } from "./db";
@@ -6,6 +7,8 @@ import { tables } from "./db-table-names";
 type DbRunResult = Promise<void | ISqlite.RunResult<Statement>>;
 
 export async function createTables(): Promise<void> {
+  console.log("--------------------");
+  console.log("Creating tables");
   await createFood();
   await createTags();
   await createFoodTags();
@@ -15,6 +18,7 @@ export async function createTables(): Promise<void> {
   await createUsers();
   await createRoles();
   await createWeights();
+  await createSettings();
 }
 
 const createUsers = async (): DbRunResult => {
@@ -27,9 +31,8 @@ const createUsers = async (): DbRunResult => {
       email TEXT UNIQUE NOT NULL
   )`
     )
-    .then(() => {
-      console.log(`${tables.USERS} table has been created`);
-    });
+    .then(() => logSuccessMessage(tables.USERS))
+    .catch((err: Error) => console.error(err));
 };
 
 const createDiaryFood = async (): DbRunResult => {
@@ -41,7 +44,8 @@ const createDiaryFood = async (): DbRunResult => {
       FOREIGN KEY (diary_id) REFERENCES ${tables.DIARY} (id),
       FOREIGN KEY (food_id) REFERENCES ${tables.FOOD_IN_DIARY} (id))`
     )
-    .then(() => console.log(`${tables.DIARY_FOOD} table has been created`));
+    .then(() => logSuccessMessage(tables.DIARY_FOOD))
+    .catch((err: Error) => console.error(err));
 };
 
 const createFoodInDiary = async (): DbRunResult => {
@@ -56,8 +60,8 @@ const createFoodInDiary = async (): DbRunResult => {
       FOREIGN KEY (id) REFERENCES ${tables.FOOD} (id)
     );`
     )
-    .catch((err: Error) => console.error(err))
-    .then(() => console.log(`${tables.FOOD_IN_DIARY} table has been created`));
+    .then(() => logSuccessMessage(tables.FOOD_IN_DIARY))
+    .catch((err: Error) => console.error(err));
 };
 
 const createDiary = async (): DbRunResult => {
@@ -68,8 +72,8 @@ const createDiary = async (): DbRunResult => {
         date DATE NOT NULL
       );`
     )
-    .catch((err: Error) => console.error(err))
-    .then(() => console.log(`${tables.DIARY} table has been created`));
+    .then(() => logSuccessMessage(tables.DIARY))
+    .catch((err: Error) => console.error(err));
 };
 
 const createFoodTags = async (): DbRunResult => {
@@ -83,9 +87,8 @@ const createFoodTags = async (): DbRunResult => {
         FOREIGN KEY (tag_id) REFERENCES tags(tag_id)
       );`
     )
-    .then(async () => {
-      console.log(`${tables.FOOD_TAGS} table has been created`);
-    });
+    .then(async () => logSuccessMessage(tables.FOOD_TAGS))
+    .catch((err: Error) => console.error(err));
 };
 
 const createTags = async (): DbRunResult => {
@@ -96,7 +99,7 @@ const createTags = async (): DbRunResult => {
         tag_name TEXT UNIQUE NOT NULL
       );`
     )
-    .then(() => console.log(`${tables.TAGS} table has been created`))
+    .then(() => logSuccessMessage(tables.TAGS))
     .catch((err: Error) => console.error(err));
 };
 
@@ -114,7 +117,7 @@ const createFood = async (): DbRunResult => {
       photo TEXT
       );`
     )
-    .then(() => console.log(`${tables.FOOD} table has been created`))
+    .then(() => logSuccessMessage(tables.FOOD))
     .catch((err: Error) => console.error(err));
 };
 
@@ -126,7 +129,7 @@ const createRoles = async (): DbRunResult => {
       name TEXT UNIQUE NOT NULL
     )`
     )
-    .then(() => console.log(`${tables.ROLES} table has been created`))
+    .then(() => logSuccessMessage(tables.ROLES))
     .catch((err: Error) => console.error(err));
 };
 
@@ -139,6 +142,24 @@ const createWeights = async (): DbRunResult => {
       date DATE NOT NULL)
       `
     )
-    .then(() => console.log(`🤔${tables.WEIGHTS} table has been created`))
+    .then(() => logSuccessMessage(tables.WEIGHTS))
     .catch((err: Error) => console.error(err));
+};
+
+const createSettings = async (): DbRunResult => {
+  return db
+    .run(
+      `
+      CREATE TABLE IF NOT EXISTS ${tables.SETTINGS} (
+        user_id INTEGER REFERENCES ${tables.USERS} (id), 
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        height REAL,
+        age INTEGER,
+        cookie_accepted BOOLEAN,
+        theme TEXT,
+        email TEXT UNIQUE
+    )`
+    )
+    .then(() => logSuccessMessage(tables.SETTINGS))
+    .catch((err: Error) => console.error("create", tables.SETTINGS, err));
 };
