@@ -88,6 +88,13 @@ const doc = {
       email: "John@gmail.com",
       password: "123456",
     },
+    UserSettings: {
+      user_id: "1",
+      height: "180",
+      age: "30",
+      cookieAccepted: "true",
+      theme: "dark",
+    },
     SignInUser: {
       userName: "John",
       password: "123456",

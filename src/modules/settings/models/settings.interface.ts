@@ -1,11 +1,11 @@
-export interface Settings {
-  user: UserSettings;
+export interface UserSettings {
+  user_id: string;
+  height: number;
+  age: number;
+  gender: Gender;
+  cookieAccepted: boolean;
   theme: Theme;
 }
 
-export interface UserSettings {
-  height: number;
-  cookieAccepted: boolean;
-}
-
 type Theme = "light" | "dark";
+type Gender = "female" | "male";

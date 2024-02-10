@@ -3,4 +3,4 @@ import { getSettings } from "../controllers/settings.controller";
 
 export const settingsRouter = express.Router();
 
-settingsRouter.get("/settings", getSettings);
+settingsRouter.get("/", getSettings);
