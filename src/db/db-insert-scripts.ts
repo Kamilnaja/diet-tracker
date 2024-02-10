@@ -1,3 +1,4 @@
+import { logSuccessMessage } from "@shared/helpers/log-success-message";
 import { getRandomEmoji } from "@shared/helpers/random-emoji";
 import { shouldLoadInitialData } from "@shared/helpers/utils";
 import { db } from "./db";
@@ -5,7 +6,8 @@ import { tables } from "./db-table-names";
 
 export async function loadInitialData(): Promise<void> {
   if (shouldLoadInitialData()) {
-    console.log("Inserting initial data");
+    console.log("----------------------");
+    console.log(`${getRandomEmoji()}: Inserting initial data`);
     await addInitialFood();
     await addInitialTags();
     await addInitialFoodTags();
@@ -23,8 +25,9 @@ export async function loadInitialData(): Promise<void> {
 }
 
 async function addInitialFoodInDiary(): Promise<void> {
-  await db.run(
-    `INSERT INTO ${tables.FOOD_IN_DIARY} (id, food_id, weight, meal_type, date_added) VALUES 
+  await db
+    .run(
+      `INSERT INTO ${tables.FOOD_IN_DIARY} (id, food_id, weight, meal_type, date_added) VALUES 
         (1, 1, 100.2, 'breakfast',  Date('now')),
         (2, 1, 1000, 'dinner',  Date('now')),
         (3, 1, 100.2, 'breakfast',  Date('now')),
@@ -35,7 +38,9 @@ async function addInitialFoodInDiary(): Promise<void> {
         (8, 3, 10, 'snack', '2021-01-05 20:10'),
         (9, 1, 4.3, 'snack', '2021-01-06 20:30')
         `
-  );
+    )
+    .then(() => logSuccessMessage(tables.FOOD_IN_DIARY))
+    .catch((err: Error) => console.error(err));
 }
 
 async function addInitialDiaryFood(): Promise<void> {
@@ -48,9 +53,7 @@ async function addInitialDiaryFood(): Promise<void> {
           (3, 4), 
           (5, 5)`
     )
-    .then(() => {
-      logSuccessMessage(tables.DIARY_FOOD);
-    })
+    .then(() => logSuccessMessage(tables.DIARY_FOOD))
     .catch((err: Error) => console.error(err));
 }
 
@@ -66,9 +69,7 @@ async function addInitialDiaryEntries(): Promise<void> {
           ('2021-02-05', 6)
           `
     )
-    .then(() => {
-      logSuccessMessage(tables.DIARY);
-    })
+    .then(() => logSuccessMessage(tables.DIARY))
     .catch((err: Error) => console.error(err));
 }
 
@@ -90,9 +91,7 @@ async function addInitialFoodTags(): Promise<void> {
           (9, 3)
           `
     )
-    .then(() => {
-      logSuccessMessage(tables.FOOD_TAGS);
-    })
+    .then(() => logSuccessMessage(tables.FOOD_TAGS))
     .catch((err: Error) => console.error(err));
 }
 
@@ -118,9 +117,7 @@ async function addInitialTags(): Promise<void> {
           ('Other')
           `
     )
-    .then(() => {
-      logSuccessMessage(tables.TAGS);
-    })
+    .then(() => logSuccessMessage(tables.TAGS))
     .catch((err: Error) => console.error(err));
 }
 
@@ -176,9 +173,7 @@ async function addInitialFood(): Promise<void> {
           ('Cigarettes', 100, 42, 'A', 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Cigarettes_IMG_0509.JPG/440px-Cigarettes_IMG_0509.JPG')
           `
     )
-    .then(() => {
-      logSuccessMessage(tables.FOOD);
-    })
+    .then(() => logSuccessMessage(tables.FOOD))
     .catch((err: Error) => console.error(err));
 }
 
@@ -190,9 +185,7 @@ async function addInitialUsers(): Promise<void> {
         ('user', 'user', 'user@gmail.com')
       `
     )
-    .then(() => {
-      logSuccessMessage(tables.USERS);
-    })
+    .then(() => logSuccessMessage(tables.USERS))
     .catch((err: Error) => console.warn(err));
 }
 
@@ -213,9 +206,7 @@ async function addWeights(): Promise<void> {
         (55, '2022-01-08')
     `
     )
-    .then(() => {
-      logSuccessMessage(tables.WEIGHTS);
-    })
+    .then(() => logSuccessMessage(tables.WEIGHTS))
     .catch((err: Error) => console.warn(`${tables.WEIGHTS} - ${err}`));
 }
 
@@ -227,12 +218,6 @@ export const addInitialSettings = async (): Promise<void> => {
         (2, 180, 25, false, 'dark', 'darkthemer@gmail.com')
       `
     )
-    .then(() => {
-      logSuccessMessage(tables.SETTINGS);
-    })
+    .then(() => logSuccessMessage(tables.SETTINGS))
     .catch((err: Error) => console.warn(err));
-};
-
-const logSuccessMessage = (table: string): void => {
-  console.log(`${getRandomEmoji()} into ${table} table successfully`);
 };
