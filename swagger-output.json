@@ -843,6 +843,28 @@
             }
           }
         }
+      },
+      "put": {
+        "tags": [
+          "Settings"
+        ],
+        "description": "Edit settings",
+        "parameters": [
+          {
+            "name": "settings",
+            "in": "body",
+            "description": "Settings object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Settings"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success when editing settings"
+          }
+        }
       }
     }
   },
@@ -1084,7 +1106,7 @@
         }
       }
     },
-    "UserSettings": {
+    "Settings": {
       "type": "object",
       "properties": {
         "user_id": {
@@ -1092,20 +1114,24 @@
           "example": "1"
         },
         "height": {
-          "type": "string",
-          "example": "180"
+          "type": "number",
+          "example": 180.5
         },
         "age": {
-          "type": "string",
-          "example": "30"
+          "type": "number",
+          "example": 30
         },
         "cookieAccepted": {
-          "type": "string",
-          "example": "true"
+          "type": "boolean",
+          "example": true
         },
         "theme": {
           "type": "string",
           "example": "dark"
+        },
+        "gender": {
+          "type": "string",
+          "example": "female"
         }
       }
     },

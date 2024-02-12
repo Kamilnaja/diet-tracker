@@ -157,7 +157,8 @@ const createSettings = async (): DbRunResult => {
         age INTEGER,
         cookie_accepted BOOLEAN,
         theme TEXT,
-        email TEXT UNIQUE
+        email TEXT UNIQUE,
+        gender TEXT
     )`
     )
     .then(() => logSuccessMessage(tables.SETTINGS))
