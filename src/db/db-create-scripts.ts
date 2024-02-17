@@ -128,3 +128,4 @@ const createRoles = async (): DbRunResult => {
     .then(() => console.log(`${tables.ROLES} table has been created`))
     .catch((err: Error) => console.error(err));
 };
+// clg - test
