@@ -163,4 +163,3 @@ const createSettings = async (): DbRunResult => {
     .then(() => logSuccessMessage(tables.SETTINGS))
     .catch((err: Error) => console.error("create", tables.SETTINGS, err));
 };
-// remove me
