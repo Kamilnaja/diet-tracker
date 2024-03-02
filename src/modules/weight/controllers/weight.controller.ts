@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from "express";
 import { WeightService } from "../services/weight.service";
 
 export const getWeights = async (
-  req: Request,
+  _: Request,
   res: Response,
   next: NextFunction
 ): Promise<void> => {

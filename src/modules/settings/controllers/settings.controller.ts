@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from "express";
 import { getSettingsFromDb } from "../services/settings.service";
 
 export const getSettings = async (
-  req: Request,
+  _: Request,
   res: Response,
   next: NextFunction
 ): Promise<void> => {

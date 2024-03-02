@@ -78,7 +78,7 @@ export const deleteById = async (
 };
 
 export const deleteAll = async (
-  req: Request,
+  _: Request,
   res: Response,
   next: NextFunction
 ): Promise<void> => {
