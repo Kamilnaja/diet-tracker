@@ -151,13 +151,14 @@ const createSettings = async (): DbRunResult => {
     .run(
       `
       CREATE TABLE IF NOT EXISTS ${tables.SETTINGS} (
-        user_id INTEGER REFERENCES ${tables.USERS} (id), 
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        height REAL,
-        age INTEGER,
-        cookie_accepted BOOLEAN,
-        theme TEXT,
-        email TEXT UNIQUE
+        user_id         INTEGER REFERENCES ${tables.USERS} (id), 
+        id              INTEGER PRIMARY KEY AUTOINCREMENT,
+        height          REAL    CHECK(height > 50),
+        age             INTEGER CHECK(age > 0),
+        cookie_accepted BOOLEAN DEFAULT FALSE,
+        theme           TEXT    CHECK(theme IN ('light', 'dark')) DEFAULT 'light',
+        email           TEXT UNIQUE,
+        gender          TEXT    CHECK(gender IN ('male', 'female'))
     )`
     )
     .then(() => logSuccessMessage(tables.SETTINGS))

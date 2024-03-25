@@ -10,3 +10,5 @@ export interface UserSettings {
 
 type Theme = "light" | "dark";
 type Gender = "female" | "male";
+
+export type UserSettingsPartial = Partial<UserSettings>;

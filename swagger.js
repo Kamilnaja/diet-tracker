@@ -88,12 +88,13 @@ const doc = {
       email: "John@gmail.com",
       password: "123456",
     },
-    UserSettings: {
+    Settings: {
       user_id: "1",
-      height: "180",
-      age: "30",
-      cookieAccepted: "true",
+      height: 180.5,
+      age: 30,
+      cookieAccepted: true,
       theme: "dark",
+      gender: "female",
     },
     SignInUser: {
       userName: "John",
