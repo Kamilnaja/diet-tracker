@@ -7,11 +7,14 @@ import {
   getFoodById,
   getFoodByTag,
   getFoodByTagsAndName,
+  getFoodPaginated,
 } from "../controllers/food.controller";
 
 export const foodRouter = express.Router();
 
 foodRouter.get("/", getFood);
+
+foodRouter.get("/v2", getFoodPaginated);
 
 foodRouter.get("/search", getFoodByTagsAndName);
 
