@@ -52,6 +52,18 @@ export const getFoodPaginated: ControllerReq = async (
       required: false,
       type: 'string'
     }
+    #swagger.parameters['page'] = {
+      in: 'query',
+      description: 'Page number',
+      required: false,
+      type: 'number'
+    }
+    #swagger.parameters['limit'] = {
+      in: 'query',
+      description: 'Number of items per page',
+      required: false,
+      type: 'number'
+    }
     #swagger.responses[200] = {
       description: 'Food successfully obtained',
       schema: { $ref: '#/definitions/FoodResponse'}
@@ -60,7 +72,7 @@ export const getFoodPaginated: ControllerReq = async (
 
   const { name } = req.query;
   const rows = name
-    ? await foodService.getAllFoodByName(name as string)
+    ? await foodService.getAllFoodByNamePaginated(name as string)
     : await foodService.getFoodPaginated(name as string, 1, 10);
 
   const response: HttpResponse<Food[]> = {

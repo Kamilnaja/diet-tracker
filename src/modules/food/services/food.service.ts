@@ -42,6 +42,16 @@ export class FoodService {
     );
   };
 
+  getAllFoodByNamePaginated = async (name: string): Promise<Food[]> => {
+    return await db.all(
+      `
+      ${this.join}
+      WHERE f.name LIKE '%' || ? || '%'
+      GROUP BY f.id`,
+      [name]
+    );
+  };
+
   getFoodPaginated = async (
     name: string,
     page: number,
