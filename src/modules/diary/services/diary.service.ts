@@ -6,7 +6,7 @@ import { Diary } from "../models/diary.model";
 import { FoodInDiary } from "../models/food-in-diary.model";
 
 export class DiaryService {
-  private static readonly joinQuery = `
+  private readonly joinQuery = `
   SELECT 
     df.diary_id, 
     df.food_id as unique_food_id, 
@@ -20,32 +20,32 @@ export class DiaryService {
   INNER JOIN diary d 
     ON df.diary_id = d.id`;
 
-  static getAllDiaryEntries = async (): Promise<Diary[]> => {
+  getAllDiaryEntries = async (): Promise<Diary[]> => {
     const rows = await db.all(this.joinQuery);
 
-    return DiaryService.groupDiaryById(rows);
+    return this.groupDiaryById(rows);
   };
 
-  static getDiaryEntriesByDate = async (date: string): Promise<Diary[]> => {
+  getDiaryEntriesByDate = async (date: string): Promise<Diary[]> => {
     const query = `    
       ${this.joinQuery}
       WHERE d.date = ?`;
 
     const rows = await db.all(query, [date]);
 
-    return DiaryService.groupDiaryById(rows);
+    return this.groupDiaryById(rows);
   };
 
-  static getDiaryEntryById = async (id: string): Promise<Diary | undefined> => {
+  getDiaryEntryById = async (id: string): Promise<Diary | undefined> => {
     const query = `    
     ${this.joinQuery}
     WHERE d.id = ?
     LIMIT 1`;
     const rows = await db.all<Diary>(query, [id]);
-    return DiaryService.groupDiaryById(rows as any)[0];
+    return this.groupDiaryById(rows as any)[0];
   };
 
-  static getDiaryEntryIdForDay = async (date: string): Promise<number> => {
+  getDiaryEntryIdForDay = async (date: string): Promise<number> => {
     const query = `
     SELECT id FROM ${tables.DIARY} 
     WHERE date = ?
@@ -56,13 +56,13 @@ export class DiaryService {
     return result?.id;
   };
 
-  static addDiaryItem = async (date: string): Promise<void> => {
+  addDiaryItem = async (date: string): Promise<void> => {
     const query = `INSERT INTO ${tables.DIARY} (date) VALUES (?)`;
 
     await db.run(query, [date]);
   };
 
-  static getLastDiaryItemId = async (): Promise<number> => {
+  getLastDiaryItemId = async (): Promise<number> => {
     const query = `
     SELECT id FROM ${tables.DIARY} 
     ORDER BY id DESC 
@@ -71,10 +71,7 @@ export class DiaryService {
     return result?.id;
   };
 
-  static addFoodToDiary = async (
-    id: number,
-    food: FoodInDiary
-  ): Promise<void> => {
+  addFoodToDiary = async (id: number, food: FoodInDiary): Promise<void> => {
     await db.run(
       `INSERT INTO ${tables.FOOD_IN_DIARY}
            (food_id, weight, meal_type, date_added)   
@@ -95,7 +92,7 @@ export class DiaryService {
     );
   };
 
-  static addFoodToExistingDiary = async (
+  addFoodToExistingDiary = async (
     diaryId: string,
     food: FoodInDiary
   ): Promise<void> => {
@@ -112,10 +109,7 @@ export class DiaryService {
     );
   };
 
-  static editDiaryEntry = async (
-    uniqueFoodId: string, // unique food id
-    food: Food
-  ): Promise<void> => {
+  editDiaryEntry = async (uniqueFoodId: string, food: Food): Promise<void> => {
     if (!uniqueFoodId) {
       throw new Error("No such food in diary");
     }
@@ -128,7 +122,7 @@ export class DiaryService {
     await db.run(query, [food.weight, food.mealType, uniqueFoodId]);
   };
 
-  static deleteFoodFromDiary = async (
+  deleteFoodFromDiary = async (
     diaryId: string,
     foodId: string
   ): Promise<void> => {
@@ -141,7 +135,7 @@ export class DiaryService {
     await db.run(deleteFoodInDiaryQuery, [foodId]);
   };
 
-  static deleteDiaryItemById = async (id: string): Promise<void> => {
+  deleteDiaryItemById = async (id: string): Promise<void> => {
     const query = `
     DELETE FROM ${tables.DIARY_FOOD}
     WHERE diary_id = ?`;
@@ -149,7 +143,7 @@ export class DiaryService {
     await db.run(query, [id]);
   };
 
-  private static groupDiaryById(rows: Row[]): Diary[] {
+  private groupDiaryById(rows: Row[]): Diary[] {
     return rows.reduce((acc: Diary[], item: Row) => {
       const { diary_id } = item;
 
