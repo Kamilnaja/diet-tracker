@@ -2,6 +2,8 @@ import { RESPONSE_CODES } from "@shared/models/response-codes.const";
 import { NextFunction, Request, Response } from "express";
 import { WeightService } from "../services/weight.service";
 
+const weightService = new WeightService();
+
 export const getWeights = async (
   _: Request,
   res: Response,
@@ -16,7 +18,8 @@ export const getWeights = async (
       schema: { $ref: '#/definitions/WeightsResponse' }
     }
   */
-  await WeightService.getWeights()
+  await weightService
+    .getWeights()
     .then((rows) => {
       res.status(200).json({
         data: rows,
@@ -48,7 +51,8 @@ export const addWeight = async (
       schema: { $ref: '#/definitions/WeightEntry' }
     }
   */
-  await WeightService.addWeight(req.body)
+  await weightService
+    .addWeight(req.body)
     .then(() => {
       res.status(RESPONSE_CODES.CREATED).json({
         data: req.body,
@@ -95,7 +99,8 @@ export const editWeight = async (
     return;
   }
 
-  await WeightService.editWeight(id, req.body)
+  await weightService
+    .editWeight(id, req.body)
     .then(() => {
       res.status(RESPONSE_CODES.OK).json({
         data: req.body,
@@ -137,7 +142,8 @@ export const deleteWeight = async (
     res.status(RESPONSE_CODES.NOT_FOUND).json(new Error("No id"));
     return;
   }
-  await WeightService.deleteWeight(id)
+  await weightService
+    .deleteWeight(id)
     .then(() => {
       res.status(RESPONSE_CODES.OK).json({
         data: req.body,

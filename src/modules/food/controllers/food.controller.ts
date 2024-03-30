@@ -5,6 +5,8 @@ import { NextFunction, Request, Response } from "express";
 import { Food } from "../models/food.model";
 import { FoodService } from "../services/food.service";
 
+const foodService = new FoodService();
+
 export const getFood = async (req: Request, res: Response): Promise<void> => {
   /*
     #swagger.auto = false
@@ -24,8 +26,8 @@ export const getFood = async (req: Request, res: Response): Promise<void> => {
 
   const { name } = req.query;
   const rows = name
-    ? await FoodService.getAllFoodByName(name as string)
-    : await FoodService.getAllFood();
+    ? await foodService.getAllFoodByName(name as string)
+    : await foodService.getAllFood();
 
   const response: HttpResponse<Food[]> = {
     data: rows,
@@ -59,7 +61,7 @@ export const getFoodById = async (
     return;
   }
 
-  await FoodService.getFoodById(id).then((row: Food | undefined) => {
+  await foodService.getFoodById(id).then((row: Food | undefined) => {
     res.status(RESPONSE_CODES.OK).json(row || {});
   });
 };
@@ -95,7 +97,7 @@ export const getFoodByTagsAndName = async (
   */
   const { tag, name } = req.query;
   try {
-    const row = await FoodService.getFoodByTagsAndName(
+    const row = await foodService.getFoodByTagsAndName(
       Number(tag),
       name as string | undefined
     );
@@ -139,7 +141,7 @@ export const getFoodByTag = async (
     return;
   }
 
-  await FoodService.getFoodByTag(Number(tag)).then((row) => {
+  await foodService.getFoodByTag(Number(tag)).then((row) => {
     res.status(RESPONSE_CODES.OK).json({
       data: row,
       length: row.length,
@@ -183,7 +185,7 @@ export const addNewFood = async (
     return;
   }
   try {
-    await FoodService.addNewFood({
+    await foodService.addNewFood({
       name,
       weight,
       caloriesPer100g,
@@ -195,7 +197,7 @@ export const addNewFood = async (
   }
 
   try {
-    await FoodService.addTags(tags.split(","));
+    await foodService.addTags(tags.split(","));
   } catch (err) {
     next(err);
   }
@@ -241,7 +243,7 @@ export const deleteFoodById = async (
     return;
   }
 
-  await FoodService.deleteFood(id).catch(() => {
+  await foodService.deleteFood(id).catch(() => {
     res.status(RESPONSE_CODES.NOT_FOUND).json(Error.getError("Item not found"));
   });
   res.status(RESPONSE_CODES.OK).json({ message: "Item deleted successfully" });
@@ -274,7 +276,8 @@ export const editFood = async (req: Request, res: Response): Promise<void> => {
 
   const { body } = req;
 
-  await FoodService.editFood(id, body)
+  await foodService
+    .editFood(id, body)
     .then((row) => {
       res.status(RESPONSE_CODES.CREATED).json(row);
     })
