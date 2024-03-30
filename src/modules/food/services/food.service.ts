@@ -3,27 +3,27 @@ import { tables } from "@db/db-table-names";
 import { Food } from "../models/food.model";
 
 export class FoodService {
-  static readonly join = `SELECT f.*, GROUP_CONCAT(t.id) AS tags
+  private readonly join = `SELECT f.*, GROUP_CONCAT(t.id) AS tags
   FROM food f
   LEFT JOIN food_tags ft ON f.id = ft.food_id
   LEFT JOIN tags t ON ft.tag_id = t.id`;
 
-  static getFoodByTagsAndName = async (
+  getFoodByTagsAndName = async (
     tag: number,
     name: string | undefined
   ): Promise<Food[]> => {
     if (name && !tag) {
-      return await FoodService.getAllFoodByName(name);
+      return await this.getAllFoodByName(name);
     } else if (tag && !name) {
-      return await FoodService.getFoodByTag(tag);
+      return await this.getFoodByTag(tag);
     } else if (name && tag) {
-      return await FoodService.getAllFoodByTagAndName(tag, name);
+      return await this.getAllFoodByTagAndName(tag, name);
     } else {
-      return await FoodService.getAllFood();
+      return await this.getAllFood();
     }
   };
 
-  static getAllFood = async (): Promise<Food[]> => {
+  getAllFood = async (): Promise<Food[]> => {
     const query = `
       ${this.join}
       GROUP BY f.id
@@ -32,7 +32,7 @@ export class FoodService {
     return db.all(query);
   };
 
-  static getAllFoodByName = async (name: string): Promise<Food[]> => {
+  getAllFoodByName = async (name: string): Promise<Food[]> => {
     return await db.all(
       `
       ${this.join}
@@ -42,7 +42,7 @@ export class FoodService {
     );
   };
 
-  static getFoodByTag = async (tag: number): Promise<Food[]> => {
+  getFoodByTag = async (tag: number): Promise<Food[]> => {
     const request = await db.all(
       `
       SELECT * FROM (
@@ -54,7 +54,7 @@ export class FoodService {
     return request;
   };
 
-  static getFoodById = async (id: string): Promise<Food | undefined> => {
+  getFoodById = async (id: string): Promise<Food | undefined> => {
     const query = `
       ${this.join}
       WHERE f.id = ? 
@@ -63,7 +63,7 @@ export class FoodService {
     return await db.get(query, [id]);
   };
 
-  private static async getAllFoodByTagAndName(
+  private async getAllFoodByTagAndName(
     tag: number,
     name: string
   ): Promise<Food[]> {
@@ -84,7 +84,7 @@ export class FoodService {
     }
   }
 
-  static addNewFood = async (food: Food): Promise<void> => {
+  addNewFood = async (food: Food): Promise<void> => {
     const { name, weight, caloriesPer100g, nutriScore, photo } = food;
 
     const query = `
@@ -95,7 +95,7 @@ export class FoodService {
     await db.run(query, [name, weight, caloriesPer100g, nutriScore, photo]);
   };
 
-  static addTags = async (tags: number[]): Promise<void> => {
+  addTags = async (tags: number[]): Promise<void> => {
     if (tags.length) {
       const lastFoodItem = await db.get(
         `SELECT id FROM ${tables.FOOD} ORDER BY id DESC LIMIT 1`
@@ -110,7 +110,7 @@ export class FoodService {
     }
   };
 
-  static editFood = async (id: string, foodData: Food): Promise<void> => {
+  editFood = async (id: string, foodData: Food): Promise<void> => {
     const { name, weight, caloriesPer100g, nutriScore, tags, photo } = foodData;
     await db.run(
       `UPDATE ${tables.FOOD} SET name = ?, weight = ?, caloriesPer100g = ?, nutriScore = ?, photo = ? WHERE id = ?`,
@@ -136,7 +136,7 @@ export class FoodService {
     });
   };
 
-  static deleteFood = async (id: string): Promise<void> => {
+  deleteFood = async (id: string): Promise<void> => {
     await db.run(`DELETE FROM ${tables.FOOD} WHERE id = ?`, [id]);
   };
 }

@@ -3,14 +3,14 @@ import { tables } from "@db/db-table-names";
 import { Weight } from "../models/weight.model";
 
 export class WeightService {
-  static getWeights = async (): Promise<Weight[]> => {
+  getWeights = async (): Promise<Weight[]> => {
     const query = `select * from ${tables.WEIGHTS}`;
     const rows = await db.all<Weight[]>(query);
 
     return rows;
   };
 
-  static addWeight = async (newWeight: Weight): Promise<void> => {
+  addWeight = async (newWeight: Weight): Promise<void> => {
     const { weight, date } = newWeight;
 
     const query = `insert into ${tables.WEIGHTS} (weight, date) values (?, ?)`;
@@ -18,13 +18,13 @@ export class WeightService {
     await db.run(query, [weight, date]);
   };
 
-  static deleteWeight = async (id: string): Promise<void> => {
+  deleteWeight = async (id: string): Promise<void> => {
     const query = `delete from ${tables.WEIGHTS} where id = ?`;
 
     await db.run(query, [id]);
   };
 
-  static editWeight = async (id: string, weight: Weight): Promise<void> => {
+  editWeight = async (id: string, weight: Weight): Promise<void> => {
     const { date, weight: newWeight } = weight;
 
     if (!date && newWeight) {
