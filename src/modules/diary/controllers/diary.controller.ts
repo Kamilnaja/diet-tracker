@@ -1,4 +1,5 @@
 import { Error } from "@models/error";
+import { ControllerReq } from "@shared/models/controler-req.model";
 import { HttpResponse } from "@shared/models/http-response.model";
 import { RESPONSE_CODES } from "@shared/models/response-codes.const";
 import { Request, Response } from "express";
@@ -9,7 +10,7 @@ import { DiaryService } from "../services/diary.service";
 
 const diaryService = new DiaryService();
 
-export const getDiary = async (req: Request, res: Response): Promise<void> => {
+export const getDiary: ControllerReq = async (req: Request, res: Response) => {
   /* 
     #swagger.auto = false
     #swagger.tags = ['Diary']
@@ -39,10 +40,10 @@ export const getDiary = async (req: Request, res: Response): Promise<void> => {
   res.status(RESPONSE_CODES.OK).send(response);
 };
 
-export const getDiaryById = async (
+export const getDiaryById: ControllerReq = async (
   req: Request,
   res: Response
-): Promise<void> => {
+) => {
   /* 
     #swagger.tags = ['Diary'] 
     #swagger.description = 'Get Diary entry by ID'
@@ -67,10 +68,10 @@ export const getDiaryById = async (
         .json(Error.getError("Item not found"));
 };
 
-export const editDiaryEntry = async (
+export const editDiaryEntry: ControllerReq = async (
   req: Request,
   res: Response
-): Promise<void> => {
+) => {
   /* 
       #swagger.tags = ['Diary'] 
       #swagger.description = 'Edit Diary entry, that contains date & food, should be used when editing item in diary'
@@ -103,10 +104,10 @@ export const editDiaryEntry = async (
   res.status(RESPONSE_CODES.OK).send({ message: "Item updated" });
 };
 
-export const addNewDiaryEntry = async (
+export const addNewDiaryEntry: ControllerReq = async (
   req: Request,
   res: Response
-): Promise<void> => {
+) => {
   /* 
     #swagger.tags = ['Diary'] 
     #swagger.description = 'Add new Diary entry, that contains date & food, should be used when adding new food to diary'
@@ -140,10 +141,10 @@ export const addNewDiaryEntry = async (
   res.send(diaryEntry);
 };
 
-export const deleteDiaryItemById = async (
+export const deleteDiaryItemById: ControllerReq = async (
   req: Request,
   res: Response
-): Promise<void> => {
+) => {
   /* 
     #swagger.tags = ['Diary']
     #swagger.description = 'Delete Diary entry by ID'
@@ -168,10 +169,10 @@ export const deleteDiaryItemById = async (
   res.status(RESPONSE_CODES.OK).send({ message: "Item deleted" });
 };
 
-export const addFoodToDiary = async (
+export const addFoodToDiary: ControllerReq = async (
   req: Request,
   res: Response
-): Promise<void> => {
+) => {
   /* 
     #swagger.ignore = true
     #swagger.tags = ['Diary']
@@ -204,10 +205,10 @@ export const addFoodToDiary = async (
   res.status(RESPONSE_CODES.CREATED).send(req.body);
 };
 
-export const deleteFoodDiaryItemById = async (
+export const deleteFoodDiaryItemById: ControllerReq = async (
   req: Request,
   res: Response
-): Promise<void> => {
+) => {
   /* 
     #swagger.tags = ['Diary']
     #swagger.description = 'Delete Food Diary entry by ID'
@@ -237,11 +238,11 @@ export const deleteFoodDiaryItemById = async (
   res.status(RESPONSE_CODES.OK).send(response);
 };
 
-async function createNewDiaryItemAndAddFood(
+const createNewDiaryItemAndAddFood = async (
   date: string,
   food: FoodInDiary
-): Promise<void> {
+): Promise<void> => {
   await diaryService.addDiaryItem(date);
   const currentId = await diaryService.getLastDiaryItemId();
   await diaryService.addFoodToDiary(currentId, food);
-}
+};
