@@ -1,4 +1,5 @@
 import { Error } from "@models/error";
+import { convertStringToNumber } from "@shared/helpers/convert-string-to-number";
 import { ControllerReq } from "@shared/models/controler-req.model";
 import { HttpResponse } from "@shared/models/http-response.model";
 import { RESPONSE_CODES } from "@shared/models/response-codes.const";
@@ -19,38 +20,17 @@ export const getFood: ControllerReq = async (req: Request, res: Response) => {
       required: false,
       type: 'string'
     }
-    #swagger.responses[200] = {
-      description: 'Food successfully obtained',
-      schema: { $ref: '#/definitions/FoodResponse'}
-    }
-  */
-
-  const { name } = req.query;
-  const rows = name
-    ? await foodService.getAllFoodByName(name as string)
-    : await foodService.getAllFood();
-
-  const response: HttpResponse<Food[]> = {
-    data: rows,
-    length: rows.length,
-  };
-
-  res.status(RESPONSE_CODES.OK).json(response);
-};
-
-export const getFoodPaginated: ControllerReq = async (
-  req: Request,
-  res: Response
-) => {
-  /*
-    #swagger.auto = false
-    #swagger.tags = ['Food']
-    #swagger.description = 'Get all Food'
-    #swagger.parameters['name'] = {
+    #swagger.parameters['page'] = {
       in: 'query',
-      description: 'Food name',
+      description: 'Page number',
       required: false,
-      type: 'string'
+      type: 'number'
+    }
+    #swagger.parameters['limit'] = {
+      in: 'query',
+      description: 'Number of items per page',
+      required: false,
+      type: 'number'
     }
     #swagger.responses[200] = {
       description: 'Food successfully obtained',
@@ -58,17 +38,29 @@ export const getFoodPaginated: ControllerReq = async (
     }
   */
 
-  const { name } = req.query;
-  const rows = name
-    ? await foodService.getAllFoodByName(name as string)
-    : await foodService.getFoodPaginated(name as string, 1, 10);
+  const { name, page, limit } = req.query;
 
-  const response: HttpResponse<Food[]> = {
-    data: rows,
-    length: rows.length,
-  };
+  try {
+    const rows = name
+      ? await foodService.getAllFoodByName(
+          name as string,
+          convertStringToNumber(limit as string),
+          convertStringToNumber(page as string)
+        )
+      : await foodService.getAllFood(
+          convertStringToNumber(limit as string),
+          convertStringToNumber(page as string)
+        );
 
-  res.status(RESPONSE_CODES.OK).json(response);
+    const response: HttpResponse<Food[]> = {
+      data: rows,
+      length: rows.length,
+    };
+    res.status(RESPONSE_CODES.OK).json(response);
+  } catch (err) {
+    console.log(err);
+    res.status(RESPONSE_CODES.BAD_REQUEST).json(Error.getError("Bad request"));
+  }
 };
 
 export const getFoodById: ControllerReq = async (
@@ -119,6 +111,18 @@ export const getFoodByTagsAndName: ControllerReq = async (
         required: false,
         type: 'string'
       }
+      #swagger.parameters['page'] = {
+      in: 'query',
+      description: 'Page number',
+      required: false,
+      type: 'number'
+    }
+    #swagger.parameters['limit'] = {
+      in: 'query',
+      description: 'Number of items per page',
+      required: false,
+      type: 'number'
+    }
       #swagger.description = 'Get Food by single Tag and Name'
       #swagger.responses[200] = {
         description: 'Food successfully obtained',
@@ -129,11 +133,12 @@ export const getFoodByTagsAndName: ControllerReq = async (
         schema: { $ref: '#/definitions/ErrorSearch' }
       }
   */
-  const { tag, name } = req.query;
+  const { tag, name, limit } = req.query;
   try {
     const row = await foodService.getFoodByTagsAndName(
       Number(tag),
-      name as string | undefined
+      name as string | undefined,
+      Number(limit)
     );
     const response: HttpResponse<Food[]> = {
       data: row,
@@ -153,29 +158,41 @@ export const getFoodByTag: ControllerReq = async (
       #swagger.auto = false
       #swagger.tags = ['Food']
       #swagger.description = 'Get Food by Tag'
-      #swagger.responses[200] = {
-        description: 'Food successfully obtained',
-        schema: { $ref: '#/definitions/FoodResponse' }
-      }
-      #swagger.responses[404] = {
-        description: 'No such item',
-        schema: { $ref: '#/definitions/ErrorSearch' }
-      }
-      #swagger.parameters['tag'] = {
+       #swagger.parameters['tag'] = {
         in: 'path',
         description: 'Food tags',
         required: true,
         type: 'number'
       }
+      #swagger.parameters['page'] = {
+      in: 'query',
+      description: 'Page number',
+      required: false,
+      type: 'number'
+    }
+    #swagger.parameters['limit'] = {
+      in: 'query',
+      description: 'Number of items per page',
+      required: false,
+      type: 'number'
+    }
+    #swagger.responses[200] = {
+      description: 'Food successfully obtained',
+      schema: { $ref: '#/definitions/FoodResponse' }
+    }
+     #swagger.responses[404] = {
+      description: 'No such item',
+      schema: { $ref: '#/definitions/ErrorSearch' }
+    } 
     */
 
-  const { tag } = req.params;
+  const { tag, limit } = req.params;
   if (!tag) {
     res.send(Error.getError("No entry found"));
     return;
   }
 
-  await foodService.getFoodByTag(Number(tag)).then((row) => {
+  await foodService.getFoodByTag(Number(tag), Number(limit)).then((row) => {
     res.status(RESPONSE_CODES.OK).json({
       data: row,
       length: row.length,
@@ -286,11 +303,11 @@ export const deleteFoodById: ControllerReq = async (
 export const editFood = async (req: Request, res: Response): Promise<void> => {
   /*  #swagger.tags = ['Food']
       #swagger.parameters['body'] = {
-                in: 'body',
-                description: 'Food Body',
-                schema: {
-                  $ref: '#/definitions/FoodEntry'
-                }
+        in: 'body',
+        description: 'Food Body',
+        schema: {
+          $ref: '#/definitions/FoodEntry'
+          }
         }
       #swagger.responses[201] = {
         description: 'Success when editing food',

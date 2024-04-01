@@ -1,78 +1,121 @@
 import { db } from "@db/db";
 import { tables } from "@db/db-table-names";
 import { Food } from "../models/food.model";
+import { joinClause, limitClause } from "./food.clauses";
 
 export class FoodService {
-  private readonly join = `SELECT f.*, GROUP_CONCAT(t.id) AS tags
-  FROM food f
-  LEFT JOIN food_tags ft ON f.id = ft.food_id
-  LEFT JOIN tags t ON ft.tag_id = t.id`;
-
   getFoodByTagsAndName = async (
     tag: number,
-    name: string | undefined
+    name: string | undefined,
+    limit: number
   ): Promise<Food[]> => {
     if (name && !tag) {
-      return await this.getAllFoodByName(name);
+      return await this.getAllFoodByName(name, limit);
     } else if (tag && !name) {
-      return await this.getFoodByTag(tag);
+      return await this.getFoodByTag(tag, limit);
     } else if (name && tag) {
-      return await this.getAllFoodByTagAndName(tag, name);
+      return await this.getAllFoodByTagAndName(tag, name, limit);
     } else {
-      return await this.getAllFood();
+      return await this.getAllFood(limit);
     }
   };
 
-  getAllFood = async (): Promise<Food[]> => {
+  /**
+   * Retrieves all food items.
+   * @returns A promise that resolves to an array of Food objects.
+   */
+  getAllFood = async (limit?: number, page?: number): Promise<Food[]> => {
     const query = `
-      ${this.join}
+      ${joinClause}
       GROUP BY f.id
+      ${limitClause(limit)}
     `;
 
     return db.all(query);
   };
 
-  getAllFoodByName = async (name: string): Promise<Food[]> => {
+  /**
+   * Retrieves all food items by name.
+   * @param name - The name of the food items to retrieve.
+   * @param page - The page number for pagination (optional).
+   * @param limit - The maximum number of items per page (optional).
+   * @returns A promise that resolves to an array of Food objects.
+   */
+  getAllFoodByName = async (
+    name: string,
+    limit: number | undefined,
+    page?: number
+  ): Promise<Food[]> => {
     return await db.all(
       `
-      ${this.join}
+      ${joinClause}
       WHERE f.name LIKE '%' || ? || '%'
-      GROUP BY f.id`,
+      GROUP BY f.id
+      ${limitClause(limit)}`,
+      [name]
+    );
+  };
+
+  /**
+   * Retrieves a paginated list of food items by name.
+   * @param name - The name to search for.
+   * @param page - The page number (default: 0).
+   * @param limit - The maximum number of items per page (default: 10).
+   * @returns A promise that resolves to an array of Food objects.
+   */
+  getAllFoodByNamePaginated = async (
+    name: string,
+    limit: number,
+    page: number
+  ): Promise<Food[]> => {
+    return await db.all(
+      `
+      ${joinClause}
+      WHERE f.name LIKE '%' || ? || '%'
+      GROUP BY f.id,
+      ${limitClause(limit)}`,
       [name]
     );
   };
 
   getFoodPaginated = async (
     name: string,
-    page: number,
-    limit: number
+    limit: number,
+    page: number
   ): Promise<Food[]> => {
-    console.log({ page });
-    console.log({ limit });
     return await db.all(
       `
-      ${this.join}
+      ${joinClause}
       WHERE f.name LIKE '%' || ? || '%'
-      GROUP BY f.id`,
+      GROUP BY f.id
+      ${limitClause(limit)}
+      `,
       [name]
     );
   };
 
-  getFoodByTag = async (tag: number): Promise<Food[]> => {
-    const request = await db.all(
-      `
-      SELECT * FROM (
-        ${this.join}
-        GROUP BY f.id)
-        WHERE tags LIKE '%${tag}%'
+  getFoodByTag = async (tag: number, limit: number): Promise<Food[]> => {
+    try {
+      const request = await db.all(
         `
-    );
-    return request;
+      SELECT * FROM (
+        ${joinClause}
+        GROUP BY f.id)
+        WHERE tags LIKE '%${tag}%
+        ${limitClause(limit)}
+        '
+        `
+      );
+      return request;
+    } catch (err) {
+      console.log(err);
+      return [];
+    }
   };
 
   getFoodById = async (id: string): Promise<Food | undefined> => {
     const query = `
-      ${this.join}
+      ${joinClause}
       WHERE f.id = ? 
       GROUP BY f.id
     `;
@@ -81,16 +124,18 @@ export class FoodService {
 
   private async getAllFoodByTagAndName(
     tag: number,
-    name: string
+    name: string,
+    limit?: number
   ): Promise<Food[]> {
     try {
       const request = await db.all(
         `
         SELECT * FROM (
-          ${this.join}
+          ${joinClause}
           GROUP BY f.id)
           WHERE tags LIKE '%${tag}%'
-          AND name LIKE '%${name}%'  
+          AND name LIKE '%${name}%'
+          ${limitClause(limit)}
           `
       );
       return request;
