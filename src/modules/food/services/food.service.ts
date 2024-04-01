@@ -7,8 +7,9 @@ export class FoodService {
   getFoodByTagsAndName = async (
     tag: number,
     name: string | undefined,
-    limit: number
+    limit: number | undefined
   ): Promise<Food[]> => {
+    console.log(name, tag, limit);
     if (name && !tag) {
       return await this.getAllFoodByName(name, limit);
     } else if (tag && !name) {
@@ -56,54 +57,15 @@ export class FoodService {
     );
   };
 
-  /**
-   * Retrieves a paginated list of food items by name.
-   * @param name - The name to search for.
-   * @param page - The page number (default: 0).
-   * @param limit - The maximum number of items per page (default: 10).
-   * @returns A promise that resolves to an array of Food objects.
-   */
-  getAllFoodByNamePaginated = async (
-    name: string,
-    limit: number,
-    page: number
-  ): Promise<Food[]> => {
-    return await db.all(
-      `
-      ${joinClause}
-      WHERE f.name LIKE '%' || ? || '%'
-      GROUP BY f.id,
-      ${limitClause(limit)}`,
-      [name]
-    );
-  };
-
-  getFoodPaginated = async (
-    name: string,
-    limit: number,
-    page: number
-  ): Promise<Food[]> => {
-    return await db.all(
-      `
-      ${joinClause}
-      WHERE f.name LIKE '%' || ? || '%'
-      GROUP BY f.id
-      ${limitClause(limit)}
-      `,
-      [name]
-    );
-  };
-
-  getFoodByTag = async (tag: number, limit: number): Promise<Food[]> => {
+  getFoodByTag = async (tag: number, limit?: number): Promise<Food[]> => {
     try {
       const request = await db.all(
         `
-      SELECT * FROM (
-        ${joinClause}
-        GROUP BY f.id)
-        WHERE tags LIKE '%${tag}%
-        ${limitClause(limit)}
-        '
+        SELECT * FROM (
+          ${joinClause}
+          GROUP BY f.id)
+          WHERE tags LIKE '%${tag}%'
+          ${limitClause(limit)}
         `
       );
       return request;
