@@ -5,3 +5,10 @@ export const joinClause = `SELECT f.*, GROUP_CONCAT(t.id) AS tags
 
 export const limitClause = (limit?: number): string =>
   `${limit ? `LIMIT ${limit}` : ""}`;
+
+export const offsetClause = (limit?: number, page?: number): string => {
+  if (page && page < 1) {
+    page = 1;
+  }
+  return `${page && limit ? `OFFSET ${(page - 1) * limit}` : ""}`;
+};

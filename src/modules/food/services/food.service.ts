@@ -1,23 +1,23 @@
 import { db } from "@db/db";
 import { tables } from "@db/db-table-names";
 import { Food } from "../models/food.model";
-import { joinClause, limitClause } from "./food.clauses";
+import { joinClause, limitClause, offsetClause } from "./food.clauses";
 
 export class FoodService {
   getFoodByTagsAndName = async (
-    tag: number,
-    name: string | undefined,
-    limit: number | undefined
+    tag?: number,
+    name?: string,
+    limit?: number,
+    page?: number
   ): Promise<Food[]> => {
-    console.log(name, tag, limit);
     if (name && !tag) {
-      return await this.getAllFoodByName(name, limit);
+      return await this.getAllFoodByName(name, limit, page);
     } else if (tag && !name) {
-      return await this.getFoodByTag(tag, limit);
+      return await this.getFoodByTag(tag, limit, page);
     } else if (name && tag) {
-      return await this.getAllFoodByTagAndName(tag, name, limit);
+      return await this.getAllFoodByTagAndName(tag, name, limit, page);
     } else {
-      return await this.getAllFood(limit);
+      return await this.getAllFood(limit, page);
     }
   };
 
@@ -30,6 +30,7 @@ export class FoodService {
       ${joinClause}
       GROUP BY f.id
       ${limitClause(limit)}
+      ${offsetClause(limit, page)}
     `;
 
     return db.all(query);
@@ -44,7 +45,7 @@ export class FoodService {
    */
   getAllFoodByName = async (
     name: string,
-    limit: number | undefined,
+    limit?: number,
     page?: number
   ): Promise<Food[]> => {
     return await db.all(
@@ -52,12 +53,17 @@ export class FoodService {
       ${joinClause}
       WHERE f.name LIKE '%' || ? || '%'
       GROUP BY f.id
-      ${limitClause(limit)}`,
+      ${limitClause(limit)}
+      ${offsetClause(limit, page)}`,
       [name]
     );
   };
 
-  getFoodByTag = async (tag: number, limit?: number): Promise<Food[]> => {
+  getFoodByTag = async (
+    tag: number,
+    limit?: number,
+    page?: number
+  ): Promise<Food[]> => {
     try {
       const request = await db.all(
         `
@@ -66,6 +72,7 @@ export class FoodService {
           GROUP BY f.id)
           WHERE tags LIKE '%${tag}%'
           ${limitClause(limit)}
+          ${offsetClause(limit, page)}
         `
       );
       return request;
@@ -87,7 +94,8 @@ export class FoodService {
   private async getAllFoodByTagAndName(
     tag: number,
     name: string,
-    limit?: number
+    limit?: number,
+    offset?: number
   ): Promise<Food[]> {
     try {
       const request = await db.all(
@@ -98,6 +106,7 @@ export class FoodService {
           WHERE tags LIKE '%${tag}%'
           AND name LIKE '%${name}%'
           ${limitClause(limit)}
+          ${offsetClause(limit, offset)}
           `
       );
       return request;

@@ -152,7 +152,7 @@ describe("DELETE /food", () => {
     await request(baseURL).post(partURL).send(newFood);
   });
 
-  it("Should delete one item", async () => {
+  it("should delete one item", async () => {
     await request(baseURL).delete(`${partURL}/${newFood.id}`);
     const response = await request(baseURL).get(partURL);
     const food = response.body.data;

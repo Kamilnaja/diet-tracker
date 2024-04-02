@@ -123,6 +123,12 @@ export const getFoodByTagsAndName: ControllerReq = async (
         required: false,
         type: 'number'
       }
+      #swagger.parameters['page'] = {
+        in: 'query',
+        description: 'Page number',
+        required: false,
+        type: 'number'
+      }
       #swagger.description = 'Get Food by single Tag and Name'
       #swagger.responses[200] = {
         description: 'Food successfully obtained',
@@ -133,12 +139,13 @@ export const getFoodByTagsAndName: ControllerReq = async (
         schema: { $ref: '#/definitions/ErrorSearch' }
       }
   */
-  const { tag, name, limit } = req.query;
+  const { tag, name, limit, page } = req.query;
   try {
     const row = await foodService.getFoodByTagsAndName(
       Number(tag),
       name as string,
-      convertStringToNumber(limit as string)
+      convertStringToNumber(limit as string),
+      convertStringToNumber(page as string)
     );
     const response: HttpResponse<Food[]> = {
       data: row,
