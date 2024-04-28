@@ -114,15 +114,5 @@ export const editFluid = (req: Request, res: Response) => {
       .send(Error.getError("No entry found"));
   }
 
-  const { body } = req;
-
-  const itemToReplace: Fluid = {
-    id: id,
-    name: body.name,
-    capacity: body.capacity,
-    caloriesPer100g: body.caloriesPer100g,
-    icon: body.icon,
-  };
-
   return res.status(RESPONSE_CODES.CREATED).send(req.body);
 };
