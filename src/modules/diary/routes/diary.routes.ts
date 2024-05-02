@@ -13,11 +13,11 @@ export const diaryRouter = express.Router();
 
 diaryRouter.get("/", getDiary);
 
+diaryRouter.post("/", addNewDiaryEntry);
+
 diaryRouter.get("/:id", getDiaryById);
 
 diaryRouter.put("/food/:uniqueFoodId", editDiaryEntry);
-
-diaryRouter.post("/", addNewDiaryEntry);
 
 diaryRouter.delete("/:id", deleteDiaryItemById);
 

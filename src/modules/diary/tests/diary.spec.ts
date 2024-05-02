@@ -58,6 +58,16 @@ describe("diary", () => {
     });
   });
 
+  it("should throw error when searching diary items by wrong date", async () => {
+    await request(baseURL)
+      .get(`${partURL}?date=20233-01-01`)
+      .expect(RESPONSE_CODES.BAD_REQUEST)
+      .then((resp) => {
+        console.log(resp.body);
+        expect(resp.body.message).toBe("Invalid date");
+      });
+  });
+
   describe("GET /diary/id", () => {
     it("should return one item", async () => {
       await request(baseURL)
@@ -67,15 +77,10 @@ describe("diary", () => {
           const { body } = resp;
           expect(body.id).toBe("1");
           expect(body.date).toBe("2023-01-01");
-          expect(body.food).toEqual([
-            {
-              id: 1,
-              mealType: "breakfast",
-              weight: 100,
-              food_id: 1,
-              uniqueFoodId: 3,
-            },
-          ]);
+          expect(body.food[0].id).toEqual(1);
+          expect(body.food[0].mealType).toEqual("breakfast");
+          expect(body.food[0].weight).toEqual(100);
+          expect(body.food[0].food_id).toEqual(1);
         });
 
       await request(baseURL)

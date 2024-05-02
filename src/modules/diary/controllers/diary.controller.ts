@@ -7,6 +7,7 @@ import { DiaryBuilder } from "../builders/diary.builder";
 import { Diary } from "../models/diary.model";
 import { FoodInDiary } from "../models/food-in-diary.model";
 import { DiaryService } from "../services/diary.service";
+import dateFormatValidator from "../validators/date-format.validator";
 
 const diaryService = new DiaryService();
 
@@ -27,6 +28,11 @@ export const getDiary: ControllerReq = async (req: Request, res: Response) => {
   */
 
   const { date } = req.query;
+
+  if (date && !dateFormatValidator(date as string).isValid) {
+    res.status(RESPONSE_CODES.BAD_REQUEST).send(Error.getError("Invalid date"));
+    return;
+  }
 
   const mappedRows = date
     ? await diaryService.getDiaryEntriesByDate(date as string)
