@@ -184,5 +184,5 @@ interface Row extends FoodInDiary {
   date_added: string;
   diary_id: string; // id of diary entry
   date: string; // date of diary entry
-  unique_food_id: string;
+  unique_food_id: string; // needed when editing food in diary
 }

@@ -95,22 +95,36 @@ describe("diary", () => {
     });
   });
 
-  describe("POST /diary/id/food", () => {
+  describe("POST /diary/", () => {
     afterEach(async () => {
       await request(baseURL).delete(`${partURL}/10/food/8`);
     });
 
-    it("should add food to item", async () => {
+    it("should add food to diary item", async () => {
       await request(baseURL)
-        .get(`${partURL}/1`)
+        .post(`${partURL}/`)
+        .send({
+          date: "2024-01-01",
+          food: {
+            id: "12",
+            weight: 100,
+            mealType: "lunch",
+          },
+        });
+
+      await request(baseURL)
+        .get(`${partURL}/?date=2024-01-01`)
         .expect(RESPONSE_CODES.OK)
         .then((resp) => {
-          expect(resp.body.food.length).toEqual(1);
-          expect(resp.body.food[0]).toEqual(
+          const { food } = resp.body.data.at(-1);
+          expect(food.length).toEqual(1);
+          expect(food[0]).toEqual(
             expect.objectContaining({
-              id: 1,
-              mealType: "breakfast",
+              id: 12,
+              mealType: "lunch",
               weight: 100,
+              food_id: 12,
+              uniqueFoodId: 7,
             })
           );
         });

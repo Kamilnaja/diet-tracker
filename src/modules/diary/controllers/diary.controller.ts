@@ -126,7 +126,7 @@ export const addNewDiaryEntry: ControllerReq = async (
     }
     #swagger.responses[200] = {
       description: 'Diary entry successfully added',
-      schema: { $ref: '#/definitions/DiaryPayload' }
+      schema: { $ref: '#/definitions/DiaryAddResponse' }
     }
     #swagger.responses[409] = {
       description: 'Diary entry with this id already exists',
@@ -135,6 +135,11 @@ export const addNewDiaryEntry: ControllerReq = async (
   */
 
   const { date = new Date().toISOString().split("T")[0], food } = req.body;
+
+  if (!dateFormatValidator(date).isValid) {
+    res.status(RESPONSE_CODES.BAD_REQUEST).send(Error.getError("Invalid date"));
+    return;
+  }
 
   const currentDayDiaryId = await diaryService.getDiaryEntryIdForDay(date);
 

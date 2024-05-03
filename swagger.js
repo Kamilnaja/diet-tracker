@@ -29,6 +29,13 @@ const doc = {
       id: "39393993",
       $date: "2021-01-01",
       $food: {
+        $ref: "#/definitions/FoodInDiaryPost",
+      },
+    },
+    DiaryAddResponse: {
+      id: "39393993",
+      $date: "2021-01-01",
+      $food: {
         $ref: "#/definitions/FoodInDiary",
       },
     },
@@ -41,7 +48,13 @@ const doc = {
       length: 10,
     },
     FoodInDiary: {
-      id: "1",
+      id: 1,
+      weight: 100,
+      mealType: "breakfast",
+      uniqueFoodId: "39393993", // needed for editing, dont send when creating
+    },
+    FoodInDiaryPost: {
+      id: 1,
       weight: 100,
       mealType: "breakfast",
     },

@@ -6,3 +6,4 @@ coverage
 test.db
 db.db
 package-lock.json
+swagger-output.json
