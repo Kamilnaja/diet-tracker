@@ -19,7 +19,6 @@ dotenv.config();
 const app = express();
 const port = shouldLoadInitialData() ? 8080 : 8081;
 
-app.use("/", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 app.use(cors());
 app.use(express.json());
 app.use(morgan("tiny"));
@@ -38,6 +37,7 @@ app.use("/api/auth", authRouter);
 app.use("/api/fluids", fluidsRouter);
 app.use("/api/weights", weightRouter);
 app.use("/api/settings", settingsRouter);
+app.use("/", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 app.use(
   cookieSession({

@@ -3,9 +3,8 @@ to run project
 
 npm i
 
+npm run sa - to generate swagger file (needed when running app for the first time)
 npm run dev
-
-npm run sa - to generate swagger file
 
 You can also start app from vscode
 

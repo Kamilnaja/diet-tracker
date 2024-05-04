@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "npx tsc",
+    "start": "npm run dev",
     "dev": "concurrently \"npm run sa \" \"ts-node -r tsconfig-paths/register src/index.ts -initialData=true  \"",
     "test": "concurrently \"ts-node -r tsconfig-paths/register src/index.ts -initialData=false\" \"jest --runInBand \"",
     "test:i": "concurrently \"ts-node -r tsconfig-paths/register src/index.ts --inspect -initialData=false\" \"jest --runInBand \"",
@@ -18,7 +19,7 @@
     "express",
     "tracking"
   ],
-  "author": "KamilNaja",
+  "author": "Kamil Naja",
   "license": "ISC",
   "dependencies": {
     "@types/cookie-session": "^2.0.44",

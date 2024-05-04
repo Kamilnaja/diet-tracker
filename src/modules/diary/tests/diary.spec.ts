@@ -63,7 +63,6 @@ describe("diary", () => {
       .get(`${partURL}?date=20233-01-01`)
       .expect(RESPONSE_CODES.BAD_REQUEST)
       .then((resp) => {
-        console.log(resp.body);
         expect(resp.body.message).toBe("Invalid date");
       });
   });

@@ -5,12 +5,13 @@
     "strictPropertyInitialization": false,
     "target": "ES2017" /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */,
     "module": "NodeNext" /* Specify what module code is generated. */,
+    "baseUrl": "./src/" /* Specify the base directory to resolve non-absolute module names. */,
     "paths": {
-      "@shared/*": ["src/shared/*"],
-      "@helpers/*": ["src/shared/helpers/*"],
-      "@models/*": ["src/shared/models/*"],
-      "@modules/*": ["src/modules/*"],
-      "@db/*": ["src/db/*"]
+      "@shared/*": ["shared/*"],
+      "@helpers/*": ["shared/helpers/*"],
+      "@models/*": ["shared/models/*"],
+      "@modules/*": ["modules/*"],
+      "@db/*": ["db/*"]
     },
     "outDir": "./dist" /* Specify an output folder for all emitted files. */,
     "esModuleInterop": true /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables 'allowSyntheticDefaultImports' for type compatibility. */,
