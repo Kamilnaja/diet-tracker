@@ -18,6 +18,8 @@ dotenv.config();
 
 const app = express();
 const port = shouldLoadInitialData() ? 8080 : 8081;
+
+app.use("/", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 app.use(cors());
 app.use(express.json());
 app.use(morgan("tiny"));
@@ -44,8 +46,6 @@ app.use(
     httpOnly: true,
   })
 );
-
-app.use("/", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 app.listen(port, () => {
   console.log(`[server]: 🌩️Server is running at http://localhost:${port}🐍`);
