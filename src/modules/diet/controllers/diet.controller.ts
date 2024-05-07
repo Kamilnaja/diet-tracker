@@ -16,3 +16,27 @@ export const getDiets: ControllerReq = async (req: Request, res: Response) => {
 
   res.status(RESPONSE_CODES.OK).send(diets);
 };
+
+export const getDietBydId: ControllerReq = async (
+  req: Request,
+  res: Response
+) => {
+  /*
+    #swagger.tags = ['Diet']
+    #swagger.description = 'Get diet by ID'
+    #swagger.parameters['id'] = {
+      in: 'path',
+      description: 'Diet ID',
+      required: true,
+    }
+    #swagger.responses[200] = {
+      description: 'Diet successfully obtained',
+      schema: { $ref: '#/definitions/Diet' }
+    }
+    #swagger.responses[404] = {
+      description: 'Diet not found',
+      schema: { $ref: '#/definitions/Error' }
+    }
+  */
+  res.send("Diet by ID");
+};

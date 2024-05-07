@@ -12,6 +12,7 @@ const USERS = "users";
 const ROLES = "roles";
 const WEIGHTS = "weights";
 const SETTINGS = "settings";
+const DIETS = "diets";
 
 export const tables = {
   FOOD,
@@ -24,4 +25,5 @@ export const tables = {
   ROLES,
   WEIGHTS,
   SETTINGS,
+  DIETS,
 };

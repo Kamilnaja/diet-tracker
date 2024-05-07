@@ -1,10 +1,7 @@
 import { logSuccessMessage } from "@shared/helpers/log-success-message";
-import { ISqlite } from "sqlite";
-import { Statement } from "sqlite3";
 import { db } from "./db";
 import { tables } from "./db-table-names";
-
-type DbRunResult = Promise<void | ISqlite.RunResult<Statement>>;
+import { DbRunResult } from "./models/db-run-result.model";
 
 export async function createTables(): Promise<void> {
   console.log("--------------------");
@@ -19,6 +16,7 @@ export async function createTables(): Promise<void> {
   await createRoles();
   await createWeights();
   await createSettings();
+  await createDiets();
 }
 
 const createUsers = async (): DbRunResult => {
@@ -163,4 +161,19 @@ const createSettings = async (): DbRunResult => {
     )
     .then(() => logSuccessMessage(tables.SETTINGS))
     .catch((err: Error) => console.error("create", tables.SETTINGS, err));
+};
+
+const createDiets = async (): DbRunResult => {
+  return db
+    .run(
+      `CREATE TABLE IF NOT EXISTS ${tables.DIETS} (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,
+      description TEXT,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )`
+    )
+    .then(() => logSuccessMessage(tables.DIETS))
+    .catch((err: Error) => console.error(err));
 };
