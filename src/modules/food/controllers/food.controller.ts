@@ -6,6 +6,7 @@ import { RESPONSE_CODES } from "@shared/models/response-codes.const";
 import { NextFunction, Request, Response } from "express";
 import { Food } from "../models/food.model";
 import { FoodService } from "../services/food.service";
+import { mapFoodDbToFood } from "./food.util";
 
 const foodService = new FoodService();
 
@@ -53,12 +54,11 @@ export const getFood: ControllerReq = async (req: Request, res: Response) => {
         );
 
     const response: HttpResponse<Food[]> = {
-      data: rows,
+      data: rows.map(mapFoodDbToFood),
       length: rows.length,
     };
     res.status(RESPONSE_CODES.OK).json(response);
   } catch (err) {
-    console.log(err);
     res.status(RESPONSE_CODES.BAD_REQUEST).json(Error.getError("Bad request"));
   }
 };
@@ -66,7 +66,7 @@ export const getFood: ControllerReq = async (req: Request, res: Response) => {
 export const getFoodById: ControllerReq = async (
   req: Request,
   res: Response
-) => {
+): Promise<void> => {
   /* 
     #swagger.tags = ['Food'] 
     #swagger.description = 'Get Food by ID'
@@ -87,8 +87,16 @@ export const getFoodById: ControllerReq = async (
     return;
   }
 
-  await foodService.getFoodById(id).then((row: Food | undefined) => {
-    res.status(RESPONSE_CODES.OK).json(row || {});
+  const rows = await foodService.getFoodById(id);
+
+  if (!rows) {
+    res.status(RESPONSE_CODES.NOT_FOUND).json(Error.getError("No such item"));
+    return;
+  }
+
+  res.status(RESPONSE_CODES.OK).json({
+    ...rows,
+    tags: rows.tags ? rows.tags.split(",") : [],
   });
 };
 
@@ -148,7 +156,7 @@ export const getFoodByTagsAndName: ControllerReq = async (
       convertStringToNumber(page as string)
     );
     const response: HttpResponse<Food[]> = {
-      data: row,
+      data: row.map(mapFoodDbToFood),
       length: row.length,
     };
     res.status(RESPONSE_CODES.OK).json(response);
@@ -157,6 +165,12 @@ export const getFoodByTagsAndName: ControllerReq = async (
   }
 };
 
+/**
+ *
+ * @param req
+ * @param res
+ * @returns Food[]
+ */
 export const getFoodByTag: ControllerReq = async (
   req: Request,
   res: Response
@@ -201,7 +215,7 @@ export const getFoodByTag: ControllerReq = async (
 
   await foodService.getFoodByTag(Number(tag), Number(limit)).then((row) => {
     res.status(RESPONSE_CODES.OK).json({
-      data: row,
+      data: row.map(mapFoodDbToFood),
       length: row.length,
     });
   });
