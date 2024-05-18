@@ -90,7 +90,7 @@ export const getFoodById: ControllerReq = async (
   const rows = await foodService.getFoodById(id);
 
   if (!rows) {
-    res.status(RESPONSE_CODES.NOT_FOUND).json(Error.getError("No such item"));
+    res.status(RESPONSE_CODES.OK).json({});
     return;
   }
 
@@ -269,7 +269,7 @@ export const addNewFood: ControllerReq = async (
   }
 
   try {
-    await foodService.addTags(tags.split(","));
+    await foodService.addTags(tags);
   } catch (err) {
     next(err);
   }
