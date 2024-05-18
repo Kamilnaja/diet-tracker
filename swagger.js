@@ -64,7 +64,7 @@ const doc = {
       caloriesPer100g: 100,
       $weight: 100,
       nutriScore: "E",
-      tags: "1, 2",
+      tags: ["1", "2"],
       photo: "https://www.google.com/image",
     },
     FoodResponse: {

@@ -8,7 +8,7 @@ const newFood: Food = {
   weight: 100,
   nutriScore: "D",
   caloriesPer100g: 10,
-  tags: "1,2",
+  tags: ["1", "2"],
   mealType: "breakfast",
   photo: "https://pl.wikipedia.org/wiki/Plik:Banana-Single.jpg",
 };

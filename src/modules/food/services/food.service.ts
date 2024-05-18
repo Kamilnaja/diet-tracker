@@ -1,6 +1,6 @@
 import { db } from "@db/db";
 import { tables } from "@db/db-table-names";
-import { Food } from "../models/food.model";
+import { Food, FoodDb } from "../models/food.model";
 import { joinClause, limitClause, offsetClause } from "./food.clauses";
 
 export class FoodService {
@@ -9,7 +9,7 @@ export class FoodService {
     name?: string,
     limit?: number,
     page?: number
-  ): Promise<Food[]> => {
+  ): Promise<FoodDb[]> => {
     if (name && !tag) {
       return await this.getAllFoodByName(name, limit, page);
     } else if (tag && !name) {
@@ -25,7 +25,7 @@ export class FoodService {
    * Retrieves all food items.
    * @returns A promise that resolves to an array of Food objects.
    */
-  getAllFood = async (limit?: number, page?: number): Promise<Food[]> => {
+  getAllFood = async (limit?: number, page?: number): Promise<FoodDb[]> => {
     const query = `
       ${joinClause}
       GROUP BY f.id
@@ -47,7 +47,7 @@ export class FoodService {
     name: string,
     limit?: number,
     page?: number
-  ): Promise<Food[]> => {
+  ): Promise<FoodDb[]> => {
     return await db.all(
       `
       ${joinClause}
@@ -63,7 +63,7 @@ export class FoodService {
     tag: number,
     limit?: number,
     page?: number
-  ): Promise<Food[]> => {
+  ): Promise<FoodDb[]> => {
     try {
       const request = await db.all(
         `
@@ -82,7 +82,7 @@ export class FoodService {
     }
   };
 
-  getFoodById = async (id: string): Promise<Food | undefined> => {
+  getFoodById = async (id: string): Promise<FoodDb | undefined> => {
     const query = `
       ${joinClause}
       WHERE f.id = ? 
@@ -96,7 +96,7 @@ export class FoodService {
     name: string,
     limit?: number,
     offset?: number
-  ): Promise<Food[]> {
+  ): Promise<FoodDb[]> {
     try {
       const request = await db.all(
         `
@@ -143,7 +143,14 @@ export class FoodService {
   };
 
   editFood = async (id: string, foodData: Food): Promise<void> => {
-    const { name, weight, caloriesPer100g, nutriScore, tags, photo } = foodData;
+    const {
+      name,
+      weight,
+      caloriesPer100g,
+      nutriScore,
+      tags = [],
+      photo,
+    } = foodData;
     await db.run(
       `UPDATE ${tables.FOOD} SET name = ?, weight = ?, caloriesPer100g = ?, nutriScore = ?, photo = ? WHERE id = ?`,
       [name, weight, caloriesPer100g, nutriScore, photo, id]
@@ -153,7 +160,7 @@ export class FoodService {
     await db.run(`DELETE FROM ${tables.FOOD_TAGS} WHERE food_id = ?`, [id]);
 
     // Split tags string and insert new tags one by one
-    tags?.split(",").forEach(async (tagId) => {
+    tags.forEach(async (tagId) => {
       await db
         .run(
           `INSERT INTO ${tables.FOOD_TAGS} (food_id, tag_id) VALUES (?, ?)`,
