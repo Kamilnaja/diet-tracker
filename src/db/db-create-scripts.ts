@@ -23,7 +23,7 @@ const createUsers = async (): DbRunResult => {
   return db
     .run(
       `CREATE TABLE IF NOT EXISTS ${tables.USERS} (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      id       INTEGER PRIMARY KEY AUTOINCREMENT,
       username TEXT UNIQUE NOT NULL,
       password TEXT NOT NULL,
       email TEXT UNIQUE NOT NULL
@@ -137,8 +137,8 @@ const createWeights = async (): DbRunResult => {
       `CREATE TABLE IF NOT EXISTS ${tables.WEIGHTS} (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       weight REAL NOT NULL,
-      date DATE NOT NULL)
-      `
+      date DATE NOT NULL
+    )`
     )
     .then(() => logSuccessMessage(tables.WEIGHTS))
     .catch((err: Error) => console.error(err));
@@ -155,7 +155,7 @@ const createSettings = async (): DbRunResult => {
         age             INTEGER CHECK(age > 0),
         cookie_accepted BOOLEAN DEFAULT FALSE,
         theme           TEXT    CHECK(theme IN ('light', 'dark')) DEFAULT 'light',
-        email           TEXT UNIQUE,
+        email           TEXT    UNIQUE,
         gender          TEXT    CHECK(gender IN ('male', 'female'))
     )`
     )
