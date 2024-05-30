@@ -9,6 +9,7 @@ import { weightRouter } from "@modules/weight/routes/weight.routes";
 import { shouldLoadInitialData } from "@shared/helpers/utils";
 import cookieSession from "cookie-session";
 import cors from "cors";
+import { corsOptions } from "cors.const";
 import dotenv from "dotenv";
 import express from "express";
 import morgan from "morgan";
@@ -19,7 +20,7 @@ dotenv.config();
 const app = express();
 const port = shouldLoadInitialData() ? 8080 : 8081;
 
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(morgan("tiny"));
 app.use(
