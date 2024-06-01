@@ -1,5 +1,6 @@
 import { db } from "@db/db";
 import { tables } from "@db/db-table-names";
+import { views } from "@db/db-views-scripts";
 import { Food, FoodDb } from "../models/food.model";
 import { joinClause, limitClause, offsetClause } from "./food.clauses";
 
@@ -27,12 +28,10 @@ export class FoodService {
    */
   getAllFood = async (limit?: number, page?: number): Promise<FoodDb[]> => {
     const query = `
-      ${joinClause}
-      GROUP BY f.id
+      SELECT * FROM ${views.food}
       ${limitClause(limit)}
       ${offsetClause(limit, page)}
     `;
-
     return db.all(query);
   };
 
@@ -68,8 +67,7 @@ export class FoodService {
       const request = await db.all(
         `
         SELECT * FROM (
-          ${joinClause}
-          GROUP BY f.id)
+          SELECT * FROM ${views.food})
           WHERE tags LIKE '%${tag}%'
           ${limitClause(limit)}
           ${offsetClause(limit, page)}
@@ -101,8 +99,8 @@ export class FoodService {
       const request = await db.all(
         `
         SELECT * FROM (
-          ${joinClause}
-          GROUP BY f.id)
+          SELECT * FROM ${views.food}
+        )
           WHERE tags LIKE '%${tag}%'
           AND name LIKE '%${name}%'
           ${limitClause(limit)}
