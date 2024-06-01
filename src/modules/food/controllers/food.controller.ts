@@ -59,6 +59,7 @@ export const getFood: ControllerReq = async (req: Request, res: Response) => {
     };
     res.status(RESPONSE_CODES.OK).json(response);
   } catch (err) {
+    console.log("err: ", err);
     res.status(RESPONSE_CODES.BAD_REQUEST).json(Error.getError("Bad request"));
   }
 };

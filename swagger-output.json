@@ -1035,8 +1035,14 @@
           "example": "E"
         },
         "tags": {
-          "type": "string",
-          "example": "1, 2"
+          "type": "array",
+          "example": [
+            "1",
+            "2"
+          ],
+          "items": {
+            "type": "string"
+          }
         },
         "photo": {
           "type": "string",
