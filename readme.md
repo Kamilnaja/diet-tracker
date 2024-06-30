@@ -13,3 +13,13 @@ You can also start app from vscode
 http://localhost:8080- swagger file
 
 https://docs.google.com/document/d/1jsszcE2d3QEl8RF9Kf6JtxL0P6IdhVG33sIhbrNWz7I/edit
+
+--- docker ---
+
+docker build -t diet-tracker/diet-tracker .
+docker run -p 8080:8080 diet-tracker/diet-tracker
+
+**or**
+
+chmod +x run-container.sh
+./run-container.sh
