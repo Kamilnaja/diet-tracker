@@ -15,10 +15,12 @@ import express from "express";
 import morgan from "morgan";
 import swaggerUi from "swagger-ui-express";
 import * as swaggerFile from "../swagger-output.json";
+import { foodPrismaRouter } from "./modules/food/routes/food-prisma.routes";
 dotenv.config();
 
 const app = express();
-const port = shouldLoadInitialData() ? 8080 : 8081;
+const port =
+  Number(process.env.PORT) || (shouldLoadInitialData() ? 8082 : 8081);
 
 app.use(cors(corsOptions));
 app.use(express.json());
@@ -28,10 +30,11 @@ app.use(
     name: "new-session",
     secret: "COOKIE_SECRET", // should use as secret environment variable, but app is for demo purposes only
     httpOnly: true,
-  })
+  }),
 );
 db();
 app.use("/api/food", foodRouter);
+app.use("/api/prisma/food", foodPrismaRouter);
 app.use("/api/diary", diaryRouter);
 app.use("/api/dicts", dictRouter);
 app.use("/api/auth", authRouter);
@@ -45,7 +48,7 @@ app.use(
     name: "bezkoder-session",
     secret: "COOKIE_SECRET", // This is not production app, so it's ok to have secret here
     httpOnly: true,
-  })
+  }),
 );
 
 app.listen(port, () => {

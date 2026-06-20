@@ -1,0 +1,8 @@
+add prisma:
+    [x] install
+    [] rewrite food
+    [] add migrations 
+    [] connect to db
+
+add zod:
+    [] install

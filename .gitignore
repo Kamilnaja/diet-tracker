@@ -5,3 +5,5 @@ coverage
 .vscode/settings.json
 test.db
 db.db
+.env
+/generated/prisma
