@@ -4,13 +4,17 @@ import { ControllerReq } from "@shared/models/controler-req.model";
 import { HttpResponse } from "@shared/models/http-response.model";
 import { RESPONSE_CODES } from "@shared/models/response-codes.const";
 import { NextFunction, Request, Response } from "express";
+import { prisma } from "../../../prisma";
 import { Food } from "../models/food.model";
 import { FoodPrismaService } from "../services/food-prisma.service";
 import { mapFoodDbToFood } from "./food.util";
 
 const foodService = new FoodPrismaService();
 
-export const getFood: ControllerReq = async (req: Request, res: Response) => {
+export const getPrismaFood: ControllerReq = async (
+  req: Request,
+  res: Response,
+) => {
   /*
     #swagger.auto = false
     #swagger.tags = ['Food']
@@ -42,16 +46,12 @@ export const getFood: ControllerReq = async (req: Request, res: Response) => {
   const { name, page, limit } = req.query;
 
   try {
-    const rows = name
-      ? await foodService.getAllFoodByName(
-          name as string,
-          convertStringToNumber(limit as string),
-          convertStringToNumber(page as string),
-        )
-      : await foodService.getAllFood(
-          convertStringToNumber(limit as string),
-          convertStringToNumber(page as string),
-        );
+    const rows = await foodService.getFoodByTagsAndName(
+      undefined,
+      name as string,
+      convertStringToNumber(limit as string),
+      convertStringToNumber(page as string),
+    );
 
     const response: HttpResponse<Food[]> = {
       data: rows.map(mapFoodDbToFood),
@@ -64,7 +64,7 @@ export const getFood: ControllerReq = async (req: Request, res: Response) => {
   }
 };
 
-export const getFoodById: ControllerReq = async (
+export const getPrismaFoodById: ControllerReq = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
@@ -88,16 +88,24 @@ export const getFoodById: ControllerReq = async (
     return;
   }
 
-  const rows = await foodService.getFoodById(id);
+  const food = await prisma.food.findUnique({
+    where: { id: Number(id) },
+    include: { tags: true },
+  });
 
-  if (!rows) {
+  if (!food) {
     res.status(RESPONSE_CODES.OK).json({});
     return;
   }
 
   res.status(RESPONSE_CODES.OK).json({
-    ...rows,
-    tags: rows.tags ? rows.tags.split(",") : [],
+    id: food.id,
+    name: food.name,
+    weight: food.weight,
+    caloriesPer100g: food.caloriesPer100g,
+    nutriScore: food.nutriScore,
+    photo: food.photo,
+    tags: food.tags.map((t) => t.tag_id),
   });
 };
 

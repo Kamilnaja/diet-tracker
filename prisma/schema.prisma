@@ -11,3 +11,36 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+model Food {
+  id              Int        @id @default(autoincrement())
+  caloriesPer100g Int
+  weight          Int
+  nutriScore      NutriScore
+  photo           String
+  name            String     @unique
+  tags            FoodTags[]
+}
+
+enum NutriScore {
+  A
+  B
+  C
+  D
+  E
+}
+
+model Tag {
+  id    Int        @id @default(autoincrement())
+  name  String     @unique
+  foods FoodTags[]
+}
+
+model FoodTags {
+  food_id Int
+  tag_id  Int
+  food    Food @relation(fields: [food_id], references: [id], onDelete: Cascade)
+  tag     Tag  @relation(fields: [tag_id], references: [id], onDelete: Cascade)
+
+  @@id([food_id, tag_id])
+}

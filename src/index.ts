@@ -9,12 +9,12 @@ import { weightRouter } from "@modules/weight/routes/weight.routes";
 import { shouldLoadInitialData } from "@shared/helpers/utils";
 import cookieSession from "cookie-session";
 import cors from "cors";
-import { corsOptions } from "cors.const";
 import dotenv from "dotenv";
 import express from "express";
 import morgan from "morgan";
 import swaggerUi from "swagger-ui-express";
 import * as swaggerFile from "../swagger-output.json";
+import { corsOptions } from "./cors.const";
 import { foodPrismaRouter } from "./modules/food/routes/food-prisma.routes";
 dotenv.config();
 

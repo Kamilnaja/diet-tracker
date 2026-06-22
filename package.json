@@ -6,12 +6,15 @@
   "scripts": {
     "build": "npx tsc",
     "start": "npm run dev",
-    "dev": "concurrently \"npm run sa \" \"ts-node -r tsconfig-paths/register src/index.ts -initialData=true  \"",
-    "test": "concurrently \"ts-node -r tsconfig-paths/register src/index.ts -initialData=false\" \"jest --runInBand \"",
-    "test:i": "concurrently \"ts-node -r tsconfig-paths/register src/index.ts --inspect -initialData=false\" \"jest --runInBand \"",
+    "dev": "concurrently \"npm run sa \" \"tsx src/index.ts -initialData=true  \"",
+    "test": "concurrently \"tsx src/index.ts -initialData=false\" \"jest --runInBand \"",
+    "test:i": "concurrently \"tsx src/index.ts --inspect -initialData=false\" \"jest --runInBand \"",
     "sa": "node swagger.js",
-    "pt": "ts-node -r tsconfig-paths/register src/index.ts -initialData=false",
-    "lint": "eslint --ext .ts src/"
+    "pt": "tsx src/index.ts -initialData=false",
+    "lint": "eslint --ext .ts src/",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:seed": "npx tsx prisma/seed.ts",
+    "prisma:push": "prisma db push"
   },
   "keywords": [
     "api",
@@ -67,6 +70,7 @@
     "ts-jest": "^29.0.5",
     "ts-node": "^10.9.1",
     "tsconfig-paths": "^4.1.2",
+    "tsx": "^4.22.4",
     "typescript": "^6.0.3"
   }
 }

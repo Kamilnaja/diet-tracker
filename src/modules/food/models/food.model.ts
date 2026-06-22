@@ -1,4 +1,4 @@
-import { Entry } from "@shared/models/entry.model";
+import { Entry } from "@models/entry.model";
 import { MealType } from "./meal-type.model";
 import { NutriScore } from "./nutri-score.model";
 
